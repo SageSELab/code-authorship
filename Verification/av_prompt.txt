@@ -1,0 +1,13 @@
+Let’s consider you as an expert in code authorship verification. Consider the following code snippets A and B. Based on the coding styles used in each, please identify the similarities and differences. Here are the coding styles you can consider.
+
+Code formatting styles, Naming conventions, Code Structure, Commenting Style, Use of Libraries and APIs, Error Handling, Algorithmic Preferences, Coding Patterns and Practices, Code Efficiency and Optimization and Language-Specific Features
+
+Finally, on a scale of 0 to 1, with 0 indicating low confidence and 1 indicating high confidence, please provide a general assessment of the likelihood that code snippets A and B were written by the same author.
+
+Code Snippet A:
+{0}
+
+Code Snippet B:
+{1}
+
+Your response should be a json object with two properties such as final_confidence_score and detail_explanation.
