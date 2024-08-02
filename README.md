@@ -14,6 +14,10 @@ To fine a LLM for a specific dataset, at first go to that directory. For example
 
 To run `SVM_Gemini` or `SVM_GPT-4`, go to `Gemini` or `GPT-4` folder. Then, run the following commands sequentially.
 
+- `python3 embedding.py`
+- `python3 find-embeddings.py`
+- `python3 SVM.py`
+
 ### Code Authorship Verification:
 The methodology of our code authorship verification is as follows:
 
