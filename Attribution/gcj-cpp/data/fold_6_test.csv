@@ -1,0 +1,1205 @@
+code,author
+"#pragma comment(linker, ""/STACK:256000000"")
+
+void readData() {}
+
+const int maxN = 60;
+const int maxL = 2000000;
+int n, p;
+int a[maxN];
+int b[maxN][maxN];
+
+int d[maxN][maxN];
+int q[maxL];
+
+pair<int, int> c[maxN][maxN];
+bool used[maxN][maxN];
+
+pair<int, int> getPackages(int value, int t) {
+  int r = (value * 10) / (9 * t);
+  int l = (value * 10 + 11 * t - 1) / (11 * t);
+
+  return make_pair(l, r);
+}
+
+void solve(int test) {
+  cin >> n >> p;
+  for (int i = 0; i < n; ++i) {
+    cin >> a[i];
+  }
+
+  for (int i = 0; i < maxL; ++i) {
+    q[i] = 0;
+  }
+
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < p; ++j) {
+      cin >> b[i][j];
+      c[i][j] = getPackages(b[i][j], a[i]);
+      for (int k = c[i][j].first; k <= c[i][j].second; ++k) {
+        q[k] = true;
+      }
+    }
+  }
+
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < p; ++j) {
+      used[i][j] = false;
+    }
+  }
+
+  int res = 0;
+  for (int k = 0; k < maxL; ++k) {
+    if (!q[k]) {
+      continue;
+    }
+    while (true) {
+      bool good = true;
+      for (int i = 0; i < n; ++i) {
+        bool have = false;
+        for (int j = 0; j < p; ++j) {
+          if (used[i][j]) {
+            continue;
+          }
+          if (k >= c[i][j].first && k <= c[i][j].second) {
+            have = true;
+            break;
+          }
+        }
+        if (!have) {
+          good = false;
+          break;
+        }
+      }
+      if (!good) {
+        break;
+      }
+      ++res;
+      for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < p; ++j) {
+          if (used[i][j]) {
+            continue;
+          }
+          if (k >= c[i][j].first && k <= c[i][j].second) {
+            used[i][j] = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  printf(""Case #%d: %d\n"", test, res);
+}
+
+int main(int argc, char *argv[]) {
+  freopen(""input.txt"", ""r"", stdin);
+  freopen(""output.txt"", ""w"", stdout);
+
+  int left_bound, right_bound;
+
+  /*freopen(argv[3], ""w"", stdout);
+  sscanf(argv[1], ""%d"", &left_bound);
+  sscanf(argv[2], ""%d"", &right_bound);*/
+
+  int t;
+  cin >> t;
+  left_bound = 1, right_bound = t;
+  for (int i = 1; i <= t; ++i) {
+    if (i >= left_bound && i <= right_bound) {
+      solve(i);
+    } else {
+      readData();
+    }
+    cerr << i << "": "" << clock() << endl;
+  }
+
+  return 0;
+}
+",9
+"const long long inf = 4e18;
+const int N = 123;
+
+int a[N];
+int b[N];
+long long d[N][N];
+long double f[N];
+bool was[N];
+
+int main() {
+  freopen(""in"", ""r"", stdin);
+  freopen(""out"", ""w"", stdout);
+  int tt;
+  scanf(""%d"", &tt);
+  for (int cc = 1; cc <= tt; ++cc) {
+    double begt = clock();
+    printf(""Case #%d: "", cc);
+    int n, qq;
+    scanf(""%d %d"", &n, &qq);
+    for (int i = 0; i < n; ++i) {
+      scanf(""%d %d"", a + i, b + i);
+    }
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < n; ++j) {
+        int foo;
+        scanf(""%d"", &foo);
+        d[i][j] = (foo == -1 ? inf : foo);
+      }
+    }
+    for (int k = 0; k < n; ++k) {
+      for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+          d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+        }
+      }
+    }
+    for (int q = 0; q < qq; ++q) {
+      if (q > 0)
+        putchar(' ');
+      int from, to;
+      scanf(""%d %d"", &from, &to);
+      --from;
+      --to;
+      for (int i = 0; i < n; ++i) {
+        f[i] = inf;
+      }
+      memset(was, false, sizeof was);
+      was[from] = true;
+      f[from] = 0;
+      int x = from;
+      for (int it = 0; it < n - 1; ++it) {
+        for (int y = 0; y < n; ++y) {
+          if (d[x][y] > a[x]) {
+            continue;
+          }
+          long double cur = f[x] + (long double)d[x][y] / b[x];
+          if (cur < f[y]) {
+            f[y] = cur;
+          }
+        }
+        x = -1;
+        for (int y = 0; y < n; ++y) {
+          if (was[y]) {
+            continue;
+          }
+          if (x == -1 || f[y] < f[x]) {
+            x = y;
+          }
+        }
+        was[x] = true;
+      }
+      printf(""%.15f"", (double)f[to]);
+    }
+    putchar('\n');
+    fprintf(stderr, ""case %d solved in %.3f\n"", cc,
+            (clock() - begt) / CLOCKS_PER_SEC);
+  }
+}
+",29
+"typedef pair<int, int> par;
+typedef long long int tint;
+map<char, char> inv;
+
+int main() {
+  freopen(""test.txt"", ""r"", stdin);
+  freopen(""out.txt"", ""w"", stdout);
+
+  inv['-'] = '+';
+  inv['+'] = '-';
+  int t, k;
+  string s;
+
+  cin >> t;
+
+  for (int caso = (1); caso < (t + 1); caso++) {
+    cin >> s >> k;
+    int l = s.size();
+
+    int ans = 0;
+    for (int i = 0; i < (l + 1 - k); i++) {
+      if (s[i] == '-') {
+        for (int j = (i); j < (i + k); j++)
+          s[j] = inv[s[j]];
+        ans++;
+      }
+    }
+    bool check = true;
+    for (int i = 0; i < (l); i++) {
+      check = check and s[i] == '+';
+    }
+    cout << ""Case #"" << caso << "": "";
+    if (check)
+      cout << ans << endl;
+    else
+      cout << ""IMPOSSIBLE"" << endl;
+  }
+
+  return 0;
+}
+",37
+"//
+//  main.cpp
+//  ProblemA
+//
+//  Created by Tung Nguyen on 4/22/17.
+//
+//
+
+long long D;
+int N;
+
+long long K[1000];
+long long S[1000];
+
+int main(int argc, const char *argv[]) {
+  ifstream fin(""A-small-attempt1.in.txt"");
+  ofstream fout(""A-small-attempt1.out.txt"");
+
+  int T;
+  fin >> T;
+  for (int Case = 1; Case <= T; Case++) {
+    fin >> D >> N;
+
+    double minTime = 0;
+
+    for (int i = 0; i < N; i++) {
+      fin >> K[i] >> S[i];
+      double time = (D - K[i]) * 1.0 / S[i];
+      minTime = time > minTime ? time : minTime;
+    }
+    char buff[100];
+    snprintf(buff, sizeof(buff), ""%.6f"", D / minTime);
+
+    fout << ""Case #"" << Case << "": "" << buff << endl;
+  }
+
+  fin.close();
+  fout.close();
+  return 0;
+}
+",39
+"typedef long long LL;
+typedef long double LD;
+
+int cond = 1;
+
+double solve() {
+  int n, q;
+  vector<long long> e, s, d;
+  cin >> n >> q;
+  for (int i = 0; i < n; ++i) {
+    int a, b;
+    cin >> a >> b;
+    e.push_back(a);
+    s.push_back(b);
+  }
+  d.push_back(0);
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      int di;
+      cin >> di;
+      if (di != -1) {
+        d.push_back(d.back() + di);
+      }
+    }
+  }
+
+  int a, b;
+  cin >> a >> b;
+  vector<double> dd;
+  dd.push_back(0.);
+  for (int i = 1; i < n; ++i) {
+    double dm = 1000LL * 1000 * 1000 * 1000 + 5;
+    for (int j = 0; j < i; ++j) {
+      if (d[i] - d[j] <= e[j]) {
+        double tmp = dd[j] + ((double)(d[i] - d[j])) / s[j];
+        dm = dm > tmp ? tmp : dm;
+      }
+    }
+    dd.push_back(dm);
+  }
+  return dd[n - 1];
+}
+
+int main() {
+  int t;
+  cin >> t;
+  for (int x = 1; x <= t; ++x) {
+    cout.precision(9);
+    cout << ""Case #"" << x << "": "" << fixed << solve() << endl; // result
+  }
+  return 0;
+}
+",41
+"int tc;
+
+int main() {
+  cin >> tc;
+  for (int t = 1; t <= tc; t++) {
+    string s;
+    int k, fl = 0;
+    cin >> s >> k;
+    for (int i = 0; i < s.size() - k + 1; i++) {
+      if (s[i] == '-') {
+        // cout << ""Flip at "" << i << endl;
+        fl++;
+        for (int j = i; j < i + k; j++) {
+          if (s[j] == '-')
+            s[j] = '+';
+          else
+            s[j] = '-';
+        }
+      }
+    }
+    int f = 1;
+    for (int i = s.size() - k + 1; i < s.size(); i++) {
+      if (s[i] == '-')
+        f = 0;
+    }
+    if (f == 1) {
+      printf(""Case #%d: %d\n"", t, fl);
+    } else {
+      printf(""Case #%d: IMPOSSIBLE\n"", t, fl);
+    }
+  }
+}
+",56
+"// vudduu - codejam 2017 qualification round
+// Problem C
+typedef long long LL;
+
+LL N, K;
+map<LL, int> mapa;
+
+void addNum(LL x, int y) {
+  map<LL, int>::iterator it = mapa.find(x);
+  if (it == mapa.end()) {
+    mapa[x] = y;
+  } else {
+    mapa[x] = it->second + y;
+  }
+}
+
+void solve() {
+  cin >> N >> K;
+  map<LL, int>::iterator it;
+  mapa.clear();
+  mapa[N] = 1;
+  while (true) {
+    it = mapa.end();
+    it--;
+    if (K <= it->second)
+      break;
+    LL div1 = it->first / 2LL;
+    LL div2 = it->first - div1;
+    addNum(div1, it->second);
+    addNum(div2 - 1LL, it->second);
+    K -= it->second;
+    mapa.erase(it);
+  }
+  LL res1 = it->first / 2LL;
+  LL res2 = it->first - res1 - 1LL;
+  if (res2 < res1)
+    swap(res1, res2);
+  cout << res2 << "" "" << res1 << endl;
+}
+
+int main() {
+  int T;
+  scanf(""%d"", &T);
+  for (int cas = 1; cas <= T; cas++) {
+    printf(""Case #%d: "", cas);
+    solve();
+  }
+}
+",59
+"long long a[105][105];
+
+int main() {
+  ios_base::sync_with_stdio(false);
+  ifstream ifs(""b.in"");
+  ofstream ofs(""b.out"");
+
+  int t;
+  ifs >> t;
+  for (int test = 0; test < t; ++test) {
+    int res = 0;
+    int n, q;
+    ifs >> n >> q;
+
+    vector<int> d(n), s(n);
+    for (int i = 0; i < n; ++i)
+      ifs >> d[i] >> s[i];
+
+    for (int i = 0; i < n; ++i)
+      for (int j = 0; j < n; ++j) {
+        ifs >> a[i][j];
+        if (i == j)
+          a[i][j] = 0;
+      }
+
+    for (int k = 0; k < n; ++k)
+      for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+          if (a[i][k] != -1 && a[k][j] != -1 &&
+              (a[i][j] == -1 || a[i][j] > a[i][k] + a[k][j])) {
+            a[i][j] = a[i][k] + a[k][j];
+          }
+
+    ofs << ""Case #"" << test + 1 << "":"";
+    for (int z = 0; z < q; ++z) {
+      int start, fin;
+      vector<double> dist(n, 1e+100);
+      vector<int> was(n, 0);
+      ifs >> start >> fin;
+      --start;
+      --fin;
+      priority_queue<pair<double, int>, vector<pair<double, int>>,
+                     greater<pair<double, int>>>
+          q;
+      q.push({0.0, start});
+      dist[start] = 0;
+      while (!q.empty()) {
+        int cur = q.top().second;
+        q.pop();
+        if (cur == fin)
+          break;
+        if (was[cur] == 0) {
+          was[cur] = 1;
+          for (int next = 0; next < n; ++next) {
+            if (was[next] == 0) {
+              if (a[cur][next] != -1 && a[cur][next] <= d[cur]) {
+                double time = a[cur][next] / (double)s[cur];
+                if (dist[cur] + time < dist[next]) {
+                  dist[next] = dist[cur] + time;
+                  q.push({dist[next], next});
+                }
+              }
+            }
+          }
+        }
+      }
+      ofs << ' ' << setprecision(10) << fixed << dist[fin];
+    }
+    ofs << endl;
+  }
+  return 0;
+}
+",85
+"char ch[] = {'R', 'O', 'Y', 'G', 'B', 'V'};
+int b[1111], a[10];
+int n;
+
+bool check(int x, int y) {
+  if (x > y)
+    swap(x, y);
+  return (x == y) || (x + 1 == y) || ((x & 1) && (x + 2 == y));
+}
+
+bool solve() {
+  memset(b, -1, sizeof(b));
+  for (int i = 0; i < n; ++i) {
+    if (a[1]) {
+      if (a[4]) {
+        if (i > 0 && check(b[i - 1], 4)) {
+          int x = (b[i - 1] + 3) % 6;
+          if (a[x]) {
+            b[i] = x;
+            i++;
+            a[x]--;
+          } else
+            return false;
+        }
+        b[i] = 4, b[i + 1] = 1;
+        a[1]--, a[4]--;
+        // printf(""%d %d\n"", a[1], a[4]);
+        ++i;
+      } else {
+        return false;
+      }
+    } else if (a[3]) {
+      if (a[0]) {
+        if (i > 0 && check(b[i - 1], 0)) {
+          int x = (b[i - 1] + 3) % 6;
+          if (a[x]) {
+            b[i] = x;
+            i++;
+            a[x]--;
+          } else
+            return false;
+        }
+        b[i] = 0, b[i + 1] = 3;
+        ++i;
+        a[3]--, a[0]--;
+      } else
+        return false;
+    } else if (a[5]) {
+      if (a[2]) {
+        if (i > 0 && check(b[i - 1], 2)) {
+          int x = (b[i - 1] + 3) % 6;
+          if (a[x]) {
+            b[i] = a[x];
+            i++;
+            a[x]--;
+          } else
+            return false;
+        }
+        b[i] = 2, b[i + 1] = 5;
+        ++i;
+        a[2]--, a[5]--;
+      } else
+        return false;
+    } else {
+      // printf(""i=%d\n"", i);
+      if (i == 0) {
+        if (a[0])
+          b[0] = 0, a[0]--;
+        else if (a[2])
+          b[0] = 2, a[2]--;
+        else if (a[4])
+          b[0] = 4, a[4]--;
+      } else {
+        int x = -1, mx = 0;
+        for (int j = 0; j < 6; j += 2) {
+          if (a[j] && !check(b[i - 1], j)) {
+            if (a[j] > mx) {
+              mx = a[j], x = j;
+            }
+          }
+        }
+        if (x == -1)
+          return false;
+        a[x]--, b[i] = x;
+      }
+      // printf(""bi=%d\n"", b[i]);
+      if (b[i] == -1)
+        return false;
+    }
+  }
+  return !check(b[0], b[n - 1]);
+  return true;
+}
+
+void work() {
+
+  scanf(""%d"", &n);
+  for (int i = 0; i < 6; ++i) {
+    scanf(""%d"", &a[i]);
+  }
+  if (!solve())
+    printf(""IMPOSSIBLE\n"");
+  else {
+    for (int i = 0; i < n; ++i) {
+      printf(""%c"", ch[b[i]]);
+    }
+    printf(""\n"");
+  }
+}
+
+int main() {
+  freopen(""B-small-attempt1.in"", ""r"", stdin);
+  freopen(""B-small-attempt1.out"", ""w"", stdout);
+  int TC;
+  scanf(""%d"", &TC);
+  for (int tc = 1; tc <= TC; ++tc) {
+    printf(""Case #%d: "", tc);
+    work();
+  }
+}
+",90
+"typedef long long i64d;
+
+void ins(i64d x, i64d num, vector<pair<i64d, i64d>> &b) {
+  int id = -1;
+  for (int i = 0; i < b.size(); i++)
+    if (b[i].first == x)
+      id = i;
+  if (id == -1)
+    b.push_back(make_pair(x, num));
+  else
+    b[id].second += num;
+}
+int main() {
+  freopen(""C-small-1-attempt2.in"", ""r"", stdin);
+  freopen(""C-small-1-attempt2.out"", ""w"", stdout);
+  int cas;
+  scanf(""%d"", &cas);
+  for (int ca = 1; ca <= cas; ca++) {
+    printf(""Case #%d: "", ca);
+    i64d n, k;
+    scanf(""%lld %lld"", &n, &k);
+    i64d num = 1;
+    vector<pair<i64d, i64d>> a;
+    a.push_back(make_pair(n, 1));
+    while (k > num) {
+      k -= num;
+      num <<= 1;
+
+      vector<pair<i64d, i64d>> b;
+      for (int i = 0; i < a.size(); i++) {
+        i64d x = (a[i].first - 1) / 2;
+        ins(x, a[i].second, b);
+        ins(a[i].first - 1 - x, a[i].second, b);
+      }
+      a = b;
+    }
+    if (a.size() == 2 && a[0].first < a[1].first)
+      swap(a[0], a[1]);
+    i64d res = (k <= a[0].second) ? a[0].first : a[1].first;
+    if (res % 2 == 1)
+      printf(""%lld %lld\n"", (res - 1) / 2, (res - 1) / 2);
+    else
+      printf(""%lld %lld\n"", (res - 1) / 2 + 1, (res - 1) / 2);
+  }
+  return 0;
+}
+",91
+"int main() {
+  int T;
+  freopen(""B-small-attempt0.in"", ""r"", stdin);
+  freopen(""output.txt"", ""w"", stdout);
+
+  scanf(""%d"", &T);
+
+  for (int testCase = 1; testCase <= T; testCase++) {
+    long long N;
+    vector<int> v;
+    cin >> N;
+
+    int prev = N % 10;
+    N /= 10;
+    v.push_back(prev);
+    while (N != 0) {
+      int now = N % 10;
+      if (prev < now) {
+        N--;
+        now = N % 10;
+        for (int i = 0; i < v.size(); i++) {
+          v[i] = 9;
+        }
+      }
+      N /= 10;
+      v.push_back(now);
+      prev = now;
+    }
+
+    while (v.back() == 0)
+      v.pop_back();
+
+    printf(""Case #%d: "", testCase);
+    for (int i = v.size() - 1; i >= 0; i--) {
+      printf(""%d"", v[i]);
+    }
+    printf(""\n"");
+  }
+
+  return 0;
+}
+",94
+"
+
+int main() {
+
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  ;
+  freopen(""inp3.txt"", ""r"", stdin);
+  freopen(""out3.txt"", ""w"", stdout);
+  long long t;
+  cin >> t;
+  cout << std::fixed;
+  for (long long ccr = 1; ccr <= t; ++ccr) {
+    double n, q;
+    cin >> n >> q;
+    pair<double, double> in;
+    vector<pair<double, double>> hinfo(n, in);
+    for (double i = 0; i < n; ++i)
+      cin >> hinfo[i].first >> hinfo[i].second;
+    vector<vector<double>> graph(n, vector<double>(n, 0));
+    for (double i = 0; i < n; ++i) {
+      for (double j = 0; j < n; ++j) {
+        cin >> graph[i][j];
+      }
+    }
+    vector<double> ans(n, 0.0);
+    for (double i = n - 2; i >= 0; --i) {
+      double opt = DBL_MAX;
+      double dist = 0.0;
+      for (double j = i + 1; j < n; ++j) {
+        dist += graph[j - 1][j];
+        if (dist <= hinfo[i].first) {
+          opt = min(opt, dist / hinfo[i].second + ans[j]);
+        } else {
+          break;
+        }
+      }
+      ans[i] = opt;
+    }
+    for (double i = 0; i < q; ++i) {
+      double aa;
+      cin >> aa >> aa;
+    }
+    cout << ""Case #"" << ccr << "": "" << setprecision(7) << ans[0] << ""\n"";
+  }
+  return 0;
+}
+",96
+"int N, P;
+int s[200];
+int r[200][200];
+int b[200];
+int tb[200];
+
+int ll[200][200];
+int mm[200][200];
+
+bool dfs(int cur, int less, int most) { return 0; }
+
+int main(void) {
+  int t;
+  scanf(""%d"", &t);
+  for (int tt = 1; tt <= t; tt++) {
+    scanf(""%d%d"", &N, &P);
+    for (int i = 0; i < N; ++i)
+      scanf(""%d"", &s[i]);
+    for (int i = 0; i < N; ++i) {
+      for (int j = 0; j < P; ++j) {
+        scanf(""%d"", &r[i][j]);
+      }
+      sort(r[i], r[i] + P);
+      for (int j = 0; j < P; ++j) {
+        ll[i][j] = ceil(1.0 * r[i][j] / (1.1 * s[i]));
+        mm[i][j] = floor(1.0 * r[i][j] / (0.9 * s[i]));
+      }
+    }
+
+    /*
+    for(int i=0;i<N;++i) {
+      for(int j=0;j<P;++j) {
+        printf(""[%4d,%4d] "", ll[i][j], mm[i][j]);
+      }
+      puts("""");
+    }
+    continue;
+    */
+
+    int ans = 0;
+    memset(b, 0, sizeof(b));
+
+    /*
+    for(int i=0;i<P;++i)
+    {
+      int low = s[0]-(s[0]/10);
+      int high = s[0]+((s[0]+9)/10);
+
+      int most = r[0][i]/low;
+      int less = (r[0][i]+high-1)/high;
+
+      for(int k=less;k<=most;++k){
+        bool ok=true;
+        for(int j=0;j<N && ok;++j){
+          if (r[j][i]*10 < k*s[j]*9) ok=false;
+          if (r[j][i]*10 > k*s[j]*11) ok=false;
+        }
+        if (ok) {
+          ++ans;
+          break;
+        }
+      }
+
+    }
+    */
+
+    while (1) {
+      bool stop = false;
+      for (int i = 0; i < N; ++i) {
+        if (b[i] >= P)
+          stop = true;
+      }
+      if (stop)
+        break;
+
+      int cur = 0;
+      for (int i = 0; i < N; ++i) {
+        cur = max(cur, ll[i][b[i]]);
+      }
+
+      bool ok = true;
+      for (int i = 0; i < N; ++i) {
+        for (int j = b[i]; j <= P; ++j) {
+          if (j == P || cur < ll[i][j]) {
+            b[i] = j;
+            ok = false;
+            break;
+          }
+          if (ll[i][j] > mm[i][j]) {
+            continue;
+          }
+          if (cur <= mm[i][j]) {
+            tb[i] = j;
+            break;
+          }
+        }
+      }
+
+      // printf(""%d: %d %d\n"", cur, ok, b[0]);
+      if (!ok)
+        continue;
+
+      ++ans;
+      for (int i = 0; i < N; ++i) {
+        b[i] = tb[i] + 1;
+      }
+    }
+
+    printf(""Case #%d: %d\n"", tt, ans);
+  }
+  return 0;
+}
+",99
+"
+#pragma comment(linker, ""/STACK:100000000000"")
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double lld;
+typedef pair<int, int> PII;
+typedef pair<ll, ll> PLL;
+typedef vector<int> VI;
+typedef vector<string> VS;
+typedef vector<double> VD;
+
+vector<PII> horse;
+vector<int> dis;
+double memo[110][110];
+double f(int ind, int curHorse) {
+  ll sum = 0;
+  for (int(i) = (curHorse); (i) < (ind); (i)++)
+    sum += dis[i];
+  if (sum > horse[curHorse].first)
+    return 1e100;
+
+  if (ind == dis.size())
+    return 0;
+
+  double res = 1e100;
+  double &ret = memo[ind][curHorse];
+  if (ret < 0)
+    return ret;
+
+  res = min(res,
+            (double)dis[ind] / horse[curHorse].second + f(ind + 1, curHorse));
+  res = min(res, (double)dis[ind] / horse[ind].second + f(ind + 1, ind));
+
+  return ret = res;
+}
+int main() {
+  freopen(""a.in"", ""r"", stdin);
+  freopen(""a.out"", ""w"", stdout);
+  int Tcas;
+  cin >> Tcas;
+  for (int(cas) = 0; (cas) < (Tcas); (cas)++) {
+    printf(""Case #%d: "", cas + 1);
+    int n, q;
+    cin >> n >> q;
+    horse.clear();
+    dis.clear();
+    memset((memo), (-1), sizeof(memo));
+    for (int(i) = 0; (i) < (n); (i)++) {
+      PII p;
+      cin >> p.first >> p.second;
+      horse.push_back(p);
+    }
+    for (int(i) = 0; (i) < (n); (i)++)
+      for (int(j) = 0; (j) < (n); (j)++) {
+        int k;
+        cin >> k;
+        if (i + 1 == j)
+          dis.push_back(k);
+      }
+    for (int(qq) = 0; (qq) < (q); (qq)++) {
+      int st, en;
+      cin >> st >> en;
+      cout << fixed << setprecision(9) << f(0, 0) << "" "";
+    }
+    cout << endl;
+  }
+}
+",104
+"struct Stall {
+  int first;
+  int second;
+  bool operator<(const Stall &b) const {
+    int size1 = (second - first + 1);
+    int size2 = (b.second - b.first + 1);
+    if (size2 != size1) {
+      return size1 < size2;
+    } else {
+      return first > b.first;
+    }
+  }
+};
+
+int main() {
+  int tests;
+  cin >> tests;
+  for (int t = 0; t < tests; t++) {
+    long long N, K;
+    cin >> N >> K;
+    priority_queue<Stall> pq;
+    Stall initial;
+    initial.first = 1;
+    initial.second = N;
+    pq.push(initial);
+    for (long long i = 0; i < K - 1; i++) {
+      Stall current = pq.top();
+      pq.pop();
+      long long oc = (current.second + current.first) / 2;
+      if (oc != current.first) {
+        Stall firstPart;
+        firstPart.first = current.first;
+        firstPart.second = oc - 1;
+        pq.push(firstPart);
+      }
+      if (oc != current.second) {
+        Stall secondPart;
+        secondPart.first = oc + 1;
+        secondPart.second = current.second;
+        pq.push(secondPart);
+      }
+    }
+    Stall current = pq.top();
+    long long oc = (current.second + current.first) / 2;
+    long long d1 = (oc - current.first);
+    long long d2 = (current.second - oc);
+    cout << ""Case #"" << (t + 1) << "": "";
+    cout << max(d1, d2) << "" "" << min(d1, d2) << endl;
+  }
+}
+",119
+"typedef long long ll;
+typedef pair<ll, ll> pll;
+typedef pair<int, int> pii;
+
+const int MAXN = 1 * 1000 + 10;
+
+int main() {
+  ios::sync_with_stdio(false);
+  int tt;
+  cin >> tt;
+  for (int tc = 1; tc <= tt; tc++) {
+    cout << ""Case #"" << tc << "": "";
+
+    int n, k;
+    cin >> n >> k;
+    queue<int> q;
+    q.push(1);
+    q.push(n + 1);
+
+    int x, y, mid;
+    for (int i = 0; i < k; i++) {
+      x = q.front();
+      q.pop();
+      y = q.front();
+      q.pop();
+      mid = (x + y) / 2;
+
+      // cerr << VAL(x) << VAL(y) << VAL(mid) << endl;
+
+      if ((y - x) % 2 == 0) {
+        if (mid - x > 0) {
+          q.push(x);
+          q.push(mid);
+        }
+        if (y - mid - 1 > 0) {
+          q.push(mid + 1);
+          q.push(y);
+        }
+      } else {
+        if (y - mid - 1 > 0) {
+          q.push(mid + 1);
+          q.push(y);
+        }
+        if (mid - x > 0) {
+          q.push(x);
+          q.push(mid);
+        }
+      }
+    }
+    cout << mid - x << ' ' << y - mid - 1 << endl;
+  }
+  return 0;
+}
+",157
+"typedef long long ll;
+typedef long long LL;
+typedef pair<int, int> ii;
+typedef vector<ii> vii;
+typedef vector<int> vi;
+void open() {
+  freopen(""D:/OneDrive/Code/GCJ/A-small-attempt0.in"", ""r"", stdin);
+  freopen(""D:/OneDrive/Code/GCJ/out.txt"", ""w"", stdout);
+}
+
+int main(void) {
+  open();
+  int tc;
+  scanf(""%d"", &tc);
+  char str[1010];
+  int k;
+
+  for (int ct = 1; ct <= tc; ct++) {
+    scanf(""%s"", str);
+    scanf(""%d"", &k);
+    int ret = 0;
+    int len = strlen(str);
+
+    for (int j = 0; j < len; j++) {
+      if (str[j] == '-') {
+        if (j + k > len) {
+          ret = -1;
+          break;
+        }
+        for (int l = 0; l < k; l++) {
+          if (str[l + j] == '+')
+            str[l + j] = '-';
+          else
+            str[l + j] = '+';
+        }
+        ret++;
+        // printf(""%s\n"", str);
+      }
+    }
+
+    printf(""Case #%d: "", ct);
+
+    if (ret == -1) {
+      printf(""IMPOSSIBLE\n"");
+    } else {
+      printf(""%d\n"", ret);
+    }
+    cerr << ""Test "" << ct << "" done \n"";
+  }
+  return 0;
+}
+",178
+"// Problem A
+
+int get() {
+  char c;
+  while (c = getchar(), c != '-' && (c < '0' || c > '9'))
+    ;
+  bool flag = (c == '-');
+  if (flag)
+    c = getchar();
+  int x = 0;
+  while (c >= '0' && c <= '9') {
+    x = x * 10 + c - '0';
+    c = getchar();
+  }
+  return flag ? -x : x;
+}
+
+char a[25][25];
+
+char getCake() {
+  char c;
+  while (c = getchar(), c != '?' && (c < 'A' || c > 'Z'))
+    ;
+  return c;
+}
+
+int main() {
+  int totalTest = get();
+  for (int test = 1; test <= totalTest; test++) {
+    printf(""Case #%d:\n"", test);
+    int n = get(), m = get();
+    for (int i = 0; i < n; i++)
+      for (int j = 0; j < m; j++)
+        a[i][j] = getCake();
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 1; j < m; j++)
+        if (a[i][j] == '?' && a[i][j - 1] != '?')
+          a[i][j] = a[i][j - 1];
+      for (int j = m - 2; j >= 0; j--)
+        if (a[i][j] == '?' && a[i][j + 1] != '?')
+          a[i][j] = a[i][j + 1];
+    }
+
+    for (int i = 0; i < m; i++) {
+      for (int j = 1; j < n; j++)
+        if (a[j][i] == '?' && a[j - 1][i] != '?')
+          a[j][i] = a[j - 1][i];
+      for (int j = n - 2; j >= 0; j--)
+        if (a[j][i] == '?' && a[j + 1][i] != '?')
+          a[j][i] = a[j + 1][i];
+    }
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++)
+        putchar(a[i][j]);
+      putchar('\n');
+    }
+  }
+  return 0;
+}
+",185
+"// Hi
+typedef long long ll;
+pair<int, int> horses[1001];
+void solve(int d, int n) {
+  long double ans = 1e15;
+  for (int i = 0; i < n; i++) {
+    long double en = (long double)(d - horses[i].first) / horses[i].second;
+    long double cur = d / en;
+    ans = min(cur, ans);
+  }
+  cout << fixed << setprecision(8) << ans << endl;
+}
+int main() {
+  ios::sync_with_stdio(false);
+  freopen(""test.txt"", ""r"", stdin);
+  freopen(""test1.txt"", ""w"", stdout);
+  int t;
+  cin >> t;
+  for (int i = 1; i <= t; i++) {
+    int d, n;
+    cin >> d >> n;
+    for (int j = 0; j < n; j++)
+      cin >> horses[j].first >> horses[j].second;
+    cout << ""Case #"" << i << "": "";
+    solve(d, n);
+  }
+}
+",199
+"typedef long long LL;
+
+int main() {
+  freopen(""123.in"", ""r"", stdin);
+  freopen(""123.out"", ""w"", stdout);
+  int T, cas = 0;
+  cin >> T;
+  while (T--) {
+    string s;
+    cin >> s;
+    reverse(s.begin(), s.end());
+    int n = s.size();
+    for (int i = 1; i < n; i++) {
+      if (s[i] <= s[i - 1])
+        continue;
+      for (int j = 0; j < i; j++)
+        s[j] = '9';
+      int j = i;
+      while (s[j] == '0')
+        s[j] = '9', j++;
+      s[j]--;
+    }
+    while (s.back() == '0')
+      s.pop_back();
+    reverse(s.begin(), s.end());
+    printf(""Case #%d: %s\n"", ++cas, s.c_str());
+  }
+  return 0;
+}
+",200
