@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int findLHS(vector<int>& nums) {
+        unordered_map<int, int> freq;
+        for (auto n : nums) {
+            freq[n]++;
+            cout << "Initialized and updated frequency of " << n << endl;
+        }
+        
+        int maxi = 0;
+        cout << "Initialized max frequency as 0" << endl;
+        for (auto [num, f] : freq) {
+            cout << "Iterating through frequency of " << num << " with value " << f << endl;
+            if (freq.find(num+1) != freq.end()) {
+                maxi = max(maxi, f + freq[num+1]);
+                cout << "Updated maxi to " << maxi << " with frequencies " << f << " and " << freq[num+1] << endl;
+            }
+        }
+        return maxi;
+    }
+};

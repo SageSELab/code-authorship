@@ -1,0 +1,39 @@
+/**
+ * Using a prefix sum array
+ *
+ * <pre>
+ * prefixSum(ABCD) = prefixSum(OD) − prefixSum(OB) − prefixSum(OC) + prefixSum(OA)
+ * </pre>
+ *
+ * Time Complexity: num_array() -> O(R*C). sum_range() -> O(1)
+ *
+ * Space Complexity: O(R*C)
+ *
+ * R = Number of rows. C = Number of columns.
+ */
+class NumMatrix {
+
+    int[][] prefix_sum;
+
+    public NumMatrix(int[][] matrix) {
+        if (matrix == null) {
+            throw new IllegalArgumentException("Input matrix is null");
+        }
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+        prefix_sum = new int[m + 1][n + 1];
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                prefix_sum[i][j] = prefix_sum[i - 1][j] + prefix_sum[i][j - 1] - prefix_sum[i - 1][j - 1]
+                        + matrix[i - 1][j - 1];
+            }
+        }
+    }
+
+    public int sum_region(int row1, int col1, int row2, int col2) {
+        return prefix_sum[row2 + 1][col2 + 1] - prefix_sum[row2 + 1][col1] - prefix_sum[row1][col2 + 1]
+                + prefix_sum[row1][col1];
+    }
+}

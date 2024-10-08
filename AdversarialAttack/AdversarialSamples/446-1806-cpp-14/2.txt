@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int numberOfMatches(int n) {
+        int ans = 0;  // Variable to store the number of matches
+        std::cout << "ans initialized: " << ans << std::endl;
+
+        while(n != 1) {  // Continue the loop until 'n' becomes 1 (end of matches)
+            std::cout << "n value: " << n << std::endl;
+            
+            if(n % 2 != 0) {  // If 'n' is odd
+                ans += (n - 1) / 2;  // Increment 'ans' by (n - 1) / 2
+                std::cout << "ans updated: " << ans << std::endl;
+                
+                n = (n - 1) / 2 + 1;  // Update 'n' to ((n - 1) / 2) + 1
+                std::cout << "n updated to: " << n << std::endl;
+            }
+            
+            if(n % 2 == 0) {  // If 'n' is even
+                ans += n / 2;  // Increment 'ans' by n / 2
+                std::cout << "ans updated: " << ans << std::endl;
+                
+                n = n / 2;  // Update 'n' to n / 2
+                std::cout << "n updated to: " << n << std::endl;
+            }
+        }
+        return ans;  // Return the total number of matches
+    }
+};

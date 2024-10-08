@@ -1,0 +1,77 @@
+class Solution {
+public:
+    int maxDistance(vector<vector<int>>& grid) {
+       
+        int n = grid.size();
+        cout << "Initialized n as " << n << endl;
+       
+        int m = grid[0].size();
+        cout << "Initialized m as " << m << endl;
+        
+        vector<int> dx = {-1, 0, 1, 0};
+        cout << "Initialized dx vector as {-1, 0, 1, 0}" << endl;
+        
+        vector<int> dy = {0, 1, 0, -1};
+        cout << "Initialized dy vector as {0, 1, 0, -1}" << endl;
+        
+        queue<pair<int, int>> q;
+        cout << "Initialized queue of pairs" << endl;
+        
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < m; j++)
+            {
+                if(grid[i][j])
+                {
+                    q.push({i, j});
+                    cout << "Pushed cell (" << i << ", " << j << ") into queue" << endl;
+                }
+            }
+        }
+        
+        if(q.size() == n * m)
+        {
+            cout << "Number of 1's in grid is equal to total cells, returning -1" << endl;
+            return -1;
+        }
+        
+        int dist = 0;
+        cout << "Initialized distance as 0" << endl;
+        
+        while(!q.empty())
+        {
+            int size = q.size();
+            cout << "Current queue size is " << size << endl;
+            
+            while(size--)
+            {
+                auto curr = q.front();
+                q.pop();
+                cout << "Popped cell (" << curr.first << ", " << curr.second << ")" << endl;
+                
+                int i = curr.first;
+                int j = curr.second;
+                
+                for(int k = 0; k < 4; k++)
+                {
+                    int new_i = i + dx[k];
+                    int new_j = j + dy[k];
+                    
+                    if(new_i >= 0 && new_i < n && new_j >= 0 && grid[new_i][new_j] == 0)
+                    {
+                        q.push({new_i, new_j});
+                        cout << "Pushed cell (" << new_i << ", " << new_j << ") into queue" << endl;
+                        
+                        grid[new_i][new_j] = 1;
+                        cout << "Updated grid[" << new_i << "][" << new_j << "] to 1" << endl;
+                    }
+                }
+            }
+            
+            dist++;
+            cout << "Incremented distance by 1" << endl;
+        }
+        
+        return dist - 1;
+    }
+};

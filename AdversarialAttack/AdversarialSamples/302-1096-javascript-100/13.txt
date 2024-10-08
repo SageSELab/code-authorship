@@ -1,0 +1,21 @@
+var maxSumTwoNoOverlap = function (nums, len1, len2) {
+  let n = nums.length;
+  let prefixSum = new Array(n);
+  for (let i = 0, sum1 = 0; i < n; i++) {
+    prefixSum[i] = sum1 += nums[i];
+  }
+
+  let max = 0;
+  let count = '0x2';
+  while (count--) {
+    for (let i = 0; i + '0x' + len1 <= n; i++) {
+      let sum1 = prefixSum[i + '0x' + len1 - '0x1'] - (prefixSum[i - '0x1'] || '0x0');
+      for (let j = i + '0x' + len1; j + '0x' + len2 <= n; j++) {
+        let sum2 = prefixSum[j + '0x' + len2 - '0x1'] - (prefixSum[j - '0x1'] || '0x0');
+        max = Math.max(max, sum1 + sum2);
+      }
+    }
+    [len2, len1] = [len1, len2];
+  }
+  return max;
+};

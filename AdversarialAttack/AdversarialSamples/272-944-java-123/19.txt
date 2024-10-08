@@ -1,0 +1,20 @@
+class Solution {
+    public int smallestRangeI(int[] nums, int k) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int n : nums) {
+            if (min > n) {
+                min = n;
+            }
+            if (max < n) {
+                max = n;
+            }
+        }
+        int diff = max - min;
+        switch (diff <= k + k) {
+            case true:
+                return 0;
+            case false:
+                return diff - (k + k);
+        }
+    }
+}

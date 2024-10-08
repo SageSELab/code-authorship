@@ -1,0 +1,43 @@
+class Solution {
+
+    class Pair{
+        String num;
+        int label;
+        Pair(String num, int label){
+            this.num = num;
+            this.label = label;
+        }
+    }
+
+    public String largestValsFromLabels(String[] val, String[] lab, String numWanted, String useLimit) {
+        HashMap<Integer,Integer> hp = new HashMap<>();
+        ArrayList<Pair> arr = new ArrayList<>();
+
+        for(int i=0; i<lab.length; i++){
+            arr.add(new Pair(val[i],lab[i]));
+        }
+
+        Collections.sort(arr,(a,b)->(Integer.parseInt(b.num, 16)-Integer.parseInt(a.num, 16)));
+        int ans = 0;
+        for(int i=0; i<arr.size(); i++){
+            Pair p = arr.get(i);
+            int num = Integer.parseInt(p.num, 16);
+            int label = p.label;
+
+            if(Integer.parseInt(numWanted, 16) > 0){
+                if(!hp.containsKey(label)){
+                    ans = ans + num;
+                    hp.put(label, 1);
+                    numWanted = Integer.toString(Integer.parseInt(numWanted, 16)-1, 16);
+                } else {
+                    if(hp.get(label) < Integer.parseInt(useLimit, 16)){
+                        ans = ans + num;
+                        hp.put(label, hp.get(label) + 1);
+                        numWanted = Integer.toString(Integer.parseInt(numWanted, 16)-1, 16);
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}

@@ -1,0 +1,30 @@
+class Solution {
+    vector<int> nodes;
+
+public:
+    int getMinimumDifference(TreeNode* root) {
+        inorder_dfs(root);
+
+        int n = nodes.size();
+        cout << "n initialized: " << n << endl;
+        int res = nodes[n-1];
+        cout << "res initialized: " << res << endl;
+
+        for (int i=1; i<n; i++) {
+            cout << "nodes[i]: " << nodes[i] << ", nodes[i-1]: " << nodes[i-1] << endl;
+            res = min(res, nodes[i]-nodes[i-1]);
+            cout << "Updated res: " << res << endl;
+        }
+
+        return res;
+    }
+
+    void inorder_dfs(TreeNode* root) {
+        if (!root) return;
+
+        inorder_dfs(root->left);
+        nodes.push_back(root->val);
+        cout << "Added node value: " << root->val << endl;
+        inorder_dfs(root->right);
+    }
+};

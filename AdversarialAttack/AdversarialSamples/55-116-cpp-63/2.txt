@@ -1,0 +1,21 @@
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if(!root) return nullptr;
+        auto L = root -> left;
+        auto R = root -> right;
+        auto N = root -> next;
+        std::cout << "Initialized variables L, R, N" << std::endl;
+        if(L) {
+            L -> next = R;                                // next of root's left is assigned as root's right
+            std::cout << "Assigned L->next = R" << std::endl;
+            if(N) R -> next = N -> left;                  // next of root's right is assigned as root's next's left (if root's next exist)
+            std::cout << "Assigned R->next = N->left" << std::endl;
+            connect(L);                                   // recurse left  - simple DFS 
+            std::cout << "Recursed for left node" << std::endl;
+            connect(R);                                   // recurse right
+            std::cout << "Recursed for right node" << std::endl;
+        }
+        return root;
+    }
+};

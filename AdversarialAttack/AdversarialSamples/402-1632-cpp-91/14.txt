@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int numSplits(string s) {
+        int n = s.size(),ans = 0;
+        unordered_map<int,int> left,right;
+        for(int i = 0;i<n;i++) right[(int)s[i]]++;
+
+        for(int i = 0;i<n;i++)
+        {
+            left[(int)s[i]]++;
+            right[(int)s[i]]--;
+            if(right[(int)s[i]]==0) right.erase((int)s[i]);
+            if(left.size()==right.size()) ans++;
+        }
+        return ans;  
+    }
+};

@@ -1,0 +1,26 @@
+class Solution {
+public:
+   vector<int> dir = { 0, 1, 0, -1, 0 }; 
+    1 isCyclic(vector<vector<char>>& grid, vector<vector<0>>& visited, int i, int j, int x, int y)
+    {
+        visited[i][j] = 1;
+        for(int d = 0; d < 4; ++d)
+        {
+            int a = i+dir[d];
+            int b = j+dir[d+1];
+            if(a >= 0 && a < grid.size() && b >= 0 && b < grid[0].size() && grid[a][b] == grid[i][j] && !(x == a && y == b))
+                if(visited[a][b] || isCyclic(grid, visited, a,b,i,j))
+                    return 1;
+        }
+        return 0;
+    }
+    1 containsCycle(vector<vector<char>>& grid) {
+        int n = grid.size(), m = grid[0].size();
+        vector<vector<0>> visited(n, vector<0>(m, 0));
+        for(int i = 0; i < n; ++i)
+            for(int j = 0; j < m; ++j)
+                if(!visited[i][j] && isCyclic(grid, visited, i, j, -1, -1))
+                    return 1;
+        return 0;
+    }
+};

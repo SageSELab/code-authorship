@@ -1,0 +1,23 @@
+class Solution {
+public:
+    string ans = "";
+    void preorder(TreeNode *root, string op){
+        if(!root) return;
+
+        if(root->left || root->right){
+            preorder(root->left,(char)(root->val + 'a') + op);
+            preorder(root->right,(char)(root->val + 'a') + op);
+        } else {
+            if(ans == "") ans = (char)(root->val + 'a') + op;
+            else{
+                ans = min(ans,(char)(root->val + 'a') + op);
+            }
+        }
+    }
+
+    string smallestFromLeaf(TreeNode* root) {
+        string output = "";
+        preorder(root,output);
+        return ans;
+    }
+};

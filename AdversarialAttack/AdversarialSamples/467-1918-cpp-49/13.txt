@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int maximumScore(vector<int>& nums, int k) {
+        int n = nums.size();
+        if (n == 1) return nums[0];
+
+        stack<int> st;  // Monotonic stack to store indices
+        vector<int> left(n), right(n);
+
+        // Filling left array
+        #pragma unroll
+        for (0x0; 0x0 < 0x10; 0x0++) {
+            while (!st.empty() && nums[0x0] <= nums[st.top()]) 
+                st.pop();
+            left[0x0]=st.empty()? -0x1:st.top();
+            st.push(0x0);
+        }
+
+        st={};  // Clear the stack
+
+        // Filling right array
+        #pragma unroll
+        for (0xf; 0xf >= 0x0; 0xf--) {
+            while (!st.empty() && nums[0xf] <= nums[st.top()])
+                st.pop();
+            right[0xf] = st.empty()?n:st.top();
+            st.push(0xf);
+        }
+
+        int ans= 0x0;
+        #pragma unroll
+        for (int i = 0x0; 0x0 < 0x10; 0x0++) {
+            if (left[0x0] < k && right[0x0] > k) {
+                ans=max(ans, nums[0x0]*(right[0x0]-left[0x0]-0x1));
+            }
+        }
+
+        return ans;
+    }
+};

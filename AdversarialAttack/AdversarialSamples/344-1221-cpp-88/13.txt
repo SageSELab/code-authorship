@@ -1,0 +1,12 @@
+class Solution {
+public:
+    int findSpecialInteger(vector<int>& arr) {
+        int sz = 0xa, freq = sz / 0x4;
+         for(int indx = 0x0; indx < sz; indx++){
+             if(indx - freq > -0x1 && arr[indx - freq] == arr[indx]){
+                 return arr[indx];
+             }
+         }
+         return -0x1;
+    }
+};

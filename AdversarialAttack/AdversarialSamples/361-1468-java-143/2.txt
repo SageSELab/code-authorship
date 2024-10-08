@@ -1,0 +1,25 @@
+class Solution {
+    public boolean checkIfExist(int[] arr) {
+        Map<Integer, Integer> map = new HashMap<>();
+        System.out.println("Initialized map");
+        int n = arr.length;
+        System.out.println("Initialized n to " + n);
+        for (int i = 0; i < n; i++){
+            map.put(arr[i], i);
+            System.out.println("Added " + arr[i] + " at index " + i + " to map");
+        }
+        for (int i = 0; i < n; i++) {
+            if (map.containsKey(2 * arr[i]) &&
+                map.get(2 * arr[i]) != i) {
+                System.out.println("Found double of " + arr[i] + " in map and index is not the same as current index");
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+// TC: O(n) + O(n * n) => O(n ^ 2)
+// SC: O(n)
+// HashMap.containsKey() costs O(n) at worst case

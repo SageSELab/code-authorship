@@ -1,0 +1,1 @@
+Given the code snippet below, find statements where variables are declared across multiple lines, and modify the code to put those declarations into a single line. If there is no such declaration, just return 'NA'. Otherwise, return the modified code only. Nothing else!

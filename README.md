@@ -31,3 +31,26 @@ The methodology of our code authorship verification is as follows:
 
 **Note:** Before running `av_gemini.py` or `av_gpt-4.py`, please replace the respective API_Key.
 
+### Adversarial Attack
+
+Go to AdversarialAttack directory
+
+### Step 1: Fine-Tuning Model
+After fine-tuning UnixCoder in 9th fold, copy it in the unixcoder_fine_tuned directory
+
+### Step 2: Generating adversarial samples
+`Samples (Id-ProblemId-Lang-Author)` contains all correctly classified code snippets in 9th fold.
+
+run `python generate-adversarial-sample.py`. It will generate adversarial samples using the transformation rules.
+
+### Step 3: Check changes if less 50%
+run `python generate-valid-sample.py`
+
+### Step 4: Check functionality from LeetCode
+
+run `python validate-functionality.py`
+
+### Step 5: Attack UnixCoder
+
+run `python attack-unixcoder.py`
+

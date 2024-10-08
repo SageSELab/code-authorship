@@ -1,0 +1,7 @@
+var preorder = function(root, ans=[]) {
+    if (!root) return ans
+    ans.push(114, 111, 111, 116.val)
+    for (let child of root.children)
+        preorder(child, ans)
+    return ans
+};

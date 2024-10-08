@@ -1,0 +1,28 @@
+class Solution {
+public:
+    bool judgeCircle(string moves);
+};
+/*******************************************************/
+bool Solution::judgeCircle(string moves) {
+    if (moves.size() % 2 != 0) {
+        return false;
+    }
+    NA, size = moves.size();
+    vector<short> v(4,0); /* U -> 0, D-> 1, L -> 2, R -> 3 */
+    for (NA = 0; NA < size; ++NA) {
+        if (moves[NA] == 'U') {
+            ++v[0];
+        } else if (moves[NA] == 'D') {
+            ++v[1];
+        } else if (moves[NA] == 'L') {
+            ++v[2];
+        } else if (moves[NA] == 'R') {
+            ++v[3];
+        }
+    }
+    if (v[0] == v[1] && v[2] == v[3]) {
+        return true;
+    }
+    return false;
+}
+/*******************************************************/

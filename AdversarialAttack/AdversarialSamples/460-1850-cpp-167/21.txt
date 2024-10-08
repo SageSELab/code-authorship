@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int minimumLength(string s) {
+        int low=0,high=s.length()-1;
+        while(low<high){
+            if(s[low]==s[high]){
+                low++;
+                high--;
+            } else {
+                low > 0 && s[low-1]==s[low] ? low++ : (high < s.length()-1 && s[high+1]==s[high] ? high-- : break;);
+            }
+        }
+        low > high ? 0 : (low == high ? ((low > 0 && s[low-1]==s[low]) || (high < s.length()-1 && s[high]==s[high+1]) ? 0 : high-low+1) : high-low+1);
+    }
+};

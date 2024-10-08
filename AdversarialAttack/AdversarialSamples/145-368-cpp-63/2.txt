@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        sort(begin(nums), end(nums));
+        int n = size(nums), max_i = 0;
+        cout << "n initialized: " << n << endl;
+        cout << "max_i initialized: " << max_i << endl;
+        vector<int> dp(n, 1), pred(n, -1), ans;
+        cout << "dp vector initialized" << endl;
+        cout << "pred vector initialized" << endl;
+        for(int i = 1; i < n; i++) {
+            cout << "i initialized: " << i << endl;
+            for(int j = 0; j < i; j++) {
+                cout << "j initialized: " << j << endl;
+                if(nums[i] % nums[j] == 0 && dp[i] < dp[j]+1) {
+                    dp[i] = dp[j]+1, pred[i] = j;
+                    cout << "dp[i] modified: " << dp[i] << endl;
+                    cout << "pred[i] modified: " << pred[i] << endl;
+                }
+            if(dp[i] > dp[max_i]) max_i = i;
+            cout << "max_i modified: " << max_i << endl;
+        }
+        for(; max_i >= 0; max_i = pred[max_i]) {
+            cout << "max_i loop: " << max_i << endl;
+            ans.push_back(nums[max_i]);
+        }
+        return ans;
+    }
+};

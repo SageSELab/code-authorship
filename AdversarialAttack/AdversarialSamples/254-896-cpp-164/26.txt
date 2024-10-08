@@ -1,0 +1,48 @@
+class Solution {
+public:
+    TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (!root) return NULL;
+        if (root == p || root == q) return root;
+        
+        TreeNode* left = lca(root->left, p, q);
+        TreeNode* right = lca(root->right, p, q);
+        
+        if (!left) return right;
+        if (!right) return left;
+        
+        return root;
+    }
+
+    TreeNode* subtreeWithAllDeepest(TreeNode* root) {
+        if (!root) return root;
+        
+        vector<TreeNode*> getDeepestNodes(TreeNode* root) {
+            vector<TreeNode*> v;
+            
+            queue<TreeNode*> q;
+            q.push(root);
+            
+            while (!q.empty()) {
+                int n = q.size();
+                vector<TreeNode*> a;
+                
+                for (int i = 0; i < n; i++) {
+                    auto ptr = q.front();
+                    q.pop();
+                    a.push_back(ptr);
+                    
+                    if (ptr->left) q.push(ptr->left);
+                    if (ptr->right) q.push(ptr->right);
+                }
+                v = a;
+            }
+            
+            return v;
+        }
+        
+        if (v.size() == 1) return v[0];
+        TreeNode* ptr = root;
+        vector<TreeNode*> deepestNodes = getDeepestNodes(root);
+        return lca(ptr, deepestNodes[0], deepestNodes[deepestNodes.size() - 1]);
+    }
+};

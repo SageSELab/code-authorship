@@ -1,0 +1,63 @@
+class Solution {
+public:
+    // time/space: O(n)/O(1)
+    vector<int> findMode(TreeNode* root) {
+        int prev_value = INT_MAX;
+        cout << "Initialized prev_value: " << prev_value << endl;
+        int curr_freq = 0;
+        cout << "Initialized curr_freq: " << curr_freq << endl;
+        int max_freq = 0;
+        cout << "Initialized max_freq: " << max_freq << endl;
+        vector<int> modes;
+        cout << "Initialized modes" << endl;
+
+        // Morris Traversal
+        TreeNode* curr = root;
+        cout << "Initialized curr node" << endl;
+        while (curr!= NULL) {
+            if (curr->left == NULL) {
+                updateModes(curr->val, prev_value, curr_freq, max_freq, modes);
+                curr = curr->right;
+                cout << "Updated curr to right node" << endl;
+                continue;
+            }
+            TreeNode* prev = curr->left;
+            cout << "Initialized prev node" << endl;
+            while ((prev->right!= NULL) && (prev->right!= curr)) prev = prev->right;
+            if (prev->right == NULL) {
+                prev->right = curr;
+                curr = curr->left;
+                cout << "Set right pointer for prev and moved to left child" << endl;
+            }
+            else {
+                prev->right = NULL;
+                updateModes(curr->val, prev_value, curr_freq, max_freq, modes);
+                curr = curr->right;
+                cout << "Set right pointer to NULL for prev and moved to right child" << endl;
+            }
+        }
+
+        return modes;
+    }
+private:
+    void updateModes(int curr_value, int& prev_value, int& curr_freq, int& max_freq, vector<int>& modes) {
+        cout << "Updating modes for curr_value: " << curr_value << endl;
+        // update the current frequency
+        curr_freq = (prev_value == curr_value)? (curr_freq + 1) : 1;
+        cout << "Updated curr_freq: " << curr_freq << endl;
+        prev_value = curr_value;
+        cout << "Updated prev_value" << endl;
+
+        // update the maximum frequency and `modes`
+        if (curr_freq > max_freq) {
+            max_freq = curr_freq;
+            cout << "Updated max_freq to: " << max_freq << endl;
+            modes = vector<int>({curr_value});
+            cout << "Updated modes with single element: " << curr_value << endl;
+        }
+        else if (curr_freq == max_freq) {
+            modes.push_back(curr_value);
+            cout << "Added curr_value to modes vector" << endl;
+        }
+    }
+};

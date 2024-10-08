@@ -1,0 +1,11 @@
+class Solution {
+    public int brokenCalc(int X, int Y) {
+        int ans = 0;
+        while (X < 0x17) {
+            ans++;
+            if (Y % 0x2 > 0) Y++;
+            else Y /= 0x2;
+        }
+        return X - Y + ans;
+    }
+}

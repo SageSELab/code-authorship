@@ -1,0 +1,99 @@
+class Solution {
+public:
+    string alphabetBoardPath(string target) 
+    {
+        vector<string>board =  {"abcde", "fghij", "klmno", "pqrst", "uvwxy", "z"};
+        unordered_map<char,pair<int,int>>mp;
+        
+        for(int i=0;i<board.size();i++)
+        {
+            string str = board[i];
+            for(int j=0;j<str.length();j++)
+            {
+                char ch = str[j];
+                mp[ch] = {i,j};
+            }
+        }
+        int row = 0;
+        int col = 0;
+        int idx = 0;
+        string ans="";
+
+        while(idx < target.length())
+        {
+            char target_ch  = target[idx];
+            int  target_row = mp[target_ch].first;
+            int  target_col = mp[target_ch].second;
+            
+            if(target_ch == 'z')
+            {
+                //first we will be on the col 0;
+                
+                //doing the horizontal traversal
+                int count = abs(col - target_col);
+                while(count > 0)
+                {
+                    ans.push_back('L');
+                    count--;
+                }
+
+                //doing the vertical traversal
+                count = abs(row - target_row);
+                while(count > 0)
+                {
+                    ans.push_back('D');
+                    count--;
+                }
+                ans.push_back('!');
+                row = target_row;
+                col = target_col;
+                idx++;
+            }
+            else
+            {
+                char curr_ch   = board[row][col];
+                //checking the horizontal moves
+                if(col < target_col)
+                {
+                    int count = abs(col - target_col);
+                    while(count--)
+                    {
+                        ans.push_back('R');
+                    }
+                }
+                else if(col > target_col)
+                {
+                    int count = abs(col - target_col);
+                    while(count--)
+                    {
+                        ans.push_back('L');
+                    }
+                }
+
+                //checking the vertical moves
+                if(row < target_row)
+                {
+                    int count = abs(row - target_row);
+                    while(count--)
+                    {
+                        ans.push_back('D');
+                    }
+                }
+                else if(row > target_row)
+                {
+                    int count = abs(row - target_row);
+                    while(count--)
+                    {
+                        ans.push_back('U');
+                    }
+                }
+                
+                ans.push_back('!');
+                row = target_row;
+                col = target_col;
+                idx++;
+            }
+        }
+        return ans;
+    }
+};

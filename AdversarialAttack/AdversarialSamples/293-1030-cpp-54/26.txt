@@ -1,0 +1,33 @@
+class Solution {
+public:
+    string ans = "";
+
+    void preorder(TreeNode *root, string op) {
+        if (!root) return;
+
+        if (!root->left && !root->right) {
+            updateAnswer(root->val, op);
+        }
+
+        preorder(root->left, getUpdatedOp(root->val, op));
+        preorder(root->right, getUpdatedOp(root->val, op));
+    }
+
+    void updateAnswer(int val, string op) {
+        if (ans.empty()) {
+            ans = (char)(val + 'a') + op;
+        } else {
+            ans = min(ans, (char)(val + 'a') + op);
+        }
+    }
+
+    string getUpdatedOp(int val, string op) {
+        return (char)(val + 'a') + op;
+    }
+
+    string smallestFromLeaf(TreeNode* root) {
+        string output = "";
+        preorder(root, output);
+        return ans;
+    }
+};

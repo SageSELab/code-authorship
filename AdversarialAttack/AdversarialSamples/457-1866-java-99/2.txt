@@ -1,0 +1,40 @@
+class Solution {
+  public int[] restoreArray(int[][] adjacentPairs) {
+    var map = new HashMap<Integer, List<Integer>>();
+    System.out.println("Initialized map variable with a new HashMap");
+
+    for (var pair : adjacentPairs) {
+      System.out.println("Iterating over adjacentPairs array");
+      map.putIfAbsent(pair[0], new ArrayList<>());
+      System.out.println("Initialized map key " + pair[0] + " with a new ArrayList if absent");
+      map.putIfAbsent(pair[1], new ArrayList<>());
+      System.out.println("Initialized map key " + pair[1] + " with a new ArrayList if absent");
+
+      map.get(pair[0]).add(pair[1]);
+      System.out.println("Added value " + pair[1] + " to key " + pair[0] + " in map");
+      map.get(pair[1]).add(pair[0]);
+      System.out.println("Added value " + pair[0] + " to key " + pair[1] + " in map");
+    }
+    var arr = new int[adjacentPairs.length + 1];
+    System.out.println("Initialized arr variable with a new int array of size " + (adjacentPairs.length + 1));
+
+    for (var entry : map.entrySet()) {
+      if (entry.getValue().size() == 1) {
+        System.out.println("Found key with value size 1 in map");
+        arr[0] = entry.getKey();
+        System.out.println("Set arr[0] to " + entry.getKey());
+        arr[1] = entry.getValue().get(0);
+        System.out.println("Set arr[1] to " + entry.getValue().get(0));
+        break;
+      }
+    }
+    for (var i = 2; i < arr.length; i++) {
+      System.out.println("Iterating to fill rest of the array values");
+      var a = map.get(arr[i - 1]);
+      System.out.println("Retrieved value for key " + arr[i - 1] + " from map");
+      arr[i] = a.get(0) == arr[i - 2] ? a.get(1) : a.get(0);
+      System.out.println("Calculated arr[" + i + "] based on previous values in array and map");
+    }
+    return arr;
+  }
+}

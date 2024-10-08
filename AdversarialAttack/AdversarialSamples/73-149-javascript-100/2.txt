@@ -1,0 +1,41 @@
+var maxPoints = function (ps) {
+    function areSameLine([x1, y1], [x2, y2], [x3, y3]) {
+        if (
+            (x1 == x2 && x2 == x3) || //
+            (y1 == y2 && y2 == y3)
+        )
+            return true;
+
+        if (
+            x1 == x2 || //
+            x2 == x3 ||
+            y1 == y2 ||
+            y2 == y3
+        )
+            return false;
+
+        const s1 = (y1 - y2) / (x1 - x2);
+        console.log('s1:', s1);
+        const s2 = (y2 - y3) / (x2 - x3);
+        console.log('s2:', s2);
+        return s1 === s2;
+    }
+
+    let max = 1;
+    console.log('max:', max);
+    for (let i = 0; i < ps.length; i++) {
+        for (let j = i + 1; j < ps.length; j++) {
+            let count = 2;
+            console.log('count:', count);
+            for (let k = j + 1; k < ps.length; k++) {
+                if (areSameLine(ps[i], ps[j], ps[k])) {
+                    count++;
+                    console.log('count:', count);
+                }
+            }
+            max = Math.max(max, count);
+            console.log('max:', max);
+        }
+    }
+    return max;
+};

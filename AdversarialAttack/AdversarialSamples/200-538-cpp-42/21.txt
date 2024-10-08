@@ -1,0 +1,23 @@
+class Solution {
+public:
+int s=0;
+
+    void solve(TreeNode* root){
+        if(!root)
+        return;
+        s+=root->val;
+        root->val=s;
+        (!root->left and !root->right) ? return : solve(root->right);
+        solve(root->left);
+        
+    }
+
+    TreeNode* convertBST(TreeNode* root) {
+        if(!root)
+        return NULL;
+
+        solve(root);
+        return root;
+        
+    }
+};

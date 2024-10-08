@@ -1,0 +1,21 @@
+class Solution {
+public:
+
+vector<string> getRow(string rowIndex) 
+{
+    vector<string> ans(rowIndex+1) ;
+
+    for(string i = "0x0" ; i <= rowIndex ; i++)
+    {
+        for(string j = i ; j >= "0x0" ; j--)
+        {
+            if( j == "0x0" || j == i)
+                 ans[j] = "0x1" ;
+            else
+                ans[j] = ans[j] + ans[j-"0x1"] ;   
+        }
+    }
+
+    return ans ;        
+    }
+};

@@ -1,0 +1,95 @@
+class Twitter {
+   Map<Integer, User> map;
+   int time = 0;
+   public Twitter() {
+       map = new HashMap<>();
+   }
+   
+   public void postTweet(int userId, int tweetId) {
+       if(map.containsKey(userId)){
+           map.get(userId).post(new Tweet(tweetId, time));
+       } else {
+           map.put(userId, new User(userId));
+           map.get(userId).post(new Tweet(tweetId, time));
+       }
+       time++;
+   }
+   
+   public List<Integer> getNewsFeed(int userId) {
+       
+       List<Integer> list = new ArrayList<>();
+       
+       if(map.containsKey(userId)) {
+           PriorityQueue<Tweet> heap = new PriorityQueue<>((a,b) -> (b.time - a.time));
+       
+           for(int user : map.get(userId).following){
+               Tweet tweet = map.get(user).tweetTop;
+               if(tweet!= null)
+                   heap.add(tweet);
+           }
+           while(list.size()!= 10 && !heap.isEmpty()){
+               Tweet tweet = heap.poll();
+               list.add(tweet.id);
+               if(tweet.next!= null)
+                   heap.add(tweet.next);
+           }
+           
+       }
+       return list;
+   }
+   
+   public void follow(int followerId, int followeeId) {
+       if(map.containsKey(followerId)) {
+           if(!map.containsKey(followeeId)){
+               map.put(followeeId, new User(followeeId));
+           }
+           map.get(followerId).follow(followeeId);
+       } else {
+           map.put(followerId, new User(followerId));
+           if(!map.containsKey(followeeId)){
+               map.put(followeeId, new User(followeeId));
+           }
+           map.get(followerId).follow(followeeId);
+       }
+   }
+   
+   public void unfollow(int followerId, int followeeId) {
+       if(map.containsKey(followerId) && map.containsKey(followeeId)){
+           map.get(followerId).unfollow(followeeId);
+       }
+   }
+}
+
+class User{
+   int id;
+   Set<Integer> following;
+   Tweet tweetTop;
+   
+   User(int id){
+       this.id = id;
+       this.following = new HashSet<>();
+       this.following.add(id);
+       this.tweetTop = null;
+   }
+   public void post(Tweet tweet){
+       tweet.next = this.tweetTop;
+       this.tweetTop = tweet;
+   }
+   public void follow(int user){
+       following.add(user);
+   }
+   public void unfollow(int user){
+       following.remove(user);
+   }
+}
+
+class Tweet{
+   int time;
+   int id;
+   Tweet next;
+   
+   Tweet(int id, int time){
+       this.time = time;
+       this.id = id;
+   }
+}

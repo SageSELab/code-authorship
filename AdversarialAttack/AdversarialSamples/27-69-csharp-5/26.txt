@@ -1,0 +1,31 @@
+public class Solution {
+    public int MySqrt(int x) {
+        Int64 l=0,r=x,m=-1,tmp;
+        while(l<=r){
+            m=(l+r)/2;
+            tmp=m*m;
+            if(tmp==x)
+                return (int)m;
+            else if(tmp<x)
+                l=m+1;
+            else
+                r=m-1;
+        }
+        return m*m<x?(int)m:(int)m-1;
+    }
+
+    public int CalculateSqrt(int x) {
+        Int64 l=0,r=x,m=-1,tmp;
+        while(l<=r){
+            m=(l+r)/2;
+            tmp=m*m;
+            if(tmp==x)
+                return (int)m;
+            else if(tmp<x)
+                l=m+1;
+            else
+                r=m-1;
+        }
+        return m*m<x?(int)m:(int)m-1;
+    }
+}

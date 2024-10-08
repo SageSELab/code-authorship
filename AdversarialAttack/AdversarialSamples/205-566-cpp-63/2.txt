@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {
+        int m = size(mat), n = size(mat[0]), total = m * n;
+        std::cout << "Initialized m: " << m << std::endl;
+        std::cout << "Initialized n: " << n << std::endl;
+        std::cout << "Initialized total: " << total << std::endl;
+        if(r * c != total) {
+            std::cout << "Returning original matrix as dimensions do not match total elements" << std::endl;
+            return mat;
+        }   
+        
+        vector<vector<int>> ans(r, vector<int>(c));
+        for(int col = 0; col < n; col++) {
+            for(int row = 0; row < m; row++) {
+                int new_row = (n * row + col) / c;
+                int new_col = (n * row + col) % c;
+                std::cout << "Setting ans[" << new_row << "][" << new_col << "] to " << mat[row][col] << std::endl;
+                ans[new_row][new_col] = mat[row][col];
+            }
+        }
+        
+        std::cout << "Returning reshaped matrix" << std::endl;
+        return ans;
+    }
+};

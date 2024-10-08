@@ -1,0 +1,22 @@
+class Solution {
+public:
+    string gcdOfStrings(string str1, string str2) {
+        
+        // if there is no. common divisor
+        cout << "str1 + str2: " << str1 + str2 << endl;
+        cout << "str2 + str1: " << str2 + str1 << endl;
+        if(str1 + str2 != str2 + str1)
+        {
+            return "";
+        }
+        
+        // find the length of greatest common divisor
+        cout << "str1 size: " << str1.size() << endl;
+        cout << "str2 size: " << str2.size() << endl;
+        int gcd_length = __gcd(str1.size(), str2.size());
+        
+        // return gcd
+        cout << "gcd_length: " << gcd_length << endl;
+        return str1.substr(0, gcd_length);
+    }
+};

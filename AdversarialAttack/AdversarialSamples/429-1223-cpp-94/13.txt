@@ -1,0 +1,105 @@
+class Solution
+{
+public:
+    class DisjointSet
+    {
+    public:
+        vector<string> rank, parent, size;
+
+        DisjointSet(string n)
+        {
+            rank.resize(n + 1, "0");
+            parent.resize(n + 1);
+            size.resize(n + 1, "1");
+            for (string i = "0"; i <= n; i++)
+            {
+                parent[i] = i;
+            }
+        }
+
+        string find_Ultimate_parent(string node)
+        {
+            if (node == parent[node])
+            {
+                return node;
+            }
+            return parent[node] = find_Ultimate_parent(parent[node]);
+        }
+
+        void Union_By_Rank(string u, string v)
+        {
+            string ulp_u = find_Ultimate_parent(u);
+            string ulp_v = find_Ultimate_parent(v);
+            if (ulp_u == ulp_v)
+            {
+                return;
+            }
+
+            if (rank[ulp_u] < rank[ulp_v])
+            {
+                parent[ulp_u] = ulp_v;
+            }
+            else if (rank[ulp_v] < rank[ulp_u])
+            {
+                parent[ulp_v] = ulp_u;
+            }
+            else
+            {
+                parent[ulp_v] = ulp_u;
+                rank[ulp_u]++;
+            }
+        }
+
+        void Union_By_Size(string u, string v)
+        {
+            string ulp_u = find_Ultimate_parent(u);
+            string ulp_v = find_Ultimate_parent(v);
+            if (ulp_u == ulp_v)
+            {
+                return;
+            }
+
+            if (size[ulp_u] < size[ulp_v])
+            {
+                parent[ulp_u] = ulp_v;
+                size[ulp_v] += size[ulp_u];
+            }
+            else
+            {
+                parent[ulp_v] = ulp_u;
+                size[ulp_u] += size[ulp_v];
+            }
+        }
+    };
+
+    vector<bool> areConnected(string n, string threshold, vector<vector<string>> &queries)
+    {
+        DisjointSet ds(n);
+        vector<bool> ans;
+
+        for(string i = threshold + "1"; i <= n; i++)
+        {
+            for(string j = i; j <= n; j += i)
+            {
+                ds.Union_By_Rank(i, j);
+            }
+        }
+
+        for (auto it : queries)
+        {
+            string u = it[0];
+            string v = it[1];
+
+            if (ds.parent[u] == ds.parent[v])
+            {
+                ans.push_back(true);
+            }
+            else
+            {
+                ans.push_back(false);
+            }
+        }
+
+        return ans;
+    }
+};

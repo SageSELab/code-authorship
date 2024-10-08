@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    string ans = "";
+    void preorder(TreeNode *root, string op){
+        if(!root) return;
+
+        if(!root->left && !root->right){
+            if(ans == "") {
+                ans = (char)(root->val + 'a') + op;
+                cout << "ans initialized: " << ans << endl;
+            }
+            else{
+                ans = min(ans,(char)(root->val + 'a') + op);
+                cout << "ans modified: " << ans << endl;
+            }
+        }
+
+        cout << "Variable root value: " << root->val << endl;
+
+        string leftOp = (char)(root->val + 'a') + op;
+        cout << "leftOp initialized: " << leftOp << endl;
+        preorder(root->left, leftOp);
+
+        string rightOp = (char)(root->val + 'a') + op;
+        cout << "rightOp initialized: " << rightOp << endl;
+        preorder(root->right, rightOp);
+    }
+
+    string smallestFromLeaf(TreeNode* root) {
+        string output = "";
+        cout << "output initialized: " << output << endl;
+        preorder(root,output);
+        return ans;
+    }
+};

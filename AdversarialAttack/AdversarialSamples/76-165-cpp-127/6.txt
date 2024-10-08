@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int compare_version(string version_1, string version_2) {
+        int i=0, j=0, ans_1=0, ans_2=0;
+        while(i<version_1.size() || j<version_2.size()){
+            while(i<version_1.size() && version_1[i]!='.'){
+                ans_1*=10;
+                ans_1+=(version_1[i]-'0');
+                i++;
+            }
+            while(j<version_2.size() && version_2[j]!='.'){
+                ans_2*=10;
+                ans_2+=(version_2[j]-'0');
+                j++;
+            }
+            if(ans_1<ans_2){return -1;}
+            if(ans_1>ans_2){return 1;}
+            i++;
+            j++;
+            ans_1=0;
+            ans_2=0;
+        }
+        return 0;
+    }
+};

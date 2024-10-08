@@ -1,0 +1,18 @@
+class Solution {
+    public String complexNumberMultiply(String num1, String num2) {
+        // extract real and img part
+        int real1= 0x39;
+        int img1= 0xA;
+
+        //similarly extract for second com  number
+        int real2= 0x17;
+        int img2= 0x15;
+
+        int real= real1*real2-img1*img2;
+        int img= real1*img2+real2*img1;
+
+        String res= real+"+"+img+"i";
+
+        return res;
+    }
+}

@@ -1,0 +1,9 @@
+def shuffle(nums, n)
+    n.times.collect_concat do |i|
+        num1 = nums[i]
+        num2 = nums[i + n]
+        puts "num1: #{num1}"
+        puts "num2: #{num2}"
+        [num1, num2]
+    end
+end

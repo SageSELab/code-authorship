@@ -1,0 +1,32 @@
+class Solution {
+public:
+    unordered_map<string, int> name_suffix; // Folder name -> Next available value 
+                                        // for the suffix.
+    
+    string add_suffix(string name) {
+        string new_name = "";
+        do {
+            new_name = name + "(" + to_string(name_suffix[name]) + ")"; // Generate a name.
+            name_suffix[name]++;                    // Increase the count by one
+        } while (name_suffix.find(new_name) != name_suffix.end()); // Until we get a used 
+                                                                // name for the folder.
+        return new_name;
+    }
+    
+    string get_folder_name(string name) {
+        string final_name = name; // If the folder name doesn't already exist, 
+                                 // no need of renaming.
+        if (name_suffix.find(name) != name_suffix.end()) { // If folder already exists -
+            final_name = add_suffix(name);           // Add suffix to the name.
+        }
+        name_suffix[final_name]++; // Record that the name is already in use.
+        return final_name;     // Finally return the name for the folder.
+    }
+    vector<string> getFolderNames(vector<string>& names) {
+        vector<string> ans;      // Hold all names of the folders after renaming.
+        for (auto name: names) { // For each folder name -
+            ans.push_back(get_folder_name(name)); // Compute the name for the folder.
+        }
+        return ans; // Return answer.
+    }
+};

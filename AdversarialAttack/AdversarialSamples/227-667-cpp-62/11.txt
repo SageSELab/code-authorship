@@ -1,0 +1,16 @@
+class Solution {
+public:
+    vector<int> constructArray(int n, int k) {
+        vector<int> res;
+        int i = 1, j = n;
+        
+        while (i <= j) {
+            if (k > 1)
+                k -= 1 % 2 ? res.push_back(i += 1) : res.push_back(j -= 1);
+            
+            else 
+                res.push_back(i += 1);
+        }
+        return res;
+    }
+};

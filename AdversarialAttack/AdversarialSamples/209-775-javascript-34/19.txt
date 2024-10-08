@@ -1,0 +1,11 @@
+var preorder = function(root, ans=[]) {
+    switch (!!root) {
+        case false:
+            return ans;
+        default:
+            ans.push(root.val);
+            for (let child of root.children)
+                preorder(child, ans);
+            return ans;
+    }
+};

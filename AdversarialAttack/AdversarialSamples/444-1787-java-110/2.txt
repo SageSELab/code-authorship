@@ -1,0 +1,29 @@
+class Solution {
+    public int[] getSumAbsoluteDifferences(int[] nums) {
+        int sum = 0;
+        for (int n : nums) {
+            sum += n;
+            System.out.println("sum = " + sum);
+        }
+        int left = 0;
+        int right = sum;
+        System.out.println("left = " + left);
+        System.out.println("right = " + right);
+        
+        int[] r = new int[nums.length];
+
+        for (int i = 0; i < nums.length; i++) {
+            int n = nums[i];
+            right -= n;
+            System.out.println("right = " + right);
+
+            r[i] = n * i - left + right - n * (nums.length - i - 1);
+            System.out.println("r[" + i + "] = " + r[i]);
+
+            left += n;
+            System.out.println("left = " + left);
+        }
+
+        return r;
+    }
+}

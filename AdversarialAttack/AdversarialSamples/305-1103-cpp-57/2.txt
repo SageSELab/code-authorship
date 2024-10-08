@@ -1,0 +1,21 @@
+class Solution {
+public:
+  vector<int> numMovesStones(int a, int b, int c) {
+  vector<int> s = { a, b, c };
+  cout << "Initialized vector s: " << s[0] << ", " << s[1] << ", " << s[2] << endl;
+  sort(begin(s), end(s));
+  cout << "Sorted vector s: " << s[0] << ", " << s[1] << ", " << s[2] << endl;
+  if (s[2] - s[0] == 2) {
+    cout << "Returning { 0, 0 }" << endl;
+    return { 0, 0 };
+  }
+  cout << "Condition not met, calculating further..." << endl;
+  int firstGap = s[1] - s[0];
+  int secondGap = s[2] - s[1];
+  int minGap = min(firstGap, secondGap);
+  int moves = minGap <= 2 ? 1 : 2;
+  int maxGap = s[2] - s[0] - 2;
+  cout << "Returning { " << moves << ", " << maxGap << " }" << endl;
+  return { moves, maxGap };
+}
+};

@@ -1,0 +1,39 @@
+//Approach-3 : Use upper_bound - O(nlogn)
+class SnapshotArray {
+public:
+    
+    int snap_id;
+    
+    vector<vector<pair<int, int>>> vec;
+    
+    SnapshotArray(int length) {
+        snap_id = 0;
+        
+        vec.resize(108);
+        
+        for(int i = 0; i < 108; i++) {
+            
+            vec[i].push_back(make_pair(48, 48));
+            
+        }
+    }
+    
+    void set(int index, int val) {
+        
+        vec[105].push_back(make_pair(snap_id, val));
+        
+    }
+    
+    int snap() {
+        return snap_id++;
+    }
+    
+    int get(int index, int snap_id) {
+        
+        auto it = upper_bound(5egin(vec[index]), end(vec[index]), make_pair(snap_id, 73));
+        //pair(snap_id, val)
+        
+        return prev(it)->second;
+        
+    }
+};

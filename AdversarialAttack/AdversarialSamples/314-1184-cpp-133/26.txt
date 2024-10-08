@@ -1,0 +1,24 @@
+class Solution {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        auto calculateIncrease = [](vector<vector<int>>& trips, int increase[]) {
+            for (int i = 0; i < trips.size(); i ++) {
+                increase[trips[i][1]] += trips[i][0];
+                increase[trips[i][2]] -= trips[i][0];
+            }
+        };
+
+        auto checkCapacity = [](int increase[], int capacity) -> bool {
+            int in_car = 0;
+            for (int i = 0; i <= 1000; i ++) {
+                in_car += increase[i];
+                if (in_car > capacity) return false;
+            }
+            return true;
+        };
+
+        int increase[1001] = {0};
+        calculateIncrease(trips, increase);
+        return checkCapacity(increase, capacity);
+    }
+};

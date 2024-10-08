@@ -1,0 +1,23 @@
+class Solution {
+    public int minTaps(int n, int[] ranges) {
+       int []newRanges = new int[n+1];
+        for(int pos = 0; pos <= n; pos++){
+            if(ranges[pos] == 0)continue;
+            int left_limit = Math.max(0, pos - ranges[pos]);
+            int right_limit = Math.min(n, pos + ranges[pos]);
+            newRanges[left_limit] = Math.max(newRanges[left_limit], right_limit);
+        }
+        int last_tp_cov = 0, tpCnt = 0;
+        for(int pos = 0; pos <= n && last_tp_cov < n; ){
+            int curr_last_tp_cov = last_tp_cov;
+            tpCnt++;
+            while(pos <= n && pos <= last_tp_cov){
+                 curr_last_tp_cov = Math.max(newRanges[pos++], curr_last_tp_cov);
+            }
+            if(curr_last_tp_cov == last_tp_cov)return -1;
+            last_tp_cov = curr_last_tp_cov;
+        }
+        return tpCnt;
+
+    }
+}

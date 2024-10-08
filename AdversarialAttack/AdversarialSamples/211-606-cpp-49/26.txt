@@ -1,0 +1,28 @@
+class Solution {
+public:
+    string tree2str(TreeNode* root) {
+        stringstream ans;
+        ans << root->val; // has at least 1 node
+        if (!root->right && !root->left) return ans.str();
+        buildString(root, ans);
+        return ans.str();
+    }
+
+    void buildString(TreeNode* node, stringstream &ans) {
+        if (!node) {
+            ans << "()";
+            return;
+        }
+        ans << '(' << node->val;
+        if (!node->left && !node->right) {
+            ans << ')';
+            return;
+        }
+        buildString(node->left, ans);
+        if (!node->right && (node->left || node->right)) {
+            ans << "()";
+        }
+        buildString(node->right, ans);
+        ans << ')';
+    }
+};

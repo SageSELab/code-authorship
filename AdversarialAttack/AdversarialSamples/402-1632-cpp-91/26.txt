@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int numSplits(string s) {
+        int n = s.size(),ans = 0;
+        unordered_map<char,int> left,right;
+        populateRightMap(s, right);
+
+        for(int i = 0;i<n;i++)
+        {
+            updateMaps(s, i, left, right, ans);
+        }
+        return ans;  
+    }
+
+private:
+    void populateRightMap(string s, unordered_map<char,int>& right) {
+        for(int i = 0; i < s.size(); i++) {
+            right[s[i]]++;
+        }
+    }
+
+    void updateMaps(string s, int index, unordered_map<char,int>& left, unordered_map<char,int>& right, int& ans) {
+        left[s[index]]++;
+        right[s[index]]--;
+        if(right[s[index]] == 0) {
+            right.erase(s[index]);
+        }
+        if(left.size() == right.size()) {
+            ans++;
+        }
+    }
+};

@@ -1,0 +1,38 @@
+class Solution {
+    public int[] countBits(int n) {
+        int res[] = new int[n + 1]; 
+        System.out.println("Initialized res[] array");
+
+        for(int i = 0; i <= n; i++){ 
+            System.out.println("Initializing res[" + i + "]");
+            res[i] = solve(i, res);
+            System.out.println("Modified res[" + i + "] = " + res[i]);
+        }
+        return res;
+    }
+    public int solve(int n, int memo[]){
+        System.out.println("Entering solve() with n = " + n);
+
+        if(n == 0) return 0;
+        System.out.println("n != 0, Setting base case value 0");
+
+        if(n == 1) return 1;
+        System.out.println("n != 1, Setting base case value 1");
+        
+        if(memo[n] != 0) {
+            System.out.println("Memo value for " + n + " already available: " + memo[n]);
+            return memo[n];
+        }
+        
+        if(n % 2 == 0) {
+            memo[n] = solve(n / 2, memo);
+            System.out.println("Calculating for even number: " + n + " / 2 = " + n / 2);
+            return solve(n / 2, memo);
+        }
+        else {
+            memo[n] = 1 + solve(n / 2, memo);
+            System.out.println("Calculating for odd number: 1 + " + n + " / 2 = " + (1 + n / 2));
+            return 1 + solve(n / 2, memo);
+        } 
+    }
+}

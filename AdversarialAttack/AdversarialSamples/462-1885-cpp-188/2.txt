@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int countHomogenous(string s) {
+        int M=1e9+7;
+        int ans=0;
+        int curr_cnt=1;
+        cout << "M initialized with value: " << M << endl;
+        cout << "ans initialized with value: " << ans << endl;
+        cout << "curr_cnt initialized with value: " << curr_cnt << endl;
+        
+        ans+=1;
+        cout << "ans modified, new value: " << ans << endl;
+        
+        for(int i=1;i<s.length();i++){
+            if(s[i]!=s[i-1]){
+                curr_cnt=1;
+                cout << "curr_cnt reset to 1" << endl;
+                ans+=curr_cnt;
+                cout << "ans modified, new value: " << ans << endl;
+            }
+            else{
+                curr_cnt++;
+                cout << "curr_cnt incremented, new value: " << curr_cnt << endl;
+                ans+=curr_cnt;
+                cout << "ans modified, new value: " << ans << endl;
+                ans=ans%M;
+                cout << "ans modulo M, new value: " << ans << endl;
+            }
+        }
+        return ans;
+    }
+};

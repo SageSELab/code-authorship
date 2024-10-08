@@ -1,0 +1,16 @@
+var countSegments = function(s) {
+    const countNonEmptySegments = (segments) => {
+        let count = 0;
+        for (const segment of segments) {
+            if (segment !== '') {
+                count++;
+            }
+        }
+        return count;
+    };
+    
+    // Split the input string by spaces
+    const segments = s.split(' ');
+    
+    return countNonEmptySegments(segments);
+};

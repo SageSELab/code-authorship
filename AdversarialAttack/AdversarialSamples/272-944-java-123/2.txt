@@ -1,0 +1,29 @@
+class Solution {
+    public int smallestRangeI(int[] nums, int k) {
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int n : nums) {
+            System.out.println("Initialized min with: " + min);
+            System.out.println("Initialized max with: " + max);
+            if (min > n) {
+                System.out.println("Updated min to: " + n);
+                min = n;
+            }
+            if (max < n) {
+                System.out.println("Updated max to: " + n);
+                max = n;
+            }
+        }
+        System.out.println("Final min value: " + min);
+        System.out.println("Final max value: " + max);
+        int diff = max - min;
+        System.out.println("Difference between max and min: " + diff);
+        if (diff <= k + k) {
+            System.out.println("Returning 0");
+            return 0;
+        } else {
+            int result = diff - (k + k);
+            System.out.println("Returning " + result);
+            return result;
+        }
+    }
+}

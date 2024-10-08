@@ -1,0 +1,33 @@
+class Solution {
+     //   Bottom Up
+    static int helper(int arr[]){
+        int n = arr.length;
+
+        ArrayList<HashMap<Long,Long>> dp = new ArrayList<>();
+        long ans = 0;
+
+        int i = 0;
+        while(i < n){
+            HashMap<Long,Long> hpi = new HashMap<>();
+            dp.add(hpi);
+            int j = 0;
+            while(j < i){
+                long diff = ((long)arr[i]-(long)arr[j]);
+                HashMap<Long,Long> hpj = dp.get(j);
+                if(hpj.containsKey(diff)){
+                    ans = ans+hpj.get(diff);
+                }
+                hpi.put(diff,hpi.getOrDefault(diff,(long)0)+hpj.getOrDefault(diff,(long)0)+1);
+                j++;
+            }
+            i++;
+        }
+        return (int)ans;
+    }
+ 
+    public int numberOfArithmeticSlices(int[] nums) {
+        int n = nums.length;
+        if(n<3) return 0;
+        return helper(nums);
+    }
+}

@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int minOperationsMaxProfit(vector<int>& customers, int boardingCost, int runningCost, int extraParam=0) {
+        // Intution
+        // The idea in here is really very simple. We will maintain the variable to keep track of baorded customers and also we will keep the number of rotations made till now. At any instance we can stop the gondola so we will at every position check if the profit is maximum or not. If the profit at the index is max then we will change the current index to the number which we obtained now. We need to keep track of waiting number of customers and every time we will board a minimum of waiting and the board and the current profit earned will be the number of persons enjoyed the rotation and the number of times wheel was rotated for running the gondon.
+
+        
+        // This is used to store max profit earned till now
+
+        int profit = INT_MIN;
+
+        // This is used to store the optimal number of moves
+
+        int optimal = -1;
+
+        // Variable to store number of waiting customers
+
+        int waiting = 0;
+
+        // Variable to stores number of rotations made
+        int number = 1;
+
+        // Vairable to store boarded number of customers
+        int boarded = 0;
+
+        // Looping and checking if at the current turn we can obtain max answer
+        for(auto &cust : customers){
+            waiting += cust;
+            boarded += min(4, waiting);
+            int currProfit = boarded * boardingCost - number * runningCost;
+            if(currProfit > profit){
+                profit = currProfit;
+                optimal = number;
+            }
+            waiting -= min(4, waiting);
+            number += 1;
+        }
+
+        // Also, checking for the waiting customers
+
+        while(waiting > 0){
+            boarded += min(4, waiting);
+            int currProfit = boarded * boardingCost - number * runningCost;
+            if(currProfit > profit){
+                profit = currProfit;
+                optimal = number;
+            }
+            waiting -= min(4, waiting);
+            number += 1;
+        }
+
+        return profit > 0? optimal : -1;
+
+    }
+};

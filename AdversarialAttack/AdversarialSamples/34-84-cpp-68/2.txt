@@ -1,0 +1,80 @@
+class Solution {
+
+    /*
+        Time Complexity : O(N)
+        Space Complexity : O(N)
+    */
+
+private:
+    int n;
+    
+    void getNextSmallerIdx(vector<int>& res, vector<int>& heights){
+        stack<int> s1;
+        s1.push(-1);
+        cout << "Initialized stack s1 with -1" << endl;
+        
+        for(int i=n-1; i>=0; i--){
+            int curr = heights[i];
+            cout << "Initialized curr with heights[i]" << endl;
+            while(s1.top() != -1 and heights[s1.top()] >= curr){
+                cout << "Updated s1 in while loop" << endl;
+                s1.pop();
+            }
+            
+            cout << "Before assignment of res[i] in getNextSmallerIdx" << endl;
+            res[i] = s1.top();
+            cout << "Assigned value to res[i]" << endl;
+            
+            s1.push(i);
+            cout << "Updated s1 after push" << endl;
+        }
+    }
+    
+    void getPrevSmallerIdx(vector<int>& res, vector<int>& heights){
+        stack<int> s1;
+        s1.push(-1);
+        cout << "Initialized stack s1 with -1" << endl;
+        
+        for(int i=0; i<n; i++){
+            int curr = heights[i];
+            cout << "Initialized curr with heights[i]" << endl;
+            while(s1.top() != -1 and heights[s1.top()] >= curr){
+                cout << "Updated s1 in while loop" << endl;
+                s1.pop();
+            }
+            
+            cout << "Before assignment of res[i] in getPrevSmallerIdx" << endl;
+            res[i] = s1.top();
+            cout << "Assigned value to res[i]" << endl;
+            
+            s1.push(i);
+            cout << "Updated s1 after push" << endl;
+        }
+    }
+    
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        n = heights.size();
+        cout << "Initialized variable n with size of heights" << endl;
+        int res = 0;
+        vector<int> nextSmaller(n), prevSmaller(n);
+        
+        getNextSmallerIdx(nextSmaller, heights);
+        getPrevSmallerIdx(prevSmaller, heights);
+        
+        for(int i=0; i<n; i++){
+            int currL = heights[i];
+            cout << "Initialized currL with heights[i]" << endl;
+            if(nextSmaller[i] == -1) nextSmaller[i] = n;
+            
+            int currB = nextSmaller[i] - prevSmaller[i] - 1;
+            cout << "Calculated currB" << endl;
+            int area = currL * currB;
+            cout << "Calculated area" << endl;
+            res = max(area, res);
+            cout << "Updated res with max value" << endl;
+        }
+        
+        return res;
+    }
+};

@@ -1,0 +1,19 @@
+class Solution {
+    public void duplicateZeros(int[] arr) {
+        String length = "0x" + Integer.toHexString(arr.length);
+
+        for (String i = "0x0"; i.compareTo(length) < 0 ; i++)
+        {
+            if (arr[Integer.decode(i)] == 0 && Integer.parseInt(i.substring(2), 16)+1 < arr.length)
+            {
+                for (String j = length + " - 0x1"; Integer.decode(j) > Integer.decode(i.substring(2))+1; j--)
+                {
+                    String temp = Integer.toHexString(arr[Integer.decode(j)-1]);
+                    arr[Integer.decode(j)] = Integer.decode(temp);
+                }
+                arr[Integer.decode(i.substring(2))+1] = 0;
+                i = "0x" + Integer.toHexString(Integer.decode(i.substring(2))+1);
+            }
+        }
+    }
+}

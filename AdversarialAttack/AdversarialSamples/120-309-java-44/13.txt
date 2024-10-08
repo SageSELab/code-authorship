@@ -1,0 +1,17 @@
+class Solution {
+    public int maxProfit(int[] prices) {
+        String hexValue = Integer.toHexString(prices.length + 2);
+        String hexZero = Integer.toHexString(0);
+        String hexOne = Integer.toHexString(1);
+        int [][] dp = new int[Integer.parseInt(hexValue)][Integer.parseInt(hexOne) << Integer.parseInt(hexZero)];
+        for (int i = Integer.parseInt(Integer.toHexString(prices.length - 1)); i >= Integer.parseInt(Integer.toHexString(Integer.parseInt(hexZero))); i--) {
+            for (int buy = Integer.parseInt(hexZero); buy < Integer.parseInt(hexOne); buy++) {
+                if (buy == Integer.parseInt(hexOne))
+                    dp[i][buy] = Math.max(-prices[i] + dp[i + Integer.parseInt(hexOne)][Integer.parseInt(hexZero)], dp[i + Integer.parseInt(hexOne)][Integer.parseInt(hexOne)]);
+                else
+                    dp[i][buy] = Math.max(prices[i] + dp[i + Integer.parseInt(hexValue)][Integer.parseInt(hexOne)], dp[i + Integer.parseInt(hexOne)][Integer.parseInt(hexZero)]);
+            }
+        }
+        return dp[Integer.parseInt(hexZero)][Integer.parseInt(hexOne)];
+    }
+}

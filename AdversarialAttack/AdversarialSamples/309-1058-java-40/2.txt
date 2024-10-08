@@ -1,0 +1,67 @@
+class Solution {
+    public void dfs(List<Character>[] adj, char node, char minCharacter, char [] visited)
+    {
+        System.out.println("Initializing visited[" + (node - 'a') + "] with " + minCharacter);
+        visited[node - 'a'] = minCharacter;
+
+        System.out.println("Traversing neighbors of " + node);
+        for(char near: adj[node - 'a'])
+        {
+            System.out.println("Checking if " + near + " is not visited");
+            if(visited[near - 'a'] == '#')
+            {
+                System.out.println("Calling dfs for " + near);
+                dfs(adj, near, minCharacter, visited);
+            }
+        }
+    }
+
+    public String smallestEquivalentString(String s1, String s2, String baseStr) {
+        System.out.println("Extracting size of s1");
+        int n = s1.length();
+
+        System.out.println("Declaring adjacency matrix");
+        List<Character>[] adj = new List[26];
+        for (int i = 0; i < 26; i++) 
+        {
+            adj[i] = new ArrayList<>();
+        }
+
+        for(int i = 0; i < n; i++)
+        {
+            System.out.println("Establishing connection between " + s1.charAt(i) + " and " + s2.charAt(i));
+            adj[s1.charAt(i) - 'a'].add(s2.charAt(i));
+            adj[s2.charAt(i) - 'a'].add(s1.charAt(i));
+        }
+
+        System.out.println("Initializing visited vector");
+        char [] visited = new char[26];
+        for(int i = 0; i < 26; i++)
+        {
+            System.out.println("Initializing visited[" + i + "] with #");
+            visited[i] = '#';
+        }
+
+        System.out.println("Traversing through each character");
+        for(char c = 'a'; c <= 'z'; c++)
+        {
+            System.out.println("Checking if " + c + " is not visited yet");
+            if(visited[c - 'a'] == '#')
+            {
+                System.out.println("Calling dfs for " + c);
+                dfs(adj, c, c, visited);
+            }
+        }
+
+        System.out.println("Replacing characters in baseStr with minimum found characters");
+        String ans = "";
+        for(int i = 0; i < baseStr.length(); i++)
+        {
+            System.out.println("Replacing " + baseStr.charAt(i) + " with " + visited[baseStr.charAt(i) - 'a']);
+            ans += visited[baseStr.charAt(i) - 'a'];
+        }
+
+        System.out.println("Returning final result");
+        return ans;
+    }
+}

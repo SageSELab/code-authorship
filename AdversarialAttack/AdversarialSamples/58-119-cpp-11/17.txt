@@ -1,0 +1,25 @@
+class Solution {
+public:
+
+vector<int> getRow(int rowIndex) 
+{
+    vector<int> ans(rowIndex+1) ;
+
+    int i = 0 ;
+    while(i <= rowIndex)
+    {
+        int j = i ;
+        while(j >= 0)
+        {
+            if( j == 0 || j == i)
+                 ans[j] = 1 ;
+            else
+                ans[j] = ans[j] + ans[j-1] ;   
+            j--;
+        }
+        i++;
+    }
+
+    return ans ;        
+    }
+};

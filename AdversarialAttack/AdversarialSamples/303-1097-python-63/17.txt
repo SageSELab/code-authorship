@@ -1,0 +1,12 @@
+class StreamChecker:
+    def __init__(self, words):
+        self.st, self.L, self.qs = {w[::-1] for w in words}, len(max(words, key=len)), ""
+
+    def query(self, c):
+        self.qs += c
+        i = len(self.qs)
+        while i >= max(-1, len(self.qs)-1-self.L):
+            if self.qs[i:][::-1] in self.st:
+                return True
+            i -= 1
+        return False

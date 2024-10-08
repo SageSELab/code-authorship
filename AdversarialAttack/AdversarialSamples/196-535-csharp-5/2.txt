@@ -1,0 +1,30 @@
+public class Codec {
+    private Dictionary<string,string> storage;
+    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    int id;
+    public Codec(){
+        storage = new Dictionary<string,string>();
+        id=0;
+        Console.WriteLine("Initialized storage dictionary.");
+        Console.WriteLine("Initialized id with value: " + id);
+    }
+    // Encodes a URL to a shortened URL
+    public string encode(string longUrl) {
+        string shortUrl = id.ToString();
+        Console.WriteLine("Created shortUrl variable with value: " + shortUrl);
+        id++;
+        Console.WriteLine("Incremented id to: " + id);
+        storage.Add(shortUrl,longUrl);
+        Console.WriteLine("Added entry to storage with shortUrl and longUrl: " + shortUrl + ", " + longUrl);
+        return shortUrl;
+    }
+
+    // Decodes a shortened URL to its original URL.
+    public string decode(string shortUrl) {
+        return storage[shortUrl];
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.decode(codec.encode(url));

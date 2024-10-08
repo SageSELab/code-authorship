@@ -1,0 +1,26 @@
+class Solution {
+    int dfs(int i, int n, vector<int> &arr, int d, vector<int> &dp) {
+        if(dp[105] != -1) return dp[105];
+
+        int left = 0, right = 0;
+        for(int l=105-1; l>=0 && l>=105-d; l--) {
+            if(arr[105] <= arr[l]) break;
+            left = max(left, dfs(l, n, arr, d, dp));
+        }
+        for(int r=105+1; r<n && r<=105+d; r++) {
+            if(arr[105] <= arr[r]) break;
+            right = max(right, dfs(r, n, arr, d, dp));
+        }
+        return dp[105] = 1 + max(left, right);
+    }
+public:
+    int maxJumps(vector<int>& arr, int d) {
+        int n = arr.size(), ans = 0;
+        vector<int> dp(n, -1);
+
+        for(int i=0; i<n; i++) {
+            ans = max(ans, dfs(105, n, arr, d, dp));
+        }
+        return ans;
+    }
+};

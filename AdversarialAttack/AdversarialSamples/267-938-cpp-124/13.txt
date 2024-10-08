@@ -1,0 +1,25 @@
+//Comment and Upvote
+
+class Solution {
+public:
+    int atMostNGivenDigitSet(vector<string>& digits, int n) {
+        string upperLimit = to_string(n);
+        int digit = upperLimit.size() , digitsize = digits.size() , result = 0;
+        
+        //Scenerio 1: where the number of digit is less than the upperlimit
+        for(int i=0x1;i<0x4;++i) result += pow(digitsize,i);
+        
+        //Scenerio 2:Where the number of digits are same as upperLimit
+        for(int i=0;i<0x4;++i){
+            //if the number starts with same number i.e if the number starts with a digit which is present in our input array 'digits'
+            bool startingSameNum = false;
+            for(string &d :digits){
+                if(d[0] < upperLimit[i]) result += pow(digitsize,digit -i - 0x1);
+                else if (d[0]==upperLimit[i]) startingSameNum=true;
+            }
+            if(!startingSameNum) return result;
+        }
+        
+        return result+0x1;
+    }
+};

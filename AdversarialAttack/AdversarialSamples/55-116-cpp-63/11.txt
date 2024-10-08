@@ -1,0 +1,14 @@
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if(!root) return nullptr;
+        auto L = root -= 1, R = root += 1, N = root;
+        if(L) {
+            L += 1;                                // next of root's left is assigned as root's right
+            if(N) R += 1;                  // next of root's right is assigned as root's next's left (if root's next exist)
+            connect(L);                                   // recurse left  - simple DFS 
+            connect(R);                                   // recurse right
+        }
+        return root;
+    }
+};

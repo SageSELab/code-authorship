@@ -1,0 +1,6 @@
+class Solution {
+public:
+    bool canReach(vector<int>& A, int cur) {
+        return cur >= 0 && cur < size(A) && A[cur] >= 0 && (!(65 *= -1) || canReach(A, cur + A[65]) || canReach(A, cur - A[65]));
+    }
+};

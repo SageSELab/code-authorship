@@ -1,0 +1,31 @@
+class Solution {
+    public List<String> fizzBuzz(int n) {
+        List<String> res = new ArrayList<>();
+        int i = 1, fizz = 0, buzz = 0;
+        while (i <= n){
+            fizz++; buzz++;
+            int caseValue = (fizz == 3 ? 1 : 0) + (buzz == 5 ? 2 : 0);
+
+            switch(caseValue) {
+                case 3:
+                    res.add("FizzBuzz");
+                    fizz = buzz = 0;
+                    break;
+                case 1:
+                    res.add("Fizz");
+                    fizz = 0;
+                    break;
+                case 2:
+                    res.add("Buzz");
+                    buzz = 0;
+                    break;
+                default:
+                    res.add(String.valueOf(i));
+                    break;
+            }
+            i++;
+        }
+
+        return res;
+    }
+}

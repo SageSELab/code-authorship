@@ -1,0 +1,23 @@
+var getWinner = function(arr, k) {
+    let winner = arr[0];
+    console.log('winner initialized:', winner);
+    let wins = 0;
+    console.log('wins initialized:', wins);
+
+    for (let i = 1; i < arr.length; i++) {
+        if (winner > arr[i]) {
+            wins++;
+            console.log('wins incremented:', wins);
+        } else {
+            wins = 1;
+            console.log('wins reset to 1:', wins);
+            winner = arr[i];
+            console.log('winner updated:', winner);
+        }
+
+        if (wins == k)
+            break;
+    }
+
+    return winner;
+};

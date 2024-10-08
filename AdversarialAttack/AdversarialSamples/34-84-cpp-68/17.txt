@@ -1,0 +1,67 @@
+class Solution {
+
+    /*
+        Time Complexity : O(N)
+        Space Complexity : O(N)
+    */
+
+private:
+    int n;
+    
+    void getNextSmallerIdx(vector<int>& res, vector<int>& heights){
+        stack<int> s1;
+        s1.push(-1);
+        
+        int i = n-1;
+        while(i >= 0){
+            int curr = heights[i];
+            while(s1.top() != -1 and heights[s1.top()] >= curr){
+                s1.pop();
+            }
+            
+            res[i] = s1.top();
+            s1.push(i);
+            i--;
+        }
+    }
+    
+    void getPrevSmallerIdx(vector<int>& res, vector<int>& heights){
+        stack<int> s1;
+        s1.push(-1);
+        
+        int i = 0;
+        while(i < n){
+            int curr = heights[i];
+            while(s1.top() != -1 and heights[s1.top()] >= curr){
+                s1.pop();
+            }
+            
+            res[i] = s1.top();
+            s1.push(i);
+            i++;
+        }
+    }
+    
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        n = heights.size();
+        int res = 0;
+        vector<int> nextSmaller(n), prevSmaller(n);
+        
+        getNextSmallerIdx(nextSmaller, heights);
+        getPrevSmallerIdx(prevSmaller, heights);
+        
+        int i = 0;
+        while(i < n){
+            int currL = heights[i];
+            if(nextSmaller[i] == -1) nextSmaller[i] = n;
+            
+            int currB = nextSmaller[i] - prevSmaller[i] - 1;
+            int area = currL * currB;
+            res = max(area, res);
+            i++;
+        }
+        
+        return res;
+    }
+};

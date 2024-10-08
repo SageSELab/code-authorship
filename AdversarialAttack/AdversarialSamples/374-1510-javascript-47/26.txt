@@ -1,0 +1,25 @@
+var findLucky = function(arr) {
+    const countNumbers = (arr) => {
+        const hashmap = {};
+
+        for (let i = 0; i < arr.length; i++) {
+            if (!hashmap[arr[i]]) {
+                hashmap[arr[i]] = 1;
+            } else {
+                hashmap[arr[i]]++;
+            }
+        }
+
+        return Object.entries(hashmap);
+    };
+
+    const findLuckyNumber = (arr) => {
+        for (let i = arr.length - 1; i >= 0; i--) {
+            if (arr[i][0] == arr[i][1]) return arr[i][1];
+        }
+        return -1;
+    };
+
+    const counts = countNumbers(arr);
+    return findLuckyNumber(counts);
+};

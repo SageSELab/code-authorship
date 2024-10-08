@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int minimumDeletions(string s) {
+        int n = s.size(), ans = 1e9;
+        vector<int> cnta(n), cntb(n);
+
+        calculateCount(s, 'a', cnta);
+        calculateCount(s, 'b', cntb);
+
+        for(int i=0; i<n; i++) {
+            ans = min(ans, cnta[i] + cntb[i]);
+        }
+        return ans;
+    }
+
+    void calculateCount(const string& s, char target, vector<int>& cnt) {
+        int n = s.size(), cntChar = 0;
+        for(int i=0; i<n; i++) {
+            cnt[i] = cntChar;
+            if(s[i] == target) cntChar++;
+        }
+    }
+};

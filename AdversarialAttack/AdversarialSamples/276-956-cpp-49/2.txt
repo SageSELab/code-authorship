@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int numMusicPlaylists(int n, int goal, int k) {
+        const int mod=1e9+7;
+        vector<int> dp(n+1, 0), prev(n+1, 0);
+        prev[0]=1;
+        cout << "Initialized prev[0] with value 1." << endl;
+        
+        for (int i=1; i<=goal; i++){
+            for(int j=1; j<=n; j++){
+                long long ans=(long long)prev[j-1]*(n-j+1)%mod;
+                cout << "Initialized ans with value: " << ans << " at i=" << i << " and j=" << j << endl;
+                
+                if (j>k)
+                    ans+=(long long)prev[j]*(j-k)%mod;
+                
+                cout << "Calculated ans with additional old song value at i=" << i << " and j=" << j << endl;
+                
+                dp[j]=ans%mod;
+                cout << "Updated dp[" << j << "] with value: " << dp[j] << " at i=" << i << endl;
+            }
+            prev=dp;
+            cout << "Updated prev with dp values at i=" << i << endl;
+        }
+        return dp[n];
+    }
+};

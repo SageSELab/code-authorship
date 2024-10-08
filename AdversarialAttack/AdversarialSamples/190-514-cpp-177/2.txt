@@ -1,0 +1,39 @@
+class Solution {
+public:
+    using VI = vector<int>;
+    using VVI = vector<VI>;
+    int findRotateSteps(string ring, string key, int INF = 1e9 + 7) {
+        int M = ring.size(),
+            N = key.size();
+        cout << "Initialized M and N variables" << endl;
+        auto steps = [=](auto i, auto k) {
+            cout << "steps function called with i = " << i << " and k = " << k << endl;
+            return min(abs(i - k), M - abs(i - k)); // ⭐️ minimum x steps to rotate the ring from i..k (🚫 without wrap-around, ✅ with wrap-around)
+        };
+        VVI dp(M, VI(N + 1, INF));            // 🤔 memo
+        cout << "Initialized dp matrix with size " << M << "x" << N + 1 << endl;
+        for (auto i{ 0 }; i < M; ++i)
+            for (auto k{ 0 }; k < M; ++k) {
+                cout << "Updating dp[" << i << "][" << N << "] with value 0" << endl;
+                dp[i][N] = 0;                 // 🛑 base case
+            }
+        for (auto j{ N - 1 }; 0 <= j; --j) {   // key j
+            cout << "Processing key position " << j << endl;
+            for (auto i{ 0 }; i < M; ++i) {    // cur i
+                cout << "Processing ring position " << i << endl;
+                for (auto k{ 0 }; k < M; ++k) { // pre i (optimal k-th value is found as the recursive stack unwinds)
+                    cout << "Checking ring[" << k << "] = " << ring[k] << " against key[" << j << "] = " << key[j] << endl;
+                    if (ring[k] == key[j]) {
+                        cout << "Found matching character in the ring" << endl;
+                        cout << "Current value of dp[" << i << "][" << j << "] is " << dp[i][j] << endl;
+                        auto new_val = min(dp[i][j], 1 + steps(i, k) + dp[k][j + 1]);
+                        cout << "New value found for dp[" << i << "][" << j << "] is " << new_val << endl;
+                        dp[i][j] = new_val; // 🎯 min steps to reach key[j] from each ring[i] is the min steps to reach key[j + 1] from ring[k], 🔍 find optimal k via exhaustive search
+                    }
+                }
+            }
+        }
+        cout << "Final result calculated, returning dp[0][0]" << endl;
+        return dp[0][0]; // 🚀 when the ring starts at i = 0 (ie. index 0 is aligned with the 12:00 direction of the ring) return the min steps to construct key[j = 0..N - 1]
+    }
+};

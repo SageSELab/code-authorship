@@ -1,0 +1,32 @@
+class Solution {
+public:
+    bool canReach(vector<int>& A, int cur) {
+        queue<int> q;
+        q.push(cur);
+        cout << "Initialized queue with start index: " << cur << endl;
+        while(size(q)) {
+            cur = q.front(); q.pop();
+            cout << "Current index: " << cur << endl;
+            if(A[cur] == 0) {
+                cout << "Target reached at index: " << cur << endl;
+                return true;
+            }
+            if(A[cur] < 0) {
+                cout << "Already visited index: " << cur << ". Stopping further exploration." << endl;
+                continue;
+            }
+            if(cur + A[cur] < size(A)) {
+                cout << "Trying forward jump from index: " << cur << " to index: " << cur + A[cur] << endl;
+                q.push(cur + A[cur]);
+            }
+            if(cur - A[cur] >= 0) {
+                cout << "Trying backward jump from index: " << cur << " to index: " << cur - A[cur] << endl;
+                q.push(cur - A[cur]);
+            }
+            A[cur] *= -1;
+            cout << "Marked index " << cur << " as visited by negating its value." << endl;
+        }
+        cout << "Explored all array without reaching target." << endl;
+        return false;
+    }
+};

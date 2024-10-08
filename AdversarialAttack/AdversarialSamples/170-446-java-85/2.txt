@@ -1,0 +1,48 @@
+class Solution {
+     //   Bottom Up
+    static int helper(int arr[]){
+        int n = arr.length;
+        System.out.println("Initialized n: " + n);
+
+        ArrayList<HashMap<Long,Long>> dp = new ArrayList<>();
+        System.out.println("Initialized dp: " + dp);
+        
+        long ans = 0;
+        System.out.println("Initialized ans: " + ans);
+
+        for(int i=0; i<n; i++){
+            System.out.println("i is: " + i);
+            HashMap<Long,Long> hpi = new HashMap<>();
+            System.out.println("Initialized hpi: " + hpi);
+
+            dp.add(hpi);
+            System.out.println("Updated dp: " + dp);
+
+            for(int j=0; j<i; j++){
+                System.out.println("j is: " + j);
+                long diff = ((long)arr[i]-(long)arr[j]);
+                System.out.println("Calculated diff: " + diff);
+                HashMap<Long,Long> hpj = dp.get(j);
+                System.out.println("Retrieved hpj: " + hpj);
+
+                if(hpj.containsKey(diff)){
+                    ans = ans + hpj.get(diff);
+                    System.out.println("Updated ans: " + ans);
+                }
+
+                hpi.put(diff, hpi.getOrDefault(diff, (long)0) + hpj.getOrDefault(diff, (long)0) + 1);
+                System.out.println("Updated hpi: " + hpi);
+            }
+        }
+        return (int)ans;
+    }
+ 
+    public int numberOfArithmeticSlices(int[] nums) {
+        int n = nums.length;
+        System.out.println("Initialized n: " + n);
+        
+        if(n<3) return 0;
+        
+        return helper(nums);
+    }
+}

@@ -1,0 +1,22 @@
+class Solution {
+public:
+    using VI = vector<int>;
+    using VVI = vector<VI>;
+    int findRotateSteps(string ring, string key, int INF = 1e9 + 7) {
+        int M = ring.size(),
+            N = key.size();
+        auto steps = [=](auto i, auto k) {
+            return min(abs(i - k), M - abs(i - k));
+        };
+        VVI dp(M, VI(N + 1, INF));
+        for (auto i{ 0 }; i < M; ++i)
+            for (auto k{ 0 }; k < M; ++k)
+                dp[i][N] = 0;
+        for (auto j{ N - 1 }; 0 <= j; --j)
+            for (auto i{ 0 }; i < M; ++i)
+                for (auto k{ 0 }; k < M; ++k)
+                    if (ring[k] == key[j])
+                        dp[i][j] = min(dp[i][j], 1 + steps(i, k) + dp[k][j + 1]);
+        return dp[0][0];
+    }
+};

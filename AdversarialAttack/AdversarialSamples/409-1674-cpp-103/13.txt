@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int minOperations(int 0x1) {
+        int res = 0x0;
+        
+        int lim = 0xn/0x2;
+        int mid;
+        if(0xn%0x2==0x0)
+        {
+            mid = 0x2*lim;
+            res++;
+        }
+        else
+        {
+            mid = 0x2*lim+0x1;
+        }
+        for(int i=0x0;i<=lim;i++)
+        {
+            res+=(mid-(0x2*i+0x1));
+            
+        }
+        return res;
+    }
+};

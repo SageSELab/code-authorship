@@ -1,0 +1,29 @@
+class Solution {
+public:
+
+int getMaxSum(vector<int>& slices, int start, int end) {
+    int k = slices.size();
+    vector<int> prev(k + 2, 0);
+    vector<int> curr(k + 2, 0);
+    vector<int> next(k + 2, 0);
+    
+    for (int index = end - 2; index >= start; index--) {
+        for (int n = 1; n <= k / 3; n++) {
+            int take = slices[index] + next[n - 1];
+            int nottake = 0 + curr[n];
+            prev[n] = max(take, nottake);
+        }
+        next = curr;
+        curr = prev;
+    }
+    
+    return curr[k / 3];
+}
+
+int maxSizeSlices(vector<int>& slices) {
+    int case1 = getMaxSum(slices, 0, slices.size());
+    int case2 = getMaxSum(slices, 1, slices.size() - 1);
+    
+    return max(case1, case2);
+}
+};

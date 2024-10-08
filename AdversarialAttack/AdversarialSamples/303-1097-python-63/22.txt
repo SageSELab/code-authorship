@@ -1,0 +1,16 @@
+class StreamChecker:
+    def __init__(self, words):
+        self.st, self.L, self.qs = set(), 0, ""
+        for w in words:
+            self.st.add(w[::-1])
+            if len(w) > self.L:
+                self.L = len(w)
+
+    def query(self, c):
+        self.qs += c
+        is_present = False
+        for i in range(len(self.qs), max(-1, len(self.qs)-1-self.L), -1):
+            if self.qs[i:][::-1] in self.st:
+                is_present = True
+                break
+        return is_present

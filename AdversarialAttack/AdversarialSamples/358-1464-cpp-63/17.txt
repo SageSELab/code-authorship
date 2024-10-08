@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int minSetSize(vector<int>& arr) {
+        unordered_map<int, int>mp;
+        multiset<int, greater<int>> s;
+		auto it = arr.begin();
+		while(it != arr.end()) {
+			auto num = *it;
+			mp[num]++;                  // find frequency of elements
+			it++;
+		}
+		auto it2 = mp.begin();
+		while(it2 != mp.end()) {
+			auto [num, freq] = *it2;
+			s.insert(freq);      // sort frequency in descending order
+			it2++;
+		}
+		int deleted = 0, ans = 0;
+		auto it3 = s.begin();
+		while(it3 != s.end()) {
+			auto freq = *it3;      // keep deleting till array size is reduced to half
+            deleted += freq, ans++;
+            if(deleted >= arr.size() / 2) return ans;    // atleast half array is deleted
+            it3++;
+        }
+        return -1;  // won't ever be reached
+    }
+};

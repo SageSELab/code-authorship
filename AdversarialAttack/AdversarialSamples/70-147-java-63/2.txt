@@ -1,0 +1,15 @@
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        for(ListNode cur = head; cur != null; cur = cur.next) {
+            System.out.println("cur initialized: " + cur.val);
+            for(ListNode j = head; j != cur; j = j.next) {
+                System.out.println("j initialized: " + j.val);
+                if(j.val > cur.val) {
+                    System.out.println("Swapping " + j.val + " and " + cur.val);
+                    j.val = j.val ^ cur.val ^ (cur.val = j.val);         // swap
+                }
+            }
+        }
+        return head;
+    }
+}

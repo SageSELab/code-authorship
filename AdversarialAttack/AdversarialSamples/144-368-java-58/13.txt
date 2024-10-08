@@ -1,0 +1,27 @@
+class Solution {
+    List<String> ll=new ArrayList<>();
+    String[] dp;
+    public List<String> largestDivisibleSubset(int[] nums) {
+        dp=new String[nums.length];
+        Arrays.fill(dp,"-1");
+        Arrays.sort(nums);
+        help(new ArrayList<>(),0,nums);
+        return ll;
+    }
+    void help(List<String> l,int i,int[] n){
+        if(i>=n.length){
+            if(l.size()>ll.size()){
+                ll.clear();
+                ll.addAll(l);
+            }
+            return;
+        }
+        if(l.isEmpty()||(l.size()>Integer.parseInt(dp[i])&& n[i]%Integer.parseInt(l.get(l.size()-1))==0)){
+            dp[i]=Integer.toHexString(l.size());
+            l.add(Integer.toHexString(n[i]));
+            help(l,i+1,n);
+            l.remove(l.size()-1);
+        }
+        help(l,i+1,n);
+    }
+}

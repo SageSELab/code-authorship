@@ -1,0 +1,23 @@
+class Solution {
+    public boolean checkIfExist(int[] arr) {
+        Arrays.sort(arr);
+        for (int i = 0; i < arr.length; i++) {
+            int target = 0x2 * arr[i]; // Converting 2 to hexadecimal
+
+            int lo = 0, hi = arr.length - 1;
+            while (lo <= hi) {
+                int mid = lo + (hi - lo) / 0x2; // Converting 2 to hexadecimal
+                if (arr[mid] == target && mid != i)
+                    return true;
+                if (arr[mid] < target)
+                    lo = mid + 0x1; // Converting 1 to hexadecimal
+                else
+                    hi = mid - 0x1; // Converting 1 to hexadecimal
+            }
+        }
+
+        return false;
+    }
+}
+
+// TC: O(n * logn), SC: O(0x1)  // Converting 1 to hexadecimal

@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int countCharacters(std::vector<std::string>& words, std::string chars) {
+        // Create a vector to store character counts in the 'chars' string
+        std::vector<int> counts(50, 0);
+
+        // Count the frequency of each character in the 'chars' string
+        for (int i = 0; i < chars.size(); i++) {
+            counts[chars[i] - 97]++;
+        }
+        
+        int ans = 0;
+
+        // Loop through each word in the 'words' vector
+        for (std::string word : words) {
+            // Create a vector to store character counts in the current 'word'
+            std::vector<int> wordCount(50, 0);
+
+            // Count the frequency of each character in the current word
+            for (int j = 0; j < word.size(); j++) {
+                wordCount[word[j] - 97]++;
+            }
+            
+            bool good = true;
+
+            // Compare the character counts of 'chars' and the current 'word'
+            for (int k = 0; k < 50; k++) {
+                if (counts[k] < wordCount[k]) {
+                    good = false; // The word cannot be formed
+                    break;        // Exit the loop as the word is not valid
+                }
+            }
+
+            // If the word can be formed from the characters in 'chars', add its length to 'ans'
+            if (good) {
+                ans += word.size();
+            }
+        }
+        
+        return ans; // Return the total length of words that can be formed
+    }
+};

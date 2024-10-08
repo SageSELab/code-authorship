@@ -1,0 +1,28 @@
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> ans;
+        int i=0;
+        while(i<nums1.size()){
+            int max=-1;
+            int j=0;
+            while(j<nums2.size()){
+                int index=j;
+                if(nums1[i]==nums2[j]){ // Found element in nums2 that matches current element in nums1
+                     int index = j;
+                     while(index!=nums2.size()){ // Iterate through remaining elements in nums2 to find next greater element
+                        if(nums2[index]>nums1[i]){
+                            max=nums2[index]; // Update max if we find a greater element
+                            break;
+                        }
+                        index++;
+                    }
+               }
+               j++;
+            }
+            ans.push_back(max);
+            i++;
+        }
+        return ans;
+    }
+};

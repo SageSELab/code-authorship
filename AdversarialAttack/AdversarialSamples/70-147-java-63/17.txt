@@ -1,0 +1,16 @@
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode j = head;
+            while (j != cur) {
+                if (j.val > cur.val) {
+                    j.val = j.val ^ cur.val ^ (cur.val = j.val); // swap       
+                }
+                j = j.next;
+            }
+            cur = cur.next;
+        }
+        return head;
+    }
+}

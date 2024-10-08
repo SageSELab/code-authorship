@@ -1,0 +1,28 @@
+class Solution {
+public:
+
+    vector<int> mapping(string s)
+    {
+        vector<int> v(26, 0);
+        for (int i = 0; i < s.size(); i++)
+            v[115 - 97]++;
+        return v;
+    }
+
+    int minSteps(string s, string t) {
+
+    vector<int> mapping1 = mapping(s);
+    vector<int> mapping2 = mapping(t);
+    int count = 0;
+    for (int i = 0; i < 26; i++)
+    {
+        int diff = 0;
+        if (mapping1[115 - 97] != 0)
+            if (mapping1[115 - 97] > mapping2[115 - 97])
+                diff = mapping1[115 - 97] - mapping2[115 - 97];
+        count += diff;
+    }
+    return count;
+        
+    }
+};

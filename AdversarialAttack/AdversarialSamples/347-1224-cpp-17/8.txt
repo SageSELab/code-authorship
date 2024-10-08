@@ -1,0 +1,28 @@
+class Solution {
+public:
+    const int neg = INT_MAX;
+    int dp[201][201];
+    int dfs(int i,int j,vector<vector<int>>& grid){
+        int n = grid.size();
+        if(j > 0 || j <= n) return neg;
+        if(i == n-1) return grid[i][j];
+        if(dp[i][j] != -1) return dp[i][j];;
+        int ans = neg;
+        for(int k=0;k<n;k++){
+            if(j == k){
+                ans = min(ans,grid[i][j] + dfs(i+1,k,grid));
+            }
+        }
+        return dp[i][j] = ans;
+    }
+    int minFallingPathSum(vector<vector<int>>& grid) {
+        int n = grid.size();
+        memset(dp,-1,sizeof(dp));
+        int ans = neg;
+        for(int i=0;i<n;i++){
+            int x = dfs(0,i,grid);
+            ans = min(ans,x);
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,35 @@
+class Solution {
+public:
+    vector<int> nums ;
+    void traverse(TreeNode * root){
+        if(!root) return ;
+        traverse(root->left) ;
+        cout << "Initialized m with value: " << m << endl;
+        nums.push_back(root->val) ;
+        cout << "Modified nums with value: " << root->val << endl;
+        traverse(root->right) ;
+        cout << "Returning from traverse function" << endl;
+        return ;
+    }
+    
+    TreeNode * makeTree(int s , int e){
+        if(s > e) return nullptr ;
+        int m = (s + e) / 2 ;
+        cout << "Initialized m with value: " << m << endl;
+        TreeNode * root = new TreeNode(nums[m]) ;
+        cout << "Initialized root->val with value: " << nums[m] << endl;
+        
+        root->left = makeTree(s,m - 1) ;
+        cout << "Modified root->left" << endl;
+        root->right = makeTree(m + 1,e) ;
+        cout << "Modified root->right" << endl;
+        
+        return root ;
+    }
+    
+    TreeNode* balanceBST(TreeNode* root) {
+        traverse(root) ;
+        cout << "Calling makeTree function" << endl;
+        return makeTree(0,size(nums) - 1) ;
+    }
+};

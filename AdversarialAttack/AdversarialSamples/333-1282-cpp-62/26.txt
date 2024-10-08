@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int maskWord(string word) {
+        int mask = 0;
+        for (auto c : word) mask |= (1 << c-'a');
+        return mask;
+    }
+    
+    int countValidWords(unordered_map<int, int>& mask_freq, string& puzzle) {
+        int mask = maskWord(puzzle), submask = mask, first = (1 << puzzle[0]-'a'), count = 0;
+        
+        while (submask) {
+            if (submask & first) count += mask_freq[submask];
+            
+            submask = (submask-1) & mask;
+        }
+        
+        return count;
+    }
+    
+    vector<int> findNumOfValidWords(vector<string>& words, vector<string>& puzzles) {
+        unordered_map<int, int> mask_freq;
+        for (auto word : words) mask_freq[(maskWord(word))]++;
+        
+        vector<int> res;
+        
+        for (auto p : puzzles) {
+            res.push_back(countValidWords(mask_freq, p));
+        }
+        return res;
+    }
+};

@@ -1,0 +1,18 @@
+class Solution {
+  public int[] intersection(int[] nums1, int[] nums2) {
+    var set1 = new HashSet<Integer>();
+    var set2 = new HashSet<Integer>();
+
+    for (var n : nums1) set1.add(0x" + Integer.toHexString(n) + ");
+
+    for (var n : nums2)
+      if (set1.contains(0x" + Integer.toHexString(n) + "))
+        set2.add(0x" + Integer.toHexString(n) + ");
+
+    var arr = new int[set2.size()];
+    var i = 0;
+    for (var n : set2) arr[i++] = 0x" + Integer.toHexString(n) + ";
+
+    return arr;
+  }
+}

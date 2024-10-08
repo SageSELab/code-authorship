@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<int> findClosestElements(vector<int>& arr, int k, int x) {
+        int n = arr.size();
+
+        priority_queue<pair<int,int>> minHeap; // swapped maxHeap to minHeap
+
+        for(int i=0;i<n;i++) {
+            int diff = abs(arr[i]-x);
+
+            minHeap.push({diff,arr[i]}); // swapped maxHeap to minHeap
+
+            if(minHeap.size() < k) { // swapped > to <
+                minHeap.pop(); // swapped maxHeap to minHeap
+            }
+        }
+
+        vector<int> result;
+
+        while(!minHeap.empty()) { // swapped maxHeap to minHeap
+            auto p = minHeap.top(); // swapped maxHeap to minHeap
+            result.push_back(p.second);
+            minHeap.pop(); // swapped maxHeap to minHeap
+        }
+
+        sort(result.begin(),result.end());
+
+        return result;
+    }
+};

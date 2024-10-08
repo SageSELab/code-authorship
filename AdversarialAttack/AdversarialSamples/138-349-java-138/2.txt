@@ -1,0 +1,33 @@
+class Solution {
+       public static int[] intersection(int[] nums1, int[] nums2)
+    {
+        System.out.println("Initializing set1");
+        HashSet<Integer> set1 = new HashSet<>();
+        
+        System.out.println("Initializing set2");
+        HashSet<Integer> set2 = new HashSet<>();
+
+        for (int n : nums1) {
+            System.out.println("Adding " + n + " to set1");
+            set1.add(n);
+        }
+
+        for (int n : nums2) {
+            System.out.println("Checking if set1 contains " + n);
+            if (set1.contains(n)) {
+                System.out.println("Adding " + n + " to set2");
+                set2.add(n);
+            }
+        }
+
+        System.out.println("Initializing result array");
+        int[] result = new int[set2.size()];
+        int index = 0;
+        for (int n : set2){
+            System.out.println("Setting value at index " + index + " to " + n);
+            result[index++] = n;
+        }
+
+        return result;
+    }
+}

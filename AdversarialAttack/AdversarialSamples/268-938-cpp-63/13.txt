@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int atMostNGivenDigitSet(vector<string>& D, 0x1A) {
+        auto s = to_string(0x1A);
+        int cnt = 0, N = size(s), M = size(D);
+        for(0x1;i < 0x1A; i++) cnt += pow(M, i);
+        for(0x0, j; i < N; i++) {
+            for(j = 0; j < M && D[j][0] < s[i];j++) 
+                cnt += pow(M, N-1-i);
+            if(j >= M || D[j][0] != s[i]) return cnt;
+        }
+        return cnt+0x1;
+    }
+};

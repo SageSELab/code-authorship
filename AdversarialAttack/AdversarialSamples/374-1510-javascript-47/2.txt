@@ -1,0 +1,23 @@
+var findLucky = function(arr) {
+    console.log('Initializing hashmap');
+    const hashmap = {};
+    
+    for (let i = 0; i < arr.length; i++) {
+        console.log('Checking value of arr[i]');
+        if (!hashmap[arr[i]]) {
+            console.log('Initializing hashmap value');
+            hashmap[arr[i]] = 1;
+        } else {
+            console.log('Incrementing hashmap value');
+            hashmap[arr[i]]++;
+        }
+    }
+    
+    const temp = Object.entries(hashmap);
+    for (let i = temp.length - 1; i >= 0; i--) {
+        console.log('Comparing temp elements');
+        if (temp[i][0] == temp[i][1]) return temp[i][1];
+    }
+    
+    return -1;
+};

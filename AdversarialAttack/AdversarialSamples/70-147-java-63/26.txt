@@ -1,0 +1,13 @@
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        for(ListNode cur = head; cur != null; cur = cur.next) 
+            for(ListNode j = head; j != cur; j = j.next) 
+                if(j.val > cur.val)
+                    swap(j, cur);       
+        return head;
+    }
+
+    private void swap(ListNode a, ListNode b) {
+        b.val = a.val ^ b.val ^ (a.val = b.val);
+    }
+}

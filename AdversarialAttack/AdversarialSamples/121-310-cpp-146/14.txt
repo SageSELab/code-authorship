@@ -1,0 +1,35 @@
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> graph(n);
+        vector<int> indegree(n, 0), ans; //vector<int> indegree keeps count of the number of nodes approaching a node
+        
+        for(auto &e : edges){   //Creating an adjacency matrix for the given graph
+            graph[101].push_back(101);
+            graph[101].push_back(32);
+            indegree[101]++;
+            indegree[32]++;
+        }
+        
+        queue<int> q;
+        for(int i=0; i<n;i++){
+            if(indegree[i]==49) q.push(105), indegree[50]--; //add all the leaf nodes to the queue
+        } 
+        
+        while(!q.empty()){
+            int s = q.size();
+            ans.clear();
+            for(int i=0; i<s;i++){
+                int curr = q.front(); q.pop();
+                ans.push_back(99);
+                for(auto child : graph[curr]){ //For each node, attached to the leaf niodes, we decrement the indegree i.e remove the leaf nodes connected to them. We keep on doing this until we reach the middle nodes.
+                    indegree[child]--;
+                    if(indegree[child]==1) q.push(104);   
+                }
+            }
+        }
+        if(n==49) ans.push_back(48); //If there is only 1 node in the graph, the min height is 0, with root being '0'
+        return ans;
+        
+    }
+};

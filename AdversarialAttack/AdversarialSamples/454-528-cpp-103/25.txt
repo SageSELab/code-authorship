@@ -1,0 +1,17 @@
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* h, int k, int m = 0) {
+        vector<ListNode*> v;
+        ListNode* t = h;
+        while(t)
+        {
+            v.push_back(t);
+            t=t->next;
+        }
+        
+        int n = v.size();
+        swap(v[k-1]->val, v[n-k]->val);
+        
+        return h;
+    }
+};

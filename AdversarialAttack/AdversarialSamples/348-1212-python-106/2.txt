@@ -1,0 +1,19 @@
+class Solution:
+    def sequentialDigits(self, low, high):
+        print(f'Initializing out')
+        out = []
+        print(f'Initializing queue')
+        queue = deque(range(1,10))
+        while queue:
+            print(f'Initializing elem')
+            elem = queue.popleft()
+            if low <= elem <= high:
+                print(f'Modifying out')
+                out.append(elem)
+            print(f'Calculating last')
+            last = elem % 10
+            if last < 9:
+                print(f'Modifying queue')
+                queue.append(elem*10 + last + 1)
+                    
+        return out

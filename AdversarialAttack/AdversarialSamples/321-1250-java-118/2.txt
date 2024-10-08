@@ -1,0 +1,30 @@
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[][] dp = new int[text1.length()][text2.length()];
+        for(int[] arr : dp) {
+            Arrays.fill(arr, -1);
+            System.out.println("Array initialized with values: " + Arrays.toString(arr));
+        }
+        System.out.println("2D array 'dp' initialized with dimensions: " + dp.length + " x " + dp[0].length);
+        return helper(text1, text2, text1.length() - 1, text2.length() - 1, dp);
+    }
+
+    private int helper(String str1, String str2, int ind1, int ind2, int[][] dp) {
+        if(ind1 < 0 || ind2 < 0) return 0;
+        System.out.println("Current indices: " + ind1 + ", " + ind2);
+        if(dp[ind1][ind2] != -1) {
+            System.out.println("Value already calculated in dp array: " + dp[ind1][ind2]);
+            return dp[ind1][ind2];
+        }
+
+        if(str1.charAt(ind1) == str2.charAt(ind2)) {
+            dp[ind1][ind2] = 1 + helper(str1, str2, ind1 - 1, ind2 - 1, dp);
+            System.out.println("Updated dp[" + ind1 + "][" + ind2 + "] to: " + dp[ind1][ind2]);
+            return dp[ind1][ind2];
+        } else {
+            dp[ind1][ind2] = Math.max(helper(str1, str2, ind1 - 1, ind2, dp), helper(str1, str2, ind1, ind2 - 1, dp));
+            System.out.println("Updated dp[" + ind1 + "][" + ind2 + "] to: " + dp[ind1][ind2]);
+            return dp[ind1][ind2];
+        }
+    }
+}

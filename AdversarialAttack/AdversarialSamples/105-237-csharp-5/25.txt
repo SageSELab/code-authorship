@@ -1,0 +1,6 @@
+public class Solution {
+    public void DeleteNode(ListNode node, int extraParam = 0) {
+        node.val=node.next.val;
+        node.next=node.next.next;
+    }
+}

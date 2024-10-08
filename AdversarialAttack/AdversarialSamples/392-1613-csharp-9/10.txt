@@ -1,0 +1,88 @@
+public class Solution {
+    public IList<IList<int>> FindCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
+        int m = edges.Length;
+        for (int i = 0; i < m; i++) {
+            edges[i] = new int[] { edges[i][0], edges[i][1], edges[i][2], i };
+        }
+        
+        Array.Sort(edges, (a, b) => a[2] - b[2]);
+        
+        int mstWeight = MSTWeight(n, edges, -1, -1);
+        
+        List<int> criticalEdges = new List<int>();
+        List<int> pseudoCriticalEdges = new List<int>();
+        
+        for (int i = 0; i < m; i++) {
+            if (mstWeight!= MSTWeight(n, edges, i, -1)) {
+                criticalEdges.Add(edges[i][3]);
+            } else if (mstWeight == MSTWeight(n, edges, -1, i)) {
+                pseudoCriticalEdges.Add(edges[i][3]);
+            }
+        }
+        
+        return new List<IList<int>> { criticalEdges, pseudoCriticalEdges };
+    }
+    
+    private int MSTWeight(int n, int[][] edges, int skipIndex, int addIndex) {
+        int weight = 0;
+        UnionFind uf = new UnionFind(n);
+        
+        if (addIndex != -1) {
+            uf.Union(edges[addIndex][0], edges[addIndex][1]);
+            weight += edges[addIndex][2];
+        }
+        
+        for (int i = 0; i < edges.Length; i++) {
+            if (i == skipIndex || i == addIndex) continue;
+            if (uf.Union(edges[i][0], edges[i][1])) {
+                weight += edges[i][2];
+            }
+        }
+        
+        return uf.Count == 1 ? weight : int.MaxValue;
+    }
+}
+
+public class UnionFind {
+    private int[] parent;
+    private int[] rank;
+    public int Count { get; private set; }
+    
+    public UnionFind(int size) {
+        parent = new int[size];
+        rank = new int[size];
+        Count = size;
+        for (int i = 0; i < size; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+    
+    public int Find(int x) {
+        if (parent[x] != x) {
+            parent[x] = Find(parent[x]);
+        }
+        return parent[x];
+    }
+    
+    public bool Union(int x, int y) {
+        int rootX = Find(x);
+        int rootY = Find(y);
+        
+        if (rootX == rootY) {
+            return false;
+        }
+        
+        if (rank[rootX] > rank[rootY]) {
+            parent[rootY] = rootX;
+        } else if (rank[rootX] < rank[rootY]) {
+            parent[rootX] = rootY;
+        } else {
+            parent[rootY] = rootX;
+            rank[rootX]++;
+        }
+        
+        Count--;
+        return true;
+    }
+}

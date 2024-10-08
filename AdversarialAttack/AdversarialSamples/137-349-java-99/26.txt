@@ -1,0 +1,30 @@
+class Solution {
+  public int[] intersection(int[] nums1, int[] nums2) {
+    var set1 = new HashSet<Integer>();
+    var set2 = new HashSet<Integer>();
+
+    setValuesToSet(nums1, set1);
+    checkIntersection(set1, nums2, set2);
+
+    return convertSetToArray(set2);
+  }
+
+  private void setValuesToSet(int[] nums, Set<Integer> set) {
+    for (var n : nums) set.add(n);
+  }
+
+  private void checkIntersection(Set<Integer> set1, int[] nums, Set<Integer> set2) {
+    for (var n : nums)
+      if (set1.contains(n))
+        set2.add(n);
+  }
+
+  private int[] convertSetToArray(Set<Integer> set) {
+    var arr = new int[set.size()];
+    var i = 0;
+    for (var n : set) arr[i++] = n;
+
+    return arr;
+  }
+
+}

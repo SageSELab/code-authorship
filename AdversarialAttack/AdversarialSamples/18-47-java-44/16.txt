@@ -1,0 +1,26 @@
+public class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        int[] checked = new int[nums.length]; // changed boolean to int
+        List<Integer> list = new ArrayList<Integer>();
+        Arrays.sort(nums);
+        solve(nums, checked, list, res); // changed boolean array variable to int array
+        return res;
+    }
+
+    public void solve(int[] nums, int[] checked, List<Integer> ds, List<List<Integer>> res){ // changed boolean array variable to int array
+        if(ds.size()==nums.length){
+            res.add(new ArrayList<Integer>(ds));
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(checked[i] == 1) continue; // changed true to 1
+            if(i>0 && nums[i-1]==nums[i] && checked[i-1] == 0) continue; // changed false to 0
+            checked[i] = 1; // changed true to 1
+            ds.add(nums[i]);
+            solve(nums, checked, ds, res); // changed boolean array variable to int array
+            checked[i] = 0; // changed false to 0
+            ds.remove(ds.size()-1);
+        }
+    }
+}

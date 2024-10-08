@@ -1,0 +1,15 @@
+class Solution {
+    public int countOrders(int n) {
+        int MOD = (int)1e9 + 7;
+        System.out.println("MOD initialized with value: " + MOD);
+        long[] dp = new long[n+1];
+        System.out.println("dp array initialized with length: " + dp.length);
+        dp[0] = 1;
+        System.out.println("dp[0] set to: " + dp[0]);
+        for(int i = 1; i <= n; i++) {
+            dp[i] = dp[i-1] * (2 * i - 1) * i % MOD;
+            System.out.println("dp[" + i + "] computed and set to: " + dp[i]);
+        }
+        return (int)dp[n];
+    }
+}

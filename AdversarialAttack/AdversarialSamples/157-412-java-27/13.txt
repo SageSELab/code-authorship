@@ -1,0 +1,26 @@
+class Solution {
+    public List<String> fizzBuzz(String n) {
+        List<String> res = new ArrayList<>();
+        String i = "0x1", fizz = "0x0", buzz = "0x0";
+        while (Integer.parseInt(i, 16) <= Integer.parseInt(n, 16)){
+            fizz = Integer.toHexString(Integer.parseInt(fizz, 16) + 1);
+            buzz = Integer.toHexString(Integer.parseInt(buzz, 16) + 1);
+            if (Integer.parseInt(fizz, 16) == 3 && Integer.parseInt(buzz, 16) == 5) {
+                res.add("FizzBuzz");
+                fizz = "0x0";
+                buzz = "0x0";
+            } else if (Integer.parseInt(fizz, 16) == 3) {
+                res.add("Fizz");
+                fizz = "0x0";
+            } else if (Integer.parseInt(buzz, 16) == 5) {
+                res.add("Buzz");
+                buzz = "0x0";
+            } else {
+                res.add(Integer.toHexString(Integer.parseInt(i, 16)));
+            }
+            i = Integer.toHexString(Integer.parseInt(i, 16) + 1);
+        }
+
+        return res;
+    }
+}

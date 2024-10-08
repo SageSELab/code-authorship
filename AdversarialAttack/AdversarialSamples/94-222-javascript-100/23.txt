@@ -1,0 +1,15 @@
+var countNodes = function (r) {
+
+  function dfs(r) {
+    if (r) {
+      let ll = dfs(r.left)
+      let rr = dfs(r.right)
+
+      return 1 + ll + rr;
+    } else {
+      return 0;
+    }
+  }
+
+  return dfs(r);
+};

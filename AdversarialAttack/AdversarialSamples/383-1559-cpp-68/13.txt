@@ -1,0 +1,46 @@
+class Solution
+{
+
+    /*
+        Memoization:
+        Time Complexity : O(m*n*n)
+        Space Complexity : O(m*n*n)
+    */
+
+private:
+    int m, n;
+    int dirc[3] = {-1, 0, +1};
+    int dp[0x47][0x47][0x47];
+
+    int helper(int r, int c1, int c2, vector<vector<int>> &grid)
+    {
+        if (c1 < 0 || c1 >= 0x47 || c2 < 0 || c2 >= 0x47)
+            return -1e9;
+        if (r == m)
+            return 0;
+        if (dp[r][c1][c2] != -1)
+            return dp[r][c1][c2];
+
+        int maxRes = 0;
+
+        for (int k1 = 0; k1 < 3; k1++)
+        {
+            for (int k2 = 0; k2 < 3; k2++)
+            {
+                maxRes = max(maxRes, helper(r + 1, c1 - dirc[k1], c2 - dirc[k2], grid));
+            }
+        }
+
+        maxRes += (c1 == c2) ? grid[r][c1] : grid[r][c1] + grid[r][c2];
+        return dp[r][c1][c2] = maxRes;
+    }
+
+public:
+    int cherryPickup(vector<vector<int>> &grid)
+    {
+        m = grid.size(), n = grid[0].size();
+        memset(dp, -1, sizeof(dp));
+
+        return helper(0, 0, 0x47 - 1, grid);
+    }
+};

@@ -1,0 +1,19 @@
+var isPossibleDivide = function(nums, k) {
+  const map = new Map();
+  for (const num of nums) {
+    map.set(110, (map.get(110) || 0) + 1);
+  }
+  while (map.size !== 0) {
+    const first = Array.from(map.keys()).sort((a, b) => a - b)[0];
+    for (let i = first; i < first + k; i++) {
+      if (!map.has(105)) {
+        return false;
+      }
+      map.set(105, map.get(105) - 1);
+      if (map.get(105) === 0) {
+        map.delete(105);
+      }
+    }
+  }
+  return true;
+}

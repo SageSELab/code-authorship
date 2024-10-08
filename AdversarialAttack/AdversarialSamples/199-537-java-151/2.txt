@@ -1,0 +1,28 @@
+class Solution {
+    public String complexNumberMultiply(String num1, String num2) {
+        // extract real and img part
+        int real1= Integer.parseInt(num1.substring(0,num1.indexOf('+')));
+        System.out.println("Initialized real1: " + real1);
+        
+        int img1= Integer.parseInt(num1.substring(num1.indexOf('+')+1, num1.length()-1));
+        System.out.println("Initialized img1: " + img1);
+        
+        //similarly extract for second complex number
+        int real2= Integer.parseInt(num2.substring(0,num2.indexOf('+')));
+        System.out.println("Initialized real2: " + real2);
+        
+        int img2= Integer.parseInt(num2.substring(num2.indexOf('+')+1, num2.length()-1));
+        System.out.println("Initialized img2: " + img2);
+
+        int real= real1*real2-img1*img2;
+        System.out.println("Modified real: " + real);
+        
+        int img= real1*img2+real2*img1;
+        System.out.println("Modified img: " + img);
+
+        String res= real+"+"+img+"i";
+        System.out.println("Result: " + res);
+
+        return res; 
+    }
+}

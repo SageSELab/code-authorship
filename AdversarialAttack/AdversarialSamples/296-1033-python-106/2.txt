@@ -1,0 +1,18 @@
+class Solution:
+    def brokenCalc(self, X, Y):
+        print('Variable X initialized:', X)
+        print('Variable Y initialized:', Y)
+        if X > Y: 
+            result = X - Y
+            print('Variable result modified:', result)
+            return result
+        if X == Y: 
+            return 0
+        if Y % 2 == 0:
+            result = self.brokenCalc(X, Y//2) + 1
+            print('Variable result modified:', result)
+            return result
+        else:
+            result = self.brokenCalc(X, Y + 1) + 1
+            print('Variable result modified:', result)
+            return result

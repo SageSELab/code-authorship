@@ -1,0 +1,13 @@
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int T) {
+        if(!head) {
+            cout << "head is nullptr" << endl;
+            return nullptr;
+        }
+        cout << "head value initialized" << endl;
+        head -> next = removeElements(head -> next, T);
+        cout << "head next value assigned" << endl;
+        return head -> val == T ? head -> next : head;
+    }
+};

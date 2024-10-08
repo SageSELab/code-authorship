@@ -1,0 +1,48 @@
+class Solution {
+
+    class Pair {
+        int num;
+        int label;
+
+        Pair(int num, int label){
+            this.num = num;
+            this.label = label;
+        }
+    }
+
+    public int largestValsFromLabels(int[] val, int[] lab, int numWanted, int useLimit) {
+        HashMap<Integer,Integer> hp = new HashMap<>();
+        ArrayList<Pair> arr = new ArrayList<>();
+
+        int i = 0;
+        while (i < lab.length) {
+            arr.add(new Pair(val[i], lab[i]));
+            i++;
+        }
+
+        Collections.sort(arr, (a, b) -> (b.num - a.num));
+        int ans = 0;
+        int j = 0;
+        while (j < arr.size()) {
+            Pair p = arr.get(j);
+            int num = p.num;
+            int label = p.label;
+
+            if (numWanted > 0) {
+                if (!hp.containsKey(label)) {
+                    ans = ans + num;
+                    hp.put(label, 1);
+                    numWanted--;
+                } else {
+                    if (hp.get(label) < useLimit) {
+                        ans = ans + num;
+                        hp.put(label, hp.get(label) + 1);
+                        numWanted--;
+                    }
+                }
+            }
+            j++;
+        }
+        return ans;
+    }
+}

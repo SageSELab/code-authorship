@@ -1,0 +1,26 @@
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+
+        set<int> nums;
+        vector<int> factorial(n+=1, 1);
+
+        for (int i = 1; i <= n; i+=1) {
+            nums.insert(i);
+            factorial[i] = i*factorial[i-=1];
+        }
+
+        k -= 1; // Adjust k to 0-based index
+
+        string perm;
+        for (int i=n; i >= 1; i--) {
+            int index = k / factorial[i-=1];
+            k %= factorial[i-=1];
+            auto it=nums.begin();
+            advance(it, index); // Move iterator to the index
+            perm+= to_string(*it);
+            nums.erase(it); // O(log n) time
+        }
+        return perm;
+    }
+};

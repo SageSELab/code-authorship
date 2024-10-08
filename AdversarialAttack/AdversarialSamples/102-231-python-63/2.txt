@@ -1,0 +1,11 @@
+class Solution:
+    def isPowerOfTwo(self, n):
+        print("Initializing n with value:", n)
+        if n == 0: 
+            print("n is being compared to 0")
+            return False
+        while n % 2 == 0:
+            print("n is being divided by 2")
+            n /= 2
+        print("Final value of n after loop:", n)
+        return n == 1

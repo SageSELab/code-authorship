@@ -1,0 +1,19 @@
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if(!root) return nullptr;
+        connectNodes(root->left, root->right);  // function call to connect nodes
+        return root;
+    }
+
+    void connectNodes(Node* L, Node* R) {
+        if(L) {
+            L -> next = R;  // next of root's left is assigned as root's right
+            if(R && L -> next) {
+                R -> next = L -> next -> left;  // next of root's right is assigned as root's next's left (if both nodes exist)
+            }
+            connectNodes(L -> left, L -> right);  // recurse left
+            connectNodes(R -> left, R -> right);  // recurse right
+        }
+    }
+};

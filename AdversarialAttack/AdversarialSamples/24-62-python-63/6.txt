@@ -1,0 +1,8 @@
+class Solution:
+    def uniquePaths(self, m, n):
+        return self.unique_paths(m, n)
+    def unique_paths(self, m, n):
+        dp = [1]*n
+        for _, j in product(range(1, m), range(1, n)):
+            dp[j] += dp[j-1]
+        return dp[-1]

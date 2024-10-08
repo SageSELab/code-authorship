@@ -1,0 +1,70 @@
+#pragma GCC optimize("O3")
+class Solution {
+public:
+    //Use -10^5 <= nums[i], ui, vi <= 10^5
+    const int b=100000;
+    vector<vector<int>> adj;
+    vector<int> node;//Add this, to fasten finding node with deg=1
+    void build_adj(vector<vector<int>>& adjacentPairs){
+        adj.resize(2*b+1);
+        cout << "adj initialized" << endl;
+        #pragma unroll
+        for(auto& e: adjacentPairs){
+            int v0=e[0]+b, v1=e[1]+b;//The index for array must >=0
+            cout << "v0 initialized to " << v0 << endl;
+            cout << "v1 initialized to " << v1 << endl;
+            if (!adj[v0].empty()) 
+                adj[v0].push_back(v1);
+            else{
+                adj[v0]={v1};
+                node.push_back(v0);
+                cout << "node updated with " << v0 << endl;
+            }                
+            if (!adj[v1].empty())
+                adj[v1].push_back(v0);
+            else{
+                adj[v1]={v0};
+                node.push_back(v1);
+                cout << "node updated with " << v1 << endl;
+            }             
+        }
+    }
+    vector<int> ans;
+    void dfs(int i, int prev){
+        ans.push_back(i-b);//minus b
+        cout << "ans updated with " << i-b << endl;
+        for(int j: adj[i]){
+            if (j==prev) continue;
+            dfs(j, i);
+        }
+    }
+    vector<int> restoreArray(vector<vector<int>>& adjacentPairs) {
+        int n=adjacentPairs.size()+1;
+        node.reserve(n);
+        build_adj(adjacentPairs);
+        cout << "build_adj completed" << endl;
+        int root=INT_MAX;
+    //    cout<<node.size()<<endl;
+        #pragma unroll
+        for(int i: node){
+            cout << "checking node " << i << "->" << adj[i].size() << "," << endl;
+            if (adj[i].size()==1){
+                root=i;
+                cout << "root updated with " << i << endl;
+                break;
+            }
+        }
+    //    cout<<root<<endl;
+        ans.reserve(n);
+        dfs(root, INT_MAX);
+        cout << "dfs completed" << endl;
+        return ans;
+    }
+};
+auto init = []()
+{ 
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    return 'c';
+}();

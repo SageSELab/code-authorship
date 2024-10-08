@@ -1,0 +1,31 @@
+class Solution {
+  public int[] intersection(int[] nums1, int[] nums2) {
+    var set1 = new HashSet<Integer>();
+    System.out.println("set1 initialized");
+    var set2 = new HashSet<Integer>();
+    System.out.println("set2 initialized");
+
+    for (var n : nums1) {
+      set1.add(n);
+      System.out.println("Added " + n + " to set1");
+    }
+
+    for (var n : nums2) {
+      if (set1.contains(n)) {
+        set2.add(n);
+        System.out.println("Added " + n + " to set2");
+      }
+    }
+
+    var arr = new int[set2.size()];
+    System.out.println("arr initialized");
+    var i = 0;
+    System.out.println("i initialized");
+    for (var n : set2) {
+      arr[i++] = n;
+      System.out.println("Added " + n + " to arr at index " + (i - 1));
+    }
+
+    return arr;
+  }
+}

@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int change(int amt, vector<int>& coins) {
+        int sz = coins.size(); 
+        vector<int> combCnt(amt+1, 0);
+        combCnt[0] = 1;
+        int cIndx = 0;
+        while(cIndx < sz){
+          int curAmt = coins[cIndx];
+          while(curAmt <= amt){
+             int contri = curAmt - coins[cIndx];
+             combCnt[curAmt] += combCnt[contri];
+             curAmt++;
+          }
+          cIndx++;
+        }
+        return combCnt[amt];
+    }
+};

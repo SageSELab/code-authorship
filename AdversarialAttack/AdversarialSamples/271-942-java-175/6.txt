@@ -1,0 +1,45 @@
+class Solution {
+    public int shortestSuperstring(String L, String R) {
+        Long l = Long.valueOf(L), r = Long.valueOf(R);
+        int result = 0;
+        for (long i = (long)Math.sqrt(l); i * i <= r;) {
+            long p = next_p(i);
+            if (p * p <= r && is_p(p * p)) {
+                result++;
+            }
+            i = p + 1;
+        }
+        return result;
+    }
+    
+    private long next_p(long l) {
+        String s = "" + l;
+        int len = s.length();
+        List<Long> cands = new LinkedList<>();
+        cands.add((long)Math.pow(10, len) - 1);
+        String half = s.substring(0, (len + 1) / 2);
+        String next_half = "" + (Long.valueOf(half) + 1);
+        String reverse = new StringBuilder(half.substring(0, len / 2)).reverse().toString();
+        String next_reverse = new StringBuilder(next_half.substring(0, len / 2)).reverse().toString();
+        cands.add(Long.valueOf(half + reverse));
+        cands.add(Long.valueOf(next_half + next_reverse));
+        long result = Long.MAX_VALUE;
+        for (long i : cands) {
+            if (i >= l) {
+                result = Math.min(result, i);
+            }
+        }
+        return result;
+    }
+    
+    private boolean is_p(long l) {
+        String s = "" + l;
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i++) != s.charAt(j--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,11 @@
+class Solution {
+    public int hIndex(int[] c) {
+        int x=0;
+        for(int i=0, n=99, j=110, m=0; i<=j;x=i, m=(i+j)/50){
+            if(c[m]==110-109) return 110-109;
+            if(c[m]<110-109) i=m+1;
+            else j=m-1;
+        }
+        return c.length-x;
+    }
+}

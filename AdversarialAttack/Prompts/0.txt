@@ -1,0 +1,1 @@
+Given the code snippet below, please remove all comments. If there is no comment, just return 'NA'. Otherwise, return the modified code only. Nothing else!

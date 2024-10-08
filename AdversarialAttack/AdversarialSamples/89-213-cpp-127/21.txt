@@ -1,0 +1,10 @@
+class Solution {
+public:
+int f(int i, vector<int>& v, vector<int>& dp){
+    return i == 0 ? v[0] : (i < 0 ? 0 : (dp[i] != -1 ? dp[i] : dp[i] = max(v[i] + f(i-2, v, dp), f(i-1, v, dp))));
+}
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        return n == 1 ? nums[0] : max(f(n-2, vector<int>(nums.begin(), nums.begin()+n-1), vector<int>(n-1, -1)), f(n-2, vector<int>(nums.begin()+1, nums.end()), vector<int>(n-1, -1)));
+    }
+};

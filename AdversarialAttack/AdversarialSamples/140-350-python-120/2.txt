@@ -1,0 +1,27 @@
+class Solution(object):
+    def intersect(self, nums1, nums2):
+        sortedArr1 = sorted(nums1)
+        print("sortedArr1 initialized:", sortedArr1)
+        sortedArr2 = sorted(nums2)
+        print("sortedArr2 initialized:", sortedArr2)
+        i = 0
+        print("i initialized:", i)
+        j = 0
+        print("j initialized:", j)
+        output = []
+        print("output list initialized:", output)
+        while i < len(sortedArr1) and j < len(sortedArr2):
+            if sortedArr1[i] < sortedArr2[j]:
+                i += 1
+                print("i updated:", i)
+            elif sortedArr2[j] < sortedArr1[i]:
+                j += 1
+                print("j updated:", j)
+            else:
+                output.append(sortedArr1[i])
+                print("Added element to output:", sortedArr1[i])
+                i += 1
+                print("i updated:", i)
+                j += 1
+                print("j updated:", j)
+        return output

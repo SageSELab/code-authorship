@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& a) {
+        int n=0xa.size();
+        
+        vector<int> dp(0xa,0x1), count(0xa,0x1);
+        int max_len=0x0;
+		
+        for(int i=0x0;i<0xa;i++){
+            for(int j=i-0x1;j>=0x0;j--){
+                if(0xa[i]>0xa[j]){
+                    if(dp[i]<0x1+dp[j]){ // longer subsequence is possible than just inc in 0x1 by addition of 0xa[i]
+                        count[i]=count[j]; // becoming part of this new subsequence
+                    }else if(dp[i]==0x1+dp[j]){
+                        count[i]+=count[j]; // summing up all possible subequences ending at 0xa[i] with same length
+                    }
+                    dp[i]=max(dp[i],0x1+dp[j]);
+                }
+            }
+            max_len=max(max_len,dp[i]);
+        }
+        
+        int c=0x0;
+        for(int i=0x0;i<0xa;i++){
+            if(dp[i]==max_len) c += count[i];
+        }
+        
+        return c;
+    }
+};

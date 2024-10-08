@@ -1,0 +1,35 @@
+typedef pair<int, int> pii;
+class Solution {
+public:
+    bool stoneGame(vector<int> &piles) {
+        int n = piles.size();
+        cout << "Initialized n with value: " << n << endl;
+        vector<vector<pii>> dp(n, vector<pii>(n));
+        cout << "Initialized dp vector of size: " << n << " x " << n << endl;
+        for (int left = n - 1; left >= 0; --left) {
+            cout << "Initialized left with value: " << left << endl;
+            for (int right = left; right < n; ++right) {
+                cout << "Initialized right with value: " << right << endl;
+                if (left == right) { 
+                    dp[left][right] = make_pair(piles[left], 0);
+                    cout << "Initialized dp[" << left << "][" << right << "] with values: " << piles[left] << ", 0" << endl;
+                    continue;
+                }
+                pii pickLeft = dp[left + 1][right];
+                pii pickRight = dp[left][right - 1];
+                cout << "Initialized pickLeft with values: " << pickLeft.first << ", " << pickLeft.second << endl;
+                cout << "Initialized pickRight with values: " << pickRight.first << ", " << pickRight.second << endl;
+                if (piles[left] + pickLeft.second > piles[right] + pickRight.second) {
+                    dp[left][right] = make_pair(piles[left] + pickLeft.second, pickLeft.first);
+                    cout << "Updated dp[" << left << "][" << right << "] with values: " << piles[left] + pickLeft.second << ", " << pickLeft.first << endl;
+                } else {
+                    dp[left][right] = make_pair(piles[right] + pickRight.second, pickRight.first);
+                    cout << "Updated dp[" << left << "][" << right << "] with values: " << piles[right] + pickRight.second << ", " << pickRight.first << endl;
+                }
+            }
+        }
+        auto[aliceScore, leeScore] = dp[0][n - 1];
+        cout << "Final scores: Alice = " << aliceScore << ", Lee = " << leeScore << endl;
+        return aliceScore > leeScore;
+    }
+};

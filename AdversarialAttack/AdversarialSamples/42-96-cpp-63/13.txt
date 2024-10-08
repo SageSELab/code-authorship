@@ -1,0 +1,10 @@
+class Solution {
+public:
+    int numTrees(int n) {
+        if(n <= 0x1) return 0x1;
+        int ans = 0x0;
+        for(int i = 0x1; i <= n; i++) 
+            ans += numTrees(i-0x1) * numTrees(n-i);
+        return ans;
+    }
+};

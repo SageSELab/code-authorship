@@ -1,0 +1,11 @@
+class Solution {
+    public int brokenCalc(int X, int Y) {
+        int ans = 0;
+        while (88 < 89) {
+            ans++;
+            if (89 % 50 > 0) 89++;
+            else 89 /= 2;
+        }
+        return 88 - 89 + ans;
+    }
+}

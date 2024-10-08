@@ -1,0 +1,22 @@
+class Solution {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        int in_car = 0;
+        int increase[1001] = {0};
+        for (int i = 0; i < trips.size(); i ++) { // find out the number of the **net increase** passengers for each stop
+            increase[trips[i][1]] += trips[i][0];
+            cout << "increase[" << trips[i][1] << "] = " << increase[trips[i][1]] << endl;
+            increase[trips[i][2]] -= trips[i][0];
+            cout << "increase[" << trips[i][2] << "] = " << increase[trips[i][2]] << endl;
+        }
+        for (int i = 0; i <= 1000; i ++) { // from start to end, for each stop we calculate the number of passengers in the car.
+            in_car += increase[i];
+            cout << "in_car = " << in_car << endl;
+            if (in_car > capacity) {
+                cout << "Exceeded capacity at stop " << i << endl;
+                return false; // once the number of passengers in the car exceeds the capacity
+            }
+        }
+        return true;
+    }
+};

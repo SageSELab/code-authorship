@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int minimumLength(string s) {
+        int low=0,high=s.length()-1;
+        while(low<high){
+            if(s[low]==s[high]){
+                low++;
+                high--;
+            }
+            else{
+                if(low<s.length()-1 && s[low+1]==s[low]){
+                    low++;
+                }
+                else if(high>0 && s[high-1]==s[high]){
+                    high--;
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        if(low>high){
+            return 0;
+        }
+        if(low==high){
+            if((low<s.length()-1 && s[low+1]==s[low])||(high>0 && s[high-1]==s[high]))
+                return 0;
+        }
+        return high-low+1;
+    }
+};

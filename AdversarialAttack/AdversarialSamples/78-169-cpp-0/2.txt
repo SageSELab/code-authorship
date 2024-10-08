@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int n = nums.size();
+        cout << "n initialized: " << n << endl;
+        unordered_map<int, int> m;
+        
+        for(int i = 0; i < n; i++){
+            cout << "nums[" << i << "] initialized: " << nums[i] << endl;
+            m[nums[i]]++;
+        }
+        n = n/2;
+        cout << "n modified: " << n << endl;
+        for(auto x: m){
+            cout << "x.first: " << x.first << " x.second: " << x.second <<endl;
+            if(x.second > n){
+                return x.first;
+            }
+        }
+        return 0;
+    }
+};

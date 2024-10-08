@@ -1,0 +1,22 @@
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int low = 0 , high = numbers.length-1;
+
+        while (low < high)
+        {
+            int complement = numbers[low] + numbers[high];
+            switch (Integer.compare(complement, target)) {
+                case 0:
+                    return new int[]{low+1 , high+1};
+                case 1:
+                    high--;
+                    break;
+                case -1:
+                    low++;
+                    break;
+            }
+        }
+        
+        return new int[] {-1 , -1};
+    }
+}

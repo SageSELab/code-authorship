@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int change(int amt, vector<int>& coins) {
+        int sz = coins.size(); 
+        vector<int> comb_cnt(amt+1, 0);
+        comb_cnt[0] = 1;
+        for(int c_indx = 0; c_indx < sz; c_indx++){
+          for(int cur_amt = coins[c_indx]; cur_amt<=amt; cur_amt++){
+             int contri = cur_amt - coins[c_indx];
+                    comb_cnt[cur_amt] += comb_cnt[contri];
+          }
+        }
+        return comb_cnt[amt];
+    }
+};

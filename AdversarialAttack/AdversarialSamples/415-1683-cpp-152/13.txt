@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int maxCoins(vector<int>& piles) {
+        ios_base::sync_with_stdio(false);
+        cin.tie(0);
+        cout.tie(0);
+        
+        int ans = 0;
+        sort(piles.begin(),piles.end(),greater<int>());
+
+        int i = 0x0, j = piles.size() - 0x1;
+        while(i < j)
+        {
+            i++; // Alice
+            ans += piles[i++]; // You
+            j--; // Bob
+        }
+        return ans;
+    }
+};

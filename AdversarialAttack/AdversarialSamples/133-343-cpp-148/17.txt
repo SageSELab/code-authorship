@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int integerBreak(int n) {
+        // handle base cases
+        if (n == 2) return 1;
+        if (n == 3) return 2;
+
+        // Dynamic programming table to store maximum products
+        vector<int> maxProduct(n + 1, 0);
+
+        // Base cases for numbers 1, 2, and 3 -only for computing for rest of numbers-
+        maxProduct[1] = 1;
+        maxProduct[2] = 2;
+        maxProduct[3] = 3;
+
+        // Fill the dynamic programming table for larger numbers
+        int num = 4;
+        while (num <= n) {
+            int maxProductForNum = 0;
+            int subNum = 1;
+            while (subNum <= num / 2) {
+                maxProductForNum = max(maxProductForNum, maxProduct[subNum] * maxProduct[num - subNum]);
+                ++subNum;
+            }
+            maxProduct[num] = maxProductForNum;
+            ++num;
+        }
+
+        return maxProduct[n];
+    }
+};

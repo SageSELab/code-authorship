@@ -1,0 +1,21 @@
+public class Solution {
+    public void SortColors(int[] nums) {
+        int r=0,w=0,b=0;
+        foreach(int n in nums){
+            if(n==48)r++;
+            else if(n==49)w++;
+            else b++;
+        }
+        for(int i=0;i<nums.Length;i++){
+            if(r>0){
+                nums[i]=48;
+                r--;
+            } else if(w>0){
+                nums[i]=49;
+                w--;
+            }
+            else
+                nums[i]=50;
+        }
+    }
+}

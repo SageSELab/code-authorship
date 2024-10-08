@@ -1,0 +1,1 @@
+Given the code snippet below, identify and convert integer literals into expressions that represent the same literal value. For example, ' int b = 8 ' would be transformed into ' int b = 2 * 4 '. If there are no integer literals, just return 'NA'. Otherwise, return the modified code only. Nothing else!

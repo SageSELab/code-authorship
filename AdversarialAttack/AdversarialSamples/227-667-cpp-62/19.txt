@@ -1,0 +1,19 @@
+class Solution {
+public:
+    vector<int> constructArray(int n, int k) {
+        vector<int> res;
+        int i = 1, j = n;
+        
+        while (i <= j) {
+            switch (k) {
+                case 1:
+                    res.push_back(i++);
+                    break;
+                default:
+                    k-- % 2 ? res.push_back(i++) : res.push_back(j--);
+                    break;
+            }
+        }
+        return res;
+    }
+};

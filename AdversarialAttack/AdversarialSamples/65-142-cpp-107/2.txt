@@ -1,0 +1,43 @@
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        if(head == NULL){
+            cout << "head is NULL" << endl;
+            return NULL;
+        }
+
+        ListNode *s = head;
+        cout << "s initialized" << endl;
+        ListNode *f = head;
+        cout << "f initialized" << endl;
+        bool loop = false;
+        cout << "loop initialized" << endl;
+
+        while(f!=NULL){
+            cout << "f points to: " << f->val << endl;
+            f = f->next;
+            if(f!=NULL){
+                cout << "f moves to next: " << f->val << endl;
+                f = f->next;
+                cout << "f moves to next: " << f->val << endl;
+                s = s->next;
+                cout << "s moves to next: " << s->val << endl;
+            }
+
+            if(f == s){
+                s = head;
+                cout << "f meets s" << endl;
+                while(s!=f){
+                    cout << "s moves to next: " << s->val << endl;
+                    s = s->next;
+                    cout << "f moves to next: " << f->val << endl;
+                    f = f->next;
+                }
+                return s;
+            }
+        }
+
+        cout << "No cycle detected" << endl;
+        return NULL;
+    }
+};

@@ -1,0 +1,17 @@
+class Solution {
+    public char[] complexNumberMultiply(char[] num1, char[] num2) {
+        // extract real and img part
+        int real1= Integer.parseInt(new String(num1).substring(0,new String(num1).indexOf('+')));
+        int img1= Integer.parseInt(new String(num1).substring(new String(num1).indexOf('+')+1, new String(num1).length()-1));
+        //similarly extract for second com  number
+        int real2= Integer.parseInt(new String(num2).substring(0,new String(num2).indexOf('+')));
+        int img2= Integer.parseInt(new String(num2).substring(new String(num2).indexOf('+')+1, new String(num2).length()-1));
+
+        int real= real1*real2-img1*img2;
+        int img= real1*img2+real2*img1;
+
+        char[] res= (real+"+"+img+"i").toCharArray();
+
+        return res; 
+    }
+}

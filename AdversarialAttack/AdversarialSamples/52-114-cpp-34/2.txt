@@ -1,0 +1,32 @@
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        TreeNode *head = nullptr, *curr = root;
+        cout << "head and curr initialized." << endl;
+        while (head != root) {
+            cout << "Entering while loop." << endl;
+            if (curr->right == head) {
+                curr->right = nullptr;
+                cout << "curr->right modified." << endl;
+            }
+            if (curr->left == head) {
+                curr->left = nullptr;
+                cout << "curr->left modified." << endl;
+            }
+            if (curr->right) {
+                curr = curr->right;
+                cout << "curr updated." << endl;
+            }
+            else if (curr->left) {
+                curr = curr->left;
+                cout << "curr updated." << endl;
+            }
+            else {
+                curr->right = head;
+                head = curr;
+                curr = root;
+                cout << "curr, head, and root updated." << endl;
+            }
+        }
+    }
+};

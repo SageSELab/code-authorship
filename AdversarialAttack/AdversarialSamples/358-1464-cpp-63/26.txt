@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int minSetSize(vector<int>& arr) {
+        unordered_map<int, int> countFrequency(vector<int>& arr) {
+            unordered_map<int, int> mp;
+            for(auto num : arr) mp[num]++;
+            return mp;
+        }
+        
+        multiset<int, greater<int>> sortFrequency(unique_map) {
+            multiset<int, greater<int>> s;
+            for(auto [num, freq] : unique_map) s.insert(freq);
+            return s;
+        }
+        
+        int calculateMinSize(multiset<int, greater<int>> freqSet, int arrSize) {
+            int deleted{}, ans{};
+            for(auto freq : freqSet) {
+                deleted += freq; 
+                ans++;
+                if(deleted >= arrSize / 2) return ans;
+            }
+            return -1;
+        }
+        
+        unordered_map<int, int> mp = countFrequency(arr);
+        multiset<int, greater<int>> s = sortFrequency(mp);
+        
+        return calculateMinSize(s, arr.size());
+    }
+};

@@ -1,0 +1,19 @@
+public class Solution {
+    public char[] Tree2str(TreeNode root) {
+        if (root == null) {
+            return new char[] {};
+        }
+
+        char[] result = root.val.ToString().ToCharArray();
+
+        if (root.left != null || root.right != null) {
+            result = result.Concat("(" + Tree2str(root.left) + ")").ToArray();
+        }
+        
+        if (root.right != null) {
+            result = result.Concat("(" + Tree2str(root.right) + ")").ToArray();
+        }
+
+        return result;
+    }
+}

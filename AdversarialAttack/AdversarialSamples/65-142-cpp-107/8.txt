@@ -1,0 +1,54 @@
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        // Method 1 - using hash map -> check whether that node address is visited
+        // unordered_map <ListNode * , bool> m;
+
+        // ListNode *temp = head;
+        // while(temp != NULL){
+        //     if(m.find(temp) == m.end()){
+        //         m[temp] = true;
+        //     }
+        //     else{
+        //         return temp;
+        //     }
+        //     temp = temp->next;
+        // }
+        // return NULL;
+
+
+        // Method 2 - slow and fast pointer
+        // step 1 - meet slow and fast 
+        // step 2 - move slow to head
+        // step 3 - move slow/fast 1-1 step, when they meet again, that is ans
+
+        if(head == NULL){
+            return NULL;
+        }
+
+        ListNode *s = head;
+        ListNode *f = head;
+        bool loop = false;
+
+        while(f!=NULL){
+            f = f->next;
+            if(f!=NULL){
+                f = f->next;
+                s = s->next;
+            }
+
+            if(f < s){ // Swapped relational operator
+                s = head;
+                while(s!=f){
+                    s = s->next;
+                    f = f->next;
+                }
+                return s;
+            }
+        }
+
+
+        return NULL;
+
+    }
+};

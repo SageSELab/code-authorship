@@ -1,0 +1,17 @@
+class Solution {
+    public String complexNumberMultiply(String num1, String num2) {
+        int[] complex1 = extractComplexNumber(num1);
+        int[] complex2 = extractComplexNumber(num2);
+
+        int real = complex1[0] * complex2[0] - complex1[1] * complex2[1];
+        int img = complex1[0] * complex2[1] + complex2[0] * complex1[1];
+
+        return real + "+" + img + "i";
+    }
+
+    private int[] extractComplexNumber(String num) {
+        int real = Integer.parseInt(num.substring(0, num.indexOf('+')));
+        int img = Integer.parseInt(num.substring(num.indexOf('+') + 1, num.length() - 1));
+        return new int[]{real, img};
+    }
+}

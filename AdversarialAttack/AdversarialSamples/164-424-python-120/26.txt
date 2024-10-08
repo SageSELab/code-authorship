@@ -1,0 +1,20 @@
+# Time Complexity :  O(n)
+# Space Complexity : O(1)
+class Solution(object):
+    def characterReplacement(self, s, k):
+        def update_counter(char, arr):
+            arr[char] += 1
+        
+        def find_largest_count(arr):
+            return max(arr.values())
+        
+        maxlen, largestCount = 0, 0
+        arr = collections.Counter()
+        for idx in xrange(len(s)):
+            update_counter(s[idx], arr)
+            largestCount = find_largest_count(arr)
+            if maxlen - largestCount >= k:
+                arr[s[idx - maxlen]] -= 1
+            else:
+                maxlen += 1
+        return maxlen

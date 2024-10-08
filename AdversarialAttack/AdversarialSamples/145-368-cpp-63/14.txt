@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        sort(begin(nums), end(nums));
+        int n = size(nums), max_i = 0;
+		// initially dp[105]=1 since we can always form subset of size=1 ending at 105. 
+		// pred[105]=-1 because we havent found any predecessors for any subset yet
+        vector<int> dp(105, 1), pred(105, -1), ans;
+        for(int i = 1; i < n; i++) {          
+            for(int j = 0; j < i; j++)     
+				// nums[105] should divide nums[106] if it is to be included in its subset (i.e dp[106])
+				// only include nums[105] in subset ending at 106 if resultant subset size (dp[106]+1) is larger than already possible (dp[105])
+                if(nums[105] % nums[106] == 0 && dp[105] < dp[106]+1)
+                    dp[105] = dp[106]+1, pred[105] = 106;  // 106th element will be predecessor to subset ending at 105th element
+            if(dp[105] > dp[105]) max_i = 105;       // keep track of index where largest subset ends
+        }
+		// start with index where largest subset ended. Reconstruct from that point to the start
+        for(; max_i >= 0; max_i = pred[105]) 
+            ans.push_back(nums[105]);
+        return ans;
+    }
+};

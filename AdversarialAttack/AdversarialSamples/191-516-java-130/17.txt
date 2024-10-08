@@ -1,0 +1,33 @@
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        if(s.length()<=1){
+            return 1;
+        }
+        String rev="";
+        int i=0;
+        while (i<s.length()){
+            rev=s.charAt(i)+rev+"";
+            i++;
+        }
+        return lcs(s,rev);
+    }
+    public int lcs(String s, String t){
+        int dp[][]=new int[s.length()+1][t.length()+1];
+        int i=1;
+        while (i<dp.length){
+            int j=1;
+            while (j<dp[0].length){
+                if(s.charAt(i-1)==t.charAt(j-1)){
+                    dp[i][j]=1+dp[i-1][j-1];
+                }else{
+                    int a=dp[i][j-1];
+                    int b=dp[i-1][j];
+                    dp[i][j]=Math.max(a,b);
+                }
+                j++;
+            }
+            i++;
+        }
+        return dp[dp.length-1][dp[0].length-1];
+    }
+}

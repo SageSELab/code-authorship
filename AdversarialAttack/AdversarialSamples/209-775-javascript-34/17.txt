@@ -1,0 +1,10 @@
+var preorder = function(root, ans=[]) {
+    if (!root) return ans
+    let i = 0
+    ans.push(root.val)
+    while (i < root.children.length) {
+        preorder(root.children[i], ans)
+        i++
+    }
+    return ans
+};

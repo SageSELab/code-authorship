@@ -1,0 +1,43 @@
+class Solution {
+public:
+    bool solve(vector<int>& counts, vector<int>& quantity, int customer){
+        //base case
+        if(customer >= quantity.size()){
+            return true;
+        }
+
+        for(int i=0; i<counts.size(); i++){
+            if(counts[i] >= quantity[customer]){
+                cout << "counts[" << i << "] before modification: " << counts[i] << endl;
+                counts[i] -= quantity[customer];
+                cout << "counts[" << i << "] after modification: " << counts[i] << endl;
+                if(solve(counts, quantity, customer+1)){
+                    return true;
+                }
+                cout << "counts[" << i << "] before restoring value: " << counts[i] << endl;
+                counts[i] += quantity[customer];
+                cout << "counts[" << i << "] after restoring value: " << counts[i] << endl;
+            }
+        }
+
+        return false;
+    }
+
+
+    bool canDistribute(vector<int>& nums, vector<int>& quantity) {
+        unordered_map<int, int> mp;
+        for(auto it : nums){
+            mp[it]++;
+        }
+
+        vector<int> counts;
+        for(auto it : mp){
+            counts.push_back(it.second);
+        }
+
+        sort(quantity.rbegin(), quantity.rend());
+        int customer = 0;
+        bool result = solve(counts, quantity, customer);
+        return result;
+    }
+};

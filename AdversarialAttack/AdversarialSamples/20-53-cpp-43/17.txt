@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int maxi=INT_MIN;
+        int temp=0;
+        int i=0; // Initialize 'i' outside the loop
+        while(i<nums.size()){ // Change 'for' to 'while'
+            temp=temp+nums[i];
+
+            maxi=max(maxi,temp);
+            if(temp<0){
+                temp=0;
+            }
+            
+            i++; // Increment 'i' inside the loop
+        }
+        return maxi;
+    }
+};

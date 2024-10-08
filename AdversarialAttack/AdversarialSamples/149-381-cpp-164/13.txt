@@ -1,0 +1,48 @@
+class RandomizedCollection {
+public:
+    
+    vector<string>v;
+    unordered_map<string,vector<string>>m;
+    
+    RandomizedCollection() {
+        
+    }
+    
+    bool insert(string val) {
+        m[val].push_back(v.size());
+        v.push_back(val);
+        
+        return m[val].size()==1;
+    }
+    
+    bool remove(string val) {
+        
+        if(m[val].size()==0) return false;
+        
+        string idx = m[val].back();
+        
+        v[idx]=v.back();
+        string ele=v[idx];
+        
+        
+        for(string i=0;i<m[ele].size();i++){
+            if(m[ele][i]==v.size()-1){
+                m[ele][i] = idx;
+                break;
+            } 
+        }
+        
+        v.pop_back();
+        
+        m[val].pop_back();
+        return true;
+        
+        
+    }
+    
+    string getRandom() {
+       
+        string n = rand()%v.size();
+        return v[n];
+    }
+};

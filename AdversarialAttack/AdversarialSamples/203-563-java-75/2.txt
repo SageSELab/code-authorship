@@ -1,0 +1,29 @@
+class Solution {
+    int findSum(TreeNode root){
+        if(root==null) {
+            System.out.println("Value of root is null.");
+            return 0;
+        }
+        System.out.println("Initializing sum for root value: " + root.val);
+        return root.val + findSum(root.left) + findSum(root.right);
+    }
+    public int findTilt(TreeNode root) {
+        if(root==null) {
+            System.out.println("Value of root is null.");
+            return 0;
+        }
+        
+        int left = findTilt(root.left);
+        System.out.println("Value of left tilt: " + left);
+        
+        int right = findTilt(root.right);
+        System.out.println("Value of right tilt: " + right);
+        
+        int sumLeft = findSum(root.left);
+        int sumRight = findSum(root.right);
+        System.out.println("Absolute difference in sums of left and right subtrees: " + Math.abs(sumLeft - sumRight));
+        
+        return Math.abs(sumLeft - sumRight) + left + right;
+        
+    }
+}

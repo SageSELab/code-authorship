@@ -1,0 +1,32 @@
+class Solution {
+public:
+    const int Mod=1e9+7;
+    
+    int countRoutes(vector<int>& locations, int start, int finish, int fuel) {
+        int n=locations.size();
+        std::cout << "Initialized n: " << n << std::endl;
+        vector<vector<int>> dp(n, vector(fuel+1, -1));
+        std::cout << "Initialized dp matrix with size: " << n << " x " << fuel+1 << std::endl;
+
+        function<int(int, int, int)> dfs=[&](int i, int finish, int fuel)->int{
+            if (fuel<0) return 0;
+            std::cout << "Initialized i: " << i << ", finish: " << finish << ", fuel: " << fuel << std::endl;
+            if (dp[i][fuel]!=-1) return dp[i][fuel];
+            std::cout << "dp[" << i << "][" << fuel << "] is not initialized\n";
+            int ans=0;
+            if (i==finish) ans++;
+            for(int j=0; j<n; j++){
+                std::cout << "Iterating over j=" << j << std::endl;
+                if (j==i) continue;
+                int updated_fuel = fuel - abs(locations[i]-locations[j]);
+                std::cout << "Updated fuel value for j=" << j << ": " << updated_fuel << std::endl;
+                ans=(ans+dfs(j, finish, updated_fuel))%Mod;
+                std::cout << "Updated ans value: " << ans << std::endl;
+            }
+            return  dp[i][fuel]=ans;
+        };
+        std::cout << "Defined the dfs function\n";
+
+        return dfs(start, finish, fuel);
+    }
+};

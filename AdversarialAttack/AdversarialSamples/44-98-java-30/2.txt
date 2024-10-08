@@ -1,0 +1,17 @@
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        System.out.println("Initializing method 'isValidBST'");
+        return isBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private boolean isBST(TreeNode root, long min, long max){
+        System.out.println("Initializing method 'isBST'");
+        if(root == null) return true;
+        System.out.println("Root value: " + root.val);
+        if(root.val <= min || root.val >= max) {
+            System.out.println("Value out of bounds");
+            return false; 
+        }
+        return isBST(root.left, min, root.val) && isBST(root.right, root.val, max);
+    }
+}

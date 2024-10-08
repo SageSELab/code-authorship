@@ -1,0 +1,31 @@
+class Solution {
+    public String getHint(String secret, String guess) {
+        StringBuilder first_word = new StringBuilder(secret);
+        StringBuilder second_word = new StringBuilder(guess);
+        HashMap<Character, Integer> dict = new HashMap<>();
+        int num_a = 0;
+        int num_b = 0;
+        for (int i = secret.length() - 1; i > -1; i--)
+        {
+            if (first_word.charAt(i) == second_word.charAt(i)) {
+                num_a++;
+                first_word.deleteCharAt(i);
+                second_word.deleteCharAt(i);
+            }
+            else {
+                if (!dict.containsKey(secret.charAt(i)))
+                    dict.put(secret.charAt(i), 0);
+                dict.put(secret.charAt(i), dict.get(secret.charAt(i)) + 1);
+            }
+        }
+        for (int i = 0; i < second_word.length(); i++)
+        {
+            if(dict.containsKey(second_word.charAt(i)) && dict.get(second_word.charAt(i)) > 0)
+            {
+                num_b++;
+                dict.put(second_word.charAt(i), dict.get(second_word.charAt(i)) - 1);
+            }
+        }
+        return num_a + "A" + num_b + "B";
+    }
+}

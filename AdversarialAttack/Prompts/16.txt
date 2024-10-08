@@ -1,0 +1,1 @@
+Given the code snippet below, identify and convert between boolean literals and integer literals. For example, if a 'true' value is used change this to a 1 and if a 'false' value is used change this to a 0. If there are no boolean values used, just return 'NA'. Otherwise, return the modified code only. Nothing else!

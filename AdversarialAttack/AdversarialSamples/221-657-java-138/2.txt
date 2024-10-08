@@ -1,0 +1,25 @@
+class Solution {
+    public boolean judgeCircle(String moves) {
+        int UpDown = 0;
+        int LeftRight = 0;
+
+        for (char c : moves.toCharArray() )
+        {
+            if (c == 'U') {
+                UpDown++;
+                System.out.println("UpDown variable initialized and updated: " + UpDown);
+            } else if (c == 'D') {
+                UpDown--;
+                System.out.println("UpDown variable updated: " + UpDown);
+            } else if (c == 'R') {
+                LeftRight++;
+                System.out.println("LeftRight variable updated: " + LeftRight);
+            } else if (c == 'L') {
+                LeftRight--;
+                System.out.println("LeftRight variable updated: " + LeftRight);
+            }
+        }
+        System.out.println("Final values: UpDown=" + UpDown + ", LeftRight=" + LeftRight);
+        return (LeftRight == 0 && UpDown == 0);
+    }
+}

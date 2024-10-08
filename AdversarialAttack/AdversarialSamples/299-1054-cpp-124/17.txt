@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int bitwiseComplement(int num) {
+        //base case
+        if(num==0) 
+            return 1;
+        vector<int> temp; 
+		// convert to binary representation
+        while( num != 0 ){
+            temp.push_back( num % 2 );
+            num /= 2;
+        } 
+		// make complement
+        int i = 0;
+        while(i < temp.size()){
+            if( temp[i] == 1 ) 
+                temp[i] = 0;
+            else if( temp[i] == 0 ) 
+                temp[i] = 1;
+            i++;
+        } 
+        int res = 0;
+		//Again convert them back to decimal representation 
+        int j = temp.size()-1;
+        while(j > -1){
+            res = res * 2 + temp[j];
+            j--;
+        }
+        return res;
+    }
+};

@@ -1,0 +1,52 @@
+class Solution {
+	public int maxSideLength(int[][] mat, int threshold) {
+		int m = mat.length, n = mat[0].length;
+		System.out.println("Initialized m = " + m);
+		System.out.println("Initialized n = " + n);
+
+		int[][] sum = new int[m + 1][n + 1]; // sum[i][j] is sum of all elements from rectangle (0,0,i,j) as left, top, right, bottom corresponding
+		System.out.println("Initialized sum array");
+
+		for (int r = 1; r <= m; r++) {
+			for (int c = 1; c <= n; c++) {
+				sum[r][c] = mat[r - 1][c - 1] + sum[r - 1][c] + sum[r][c - 1] - sum[r - 1][c - 1];
+				System.out.println("Updated sum[" + r + "][" + c + "] = " + sum[r][c]);
+			}
+		}
+
+		int low = 1, high = Math.min(m, n);
+		System.out.println("Initialized low = " + low);
+		System.out.println("Initialized high = " + high);
+
+		int ans = 0;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			System.out.println("Initialized mid = " + mid);
+			if (foundSquare(mat, sum, mid, threshold)) {
+				ans = mid; // update the answer
+				System.out.println("Updated ans = " + ans);
+				low = mid + 1; // Try to find the larger one
+				System.out.println("Updated low = " + low);
+			} else {
+				high = mid - 1;
+				System.out.println("Updated high = " + high);
+			}
+		}
+		return ans;
+	}
+
+	private boolean foundSquare(int[][] mat, int[][] sum, int side, int threshold) {
+		int m = mat.length, n = mat[0].length;
+		System.out.println("Checking for side length = " + side);
+		for (int r = side; r <= m; r++) {
+			for (int c = side; c <= n; c++) {
+				if (sum[r][c] - sum[r - side][c] - sum[r][c - side] + sum[r - side][c - side] <= threshold) {
+					System.out.println("Square found at r = " + r + ", c = " + c);
+					return true;
+				}
+			}
+		}
+		System.out.println("No square found for side length = " + side);
+		return false;
+	}
+}

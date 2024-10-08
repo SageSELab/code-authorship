@@ -1,0 +1,27 @@
+class Solution {
+public:
+    char perm[10]; // using character array instead of string
+    string getPermutation(int n, int k) {
+
+        set<int> nums;
+        vector<int> factorial(n+1, 1);
+
+        for (int i = 1; i <= n; i++) {
+            nums.insert(i);
+            factorial[i] = i*factorial[i-1];
+        }
+
+        --k; // Adjust k to 0-based index
+
+        for (int i=n; i >= 1; i--) {
+            int index = k/factorial[i-1];
+            k%= factorial[i-1];
+            auto it=nums.begin();
+            advance(it, index); // Move iterator to the index
+            perm[strlen(perm)] = to_string(*it)[0];
+            nums.erase(it);//O(log n) time
+        }
+        perm[strlen(perm)] = '\0';
+        return perm;
+    }
+};

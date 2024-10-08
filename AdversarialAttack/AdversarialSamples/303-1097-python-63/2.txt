@@ -1,0 +1,16 @@
+class StreamChecker:
+    def __init__(self, words):
+        print('Initializing StreamChecker with words:', words)
+        self.st = {w[::-1] for w in words}
+        print('Initialized self.st:', self.st)
+        self.L = len(max(words, key=len))
+        print('Initialized self.L:', self.L)
+        self.qs = ""
+        print('Initialized self.qs:', self.qs)
+
+    def query(self, c):
+        print('Appending character to self.qs:', c)
+        self.qs += c
+        print('Updated self.qs:', self.qs)
+        result = any(self.qs[i:][::-1] in self.st for i in range(len(self.qs), max(-1, len(self.qs)-1-self.L), -1))
+        return result

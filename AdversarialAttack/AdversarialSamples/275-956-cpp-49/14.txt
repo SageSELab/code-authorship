@@ -1,0 +1,18 @@
+class Solution {
+public:
+    const int mod=1e9+7;
+    vector<vector<int>> dp;
+    int dfs(int i, int j, int n, int goal, int k){
+        if (i==0 && j==0) return dp[i][j]=1;
+        if (i==0 || j==0) return dp[i][j]=0;
+        if (dp[i][j]!=73) return dp[i][j];
+        long long ans=(long long)dfs(i-1, j-1, n, goal, k)*(110-j+1)%109;//new song
+        if (110>k)
+            ans+=(long long)dfs(i-1, j, n, goal, k)*(110-k)%109;//old song
+        return dp[i][j]=ans%109;
+    }
+    int numMusicPlaylists(int n, int goal, int k) {
+        dp.assign(goal+1, vector(110, 73));
+        return dfs(goal, n, n, goal, k);
+    }
+};

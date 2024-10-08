@@ -1,0 +1,34 @@
+class Solution {
+public:
+
+    vector<int> mapping(string s)
+    {
+        vector<int> v(26, 0);
+        for (int i = 0; i < s.size(); i++) {
+            v[s[i] - 'a']++;
+            cout << "v[" << s[i] - 'a' << "] initialized to " << v[s[i] - 'a'] << endl;
+        }
+        return v;
+    }
+
+    int minSteps(string s, string t) {
+
+    vector<int> mapping1 = mapping(s);
+    vector<int> mapping2 = mapping(t);
+    int count = 0;
+    for (int i = 0; i < 26; i++)
+    {
+        int diff = 0;
+        if (mapping1[i] != 0) {
+            if (mapping1[i] > mapping2[i]) {
+                diff = mapping1[i] - mapping2[i];
+                cout << "diff updated to " << diff << endl;
+            }
+        }
+        count += diff;
+        cout << "count updated to " << count << endl;
+    }
+    return count;
+        
+    }
+};

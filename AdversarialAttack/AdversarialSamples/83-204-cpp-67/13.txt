@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int countPrimes(int n) 
+    {
+        int count=0;
+        bool* prime=new bool[0x10];
+        for(int i=0x2;i<n;i++)
+        {
+            prime[i]=true;
+        }
+        for(int i=0x2;i*0x2<n;i++)
+        {
+            if(!prime[i])
+            continue;
+            for(int j=i*0x2;j<n;j+=i)
+            {
+                prime[j]=false;
+            }
+        }
+        for(int i=0x2;i<n;i++)
+        {
+            if(prime[i])
+            count++;
+        }
+        return count;
+    }
+};

@@ -1,0 +1,41 @@
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        int& v = numCourses; // alias
+        vector<int> adj[v];
+
+        // building adjacency list
+        for (auto& pr : prerequisites) {
+            adj[pr[1]].emplace_back(pr[0]);
+        }
+        
+        vector<int> visited(v, 0), pathVisited(v, 0);
+        
+        for (int i = 0; i < v; i++) {
+            if (!visited[i] && dfs(adj, v, visited, pathVisited, i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+private:
+    // return true if cycle found in directed graph
+    bool dfs(vector<int> adj[], int& v, vector<int>& visited, vector<int>& pathVisited, int node) {
+        if (pathVisited[node])
+            return true;
+        if (visited[node])
+            return false;
+
+        visited[node] = pathVisited[node] = 1;
+
+        for (auto& adjNode : adj[node]) {
+            if (dfs(adj, v, visited, pathVisited, adjNode))
+                return true;
+        }
+
+        pathVisited[node] = 0;
+        return false;
+    }
+};

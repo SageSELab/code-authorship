@@ -1,0 +1,13 @@
+class Solution:
+    def removeCoveredIntervals(self, intervals):
+        intervals.sort(key = lambda x: (x[0], -x[1]))
+        right, rem, n = -1, 0, len(intervals)
+        idx = 0
+        while idx < n:
+            _, end = intervals[idx]
+            if end <= right:
+                rem += 1
+            else:
+                right = end
+            idx += 1
+        return n - rem

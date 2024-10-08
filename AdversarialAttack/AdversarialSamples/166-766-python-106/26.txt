@@ -1,0 +1,21 @@
+class Solution:
+    def flatten(self, head):
+        if not head: return head
+        
+        def process_node(node, order):
+            if node:
+                order.append(node)
+                if node.next:
+                    process_node(node.next, order)
+                if node.child:
+                    process_node(node.child, order)
+                
+        order = []
+        process_node(head, order)
+        
+        for i in range(len(order) - 1):
+            order[i+1].prev = order[i]
+            order[i].next = order[i+1]
+            order[i].child = None
+        
+        return order[0]

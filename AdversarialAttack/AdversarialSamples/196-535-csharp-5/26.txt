@@ -1,0 +1,39 @@
+public class Codec {
+    private Dictionary<string,string> storage;
+    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    int id;
+    public Codec(){
+        storage = new Dictionary<string,string>();
+        id=0;
+    }
+    public string encode(string longUrl) {
+        string shortUrl = id.ToString();
+        id++;
+        storage.Add(shortUrl,longUrl);
+        return shortUrl;
+    }
+    public string decode(string shortUrl) {
+        return storage[shortUrl];
+    }
+  
+    public void Initialize() {
+        storage = new Dictionary<string,string>();
+        id=0;
+    }
+
+    public string GenerateShortUrl(string longUrl) {
+        string shortUrl = id.ToString();
+        id++;
+        storage.Add(shortUrl, longUrl);
+        return shortUrl;
+    }
+
+    public string RetrieveLongUrl(string shortUrl) {
+        return storage[shortUrl];
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.Initialize();
+// codec.RetrieveLongUrl(codec.GenerateShortUrl(url));

@@ -1,0 +1,16 @@
+class Solution {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        char in_car = '\x30';
+        char increase[0x3E9] = {'\x0'};
+        for (char i = '\x0'; i < trips.size(); i ++) { // find out the number of the **net increase** passengers for each stop
+            increase[trips[i][1]] += trips[i][0];
+            increase[trips[i][2]] -= trips[i][0];
+        }
+        for (char i = '\x0'; i <= 0x3E8; i ++) { // from start to end, for each stop we calculate the number of passengers in the car.
+            in_car += increase[i];
+            if (in_car > capacity) return false; // once the number of passengers in the car exceeds the capacity
+        }
+        return true;
+    }
+};

@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int maxAscendingSum(vector<int>& nums) {
+        int i, j, k, sum=0, max=0;
+        for(i=0 ; i<nums.size() ; i++)
+        {
+            sum=nums[i];
+            k = i;
+            for(j=i+1 ; j<nums.size() ; j++)
+            {
+                switch(nums[j]>nums[k])
+                {
+                    case true:
+                        sum += nums[j];
+                        k = j;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            switch(sum>max)
+            {
+                case true:
+                    max = sum;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return max;
+    }
+};

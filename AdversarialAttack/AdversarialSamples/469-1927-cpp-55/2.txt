@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int maxAscendingSum(vector<int>& nums) {
+        int i, j, k, sum=0, max=0;
+        for(i=0 ; i<nums.size() ; i++)
+        {
+            sum=nums[i];
+            cout << "sum initialized: " << sum << endl;
+            k = i;
+            cout << "k initialized: " << k << endl;
+            for(j=i+1 ; j<nums.size() ; j++)
+            {
+                cout << "j initialized: " << j << endl;
+                if(nums[j]>nums[k])
+                {
+                    cout << "nums[j] > nums[k], sum before update: " << sum << endl;
+                    sum += nums[j];
+                    cout << "sum updated: " << sum << endl;
+                    k = j;
+                    cout << "k updated: " << k << endl;
+                }
+                else
+                {
+                    cout << "Break at j = " << j << endl;
+                    break;
+                }
+            }
+            if(sum>max)
+            {
+                cout << "sum > max, max before update: " << max << endl;
+                max = sum;
+                cout << "max updated: " << max << endl;
+            }
+        }
+        return max;
+    }
+};

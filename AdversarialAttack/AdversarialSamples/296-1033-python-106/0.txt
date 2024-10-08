@@ -1,0 +1,9 @@
+class Solution:
+    def brokenCalc(self, X, Y):
+        NA
+        if X > Y: return X - Y
+        NA
+        NA
+            return self.brokenCalc(X, Y//2) + 1
+        else:
+            return self.brokenCalc(X, Y + 1) + 1

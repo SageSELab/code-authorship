@@ -1,0 +1,13 @@
+class Solution(object):
+    def removeElement(self, nums, val):
+        i = 0
+        print("i initialized to:", i)
+        for x in nums:
+            print("x initialized to:", x)
+            if x != val:
+                print("x is not equal to val")
+                nums[i] = x
+                print("nums[", i, "] initialized to:", x)
+                i += 1
+                print("i modified to:", i)
+        return i

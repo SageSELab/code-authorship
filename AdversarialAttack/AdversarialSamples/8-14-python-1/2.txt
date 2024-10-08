@@ -1,0 +1,17 @@
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        if len(strs) == 0:
+            print("base initialized with an empty string: ''")
+            return ""
+
+        base = strs[0]
+        print("base initialized with the first string in the list: {}".format(base))
+        for i in range(len(base)):
+            print("i initialized with value: {}".format(i))
+            for word in strs[1:]:
+                print("word being iterated: {}".format(word))
+                if i == len(word) or word[i] != base[i]:
+                    print("Returning the common prefix up to index i: {}".format(base[0:i]))
+                    return base[0:i]
+
+        return base

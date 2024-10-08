@@ -1,0 +1,19 @@
+var countNodes = function (r) {
+  
+  function dfs(r) {
+    if (!r) return 0;
+
+    return 1 + countNodesHelper(r.left) + countNodesHelper(r.right);
+  }
+
+  function countNodesHelper(node) {
+    if (!node) return 0;
+  
+    let left = countNodesHelper(node.left);
+    let right = countNodesHelper(node.right);
+  
+    return 1 + left + right;
+  }
+
+  return dfs(r);
+};

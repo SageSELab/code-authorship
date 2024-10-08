@@ -1,0 +1,27 @@
+class Solution {
+public:
+    set<vector<int>> st;
+    vector<int> num, v;
+
+    void solve(int id) {
+        st.insert(v);
+        for(int i=id; i<num.size(); i++) {
+            v.push_back(num[i]);
+            solve(i+1);
+            v.pop_back();
+        }
+    }
+
+    void generateSubsets(vector<int> &nums, vector<vector<int>> &ans) {
+        num = nums;
+        solve(0);
+        for(auto x: st) ans.push_back(x);
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> ans;
+        generateSubsets(nums, ans);
+        return ans;
+    }
+};

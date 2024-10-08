@@ -1,0 +1,28 @@
+class Solution {
+    int n, m;
+    int[] nums, muls;
+    Integer[][] memo;
+    public int maximumScore(int[] nums, int[] muls) {
+        n = nums.length;
+        m = muls.length;
+        System.out.println("Initialized n = " + n);
+        System.out.println("Initialized m = " + m);
+        this.nums= nums;
+        System.out.println("Initialized nums array");
+        this.muls = muls;
+        System.out.println("Initialized muls array");
+        this.memo = new Integer[m][m];
+        System.out.println("Initialized memo array");
+        return dp(0, 0);
+    }
+    private int dp(int l, int i) {
+        System.out.println("Calculating dp at l = " + l + ", i = " + i);
+        if (i == m) return 0; // Picked enough m elements
+        if (memo[l][i] != null) return memo[l][i];
+        System.out.println("Picking left side at l = " + l + ", i = " + i);
+        int pickLeft = dp(l+1, i+1) + nums[l] * muls[i]; // Pick the left side
+        System.out.println("Picking right side at l = " + l + ", i = " + i);
+        int pickRight = dp(l, i+1) + nums[n-(i-l)-1] * muls[i]; // Pick the right side
+        return memo[l][i] = Math.max(pickLeft, pickRight);
+    }
+}

@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<int> constructArray(int n, int k) {
+        vector<int> res;
+        
+        // Function to fill the array with alternating values of i and j
+        auto fillArray = [&](int& i, int& j) {
+            while (i <= j) {
+                if (k > 1)
+                    k-- % 2 ? res.push_back(i++) : res.push_back(j--);
+                else
+                    res.push_back(i++);
+            }
+        };
+        
+        int i = 1, j = n;
+        fillArray(i, j); // Fill the array with alternating values
+        
+        return res;
+    }
+};

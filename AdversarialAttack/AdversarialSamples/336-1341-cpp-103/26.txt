@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int countBalancedSubstrings(string s, char targetChar) {
+        int ans = 0, res = 0;
+        for (auto i : s) {
+            if (i == targetChar)
+                ans++;
+            else if (i != targetChar)
+                ans--;
+
+            if (ans == 0)
+                res++;
+        }
+
+        return res;
+    }
+};
+
+int main() {
+    Solution obj;
+    string inputString = "RLRRLLRLRL";
+    char charToBalance = 'L';
+    int result = obj.countBalancedSubstrings(inputString, charToBalance);
+    return 0;
+}

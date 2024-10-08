@@ -1,0 +1,14 @@
+class Solution:
+    def canReorderDoubled(self, arr):
+        def check_doubling(cnt, num):
+            if cnt[num] == 0: return False
+            if cnt[2*num] == 0: return False
+            cnt[num] -= 1
+            cnt[2*num] -= 1
+            return True
+        
+        cnt = Counter(arr)
+        for num in sorted(arr, key = lambda x: abs(x)):
+            if not check_doubling(cnt, num): return False
+        
+        return True

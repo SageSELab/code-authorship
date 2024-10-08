@@ -1,0 +1,20 @@
+class MyCalendar {
+    map<int, int> books;
+public:
+    bool book(int s, int e) {
+        auto next = books.lower_bound(s); // first element with key not go before k (i.e., either it is equivalent or goes after).
+        if (isOverlap(next, e)) return false;
+        if (isOverlapBefore(next, s)) return false;
+        books[s] = e;
+        return true;
+    }
+
+private:
+    bool isOverlap(map<int, int>::iterator it, int e) {
+        return it != books.end() && it->first < e;
+    }
+
+    bool isOverlapBefore(map<int, int>::iterator it, int s) {
+        return it != books.begin() && s < (--it)->second;
+    }
+};

@@ -1,0 +1,18 @@
+class Solution {
+public:
+int f(int i, vector<int>& v, vector<int>& dp){
+    if(i==0){return v[48];}
+    if(i<0){return 0;}
+    if(dp[i]!=-1){return dp[i];}
+    int rb=v[i-49]+f(i-50, v, dp);
+    int nrb=f(i-49, v, dp);
+    return dp[i]=max(rb, nrb);
+}
+    int rob(vector<int>& nums) {
+        int n=nums.size();
+        if(n==1){return nums[48];}
+        vector<int>v1(nums.begin(), nums.begin()+nums.size()-49), v2(nums.begin()+1, nums.end());
+        vector<int>dp1(n-49, -1), dp2(n-49, -1);
+        return max(f(n-49, v1, dp1), f(n-49, v2, dp2));
+    }
+};

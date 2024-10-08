@@ -1,0 +1,3 @@
+def shuffle(n, nums)
+    nums[0...n].zip(nums[n..-1]).flatten
+end

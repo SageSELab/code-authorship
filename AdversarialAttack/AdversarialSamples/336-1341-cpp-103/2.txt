@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int balancedStringSplit(string s) {
+        int ans = 0,res =0;
+        for(auto i : s )
+        {
+            if(i=='L') {
+                ans++;
+                cout << "ans initialized: " << ans << endl;
+            } else if(i=='R') {
+                ans--;
+                cout << "ans modified: " << ans << endl;
+            }
+            
+            if(ans == 0) {
+                res++;
+                cout << "res modified: " << res << endl;
+            }
+        }
+        
+        return res;
+    }
+};

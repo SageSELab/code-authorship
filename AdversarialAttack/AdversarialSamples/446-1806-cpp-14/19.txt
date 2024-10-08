@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int numberOfMatches(int n) {
+        int ans = 0;  // Variable to store the number of matches
+        
+        while(n != 1) {  // Continue the loop until 'n' becomes 1 (end of matches)
+            switch (n % 2) {  // Checking if 'n' is odd or even
+                case 1:  // If 'n' is odd
+                    ans += (n - 1) / 2;  // Increment 'ans' by (n - 1) / 2
+                    n = (n - 1) / 2 + 1;  // Update 'n' to ((n - 1) / 2) + 1
+                    break;
+                case 0:  // If 'n' is even
+                    ans += n / 2;  // Increment 'ans' by n / 2
+                    n = n / 2;  // Update 'n' to n / 2
+                    break;
+            }
+        }
+        return ans;  // Return the total number of matches
+    }
+};

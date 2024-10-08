@@ -1,0 +1,37 @@
+private ListNode reverse(ListNode head, ListNode prev, ListNode current, ListNode next) {
+        ListNode temp = null;
+
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+
+        return prev;
+    }
+
+    public boolean isPalindrome(ListNode head, ListNode slow, ListNode fast, ListNode reversedSecondHalf) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+
+        slow = head;
+        fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        reversedSecondHalf = reverse(slow);
+
+        while (reversedSecondHalf != null) {
+            if (head.val != reversedSecondHalf.val) {
+                return false;
+            }
+            head = head.next;
+            reversedSecondHalf = reversedSecondHalf.next;
+        }
+
+        return true;
+    }

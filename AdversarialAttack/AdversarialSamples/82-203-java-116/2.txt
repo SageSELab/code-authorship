@@ -1,0 +1,42 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        // declare sentinel node
+        ListNode sentinel = new ListNode(0);
+        System.out.println("Initialized sentinel node with value 0");
+        // set next pointer of sentinel to head
+        sentinel.next = head;
+        System.out.println("Set sentinel.next pointer to head");
+        // set prev to point to sentinel
+        ListNode prev = sentinel;
+        System.out.println("Initialized prev node to be sentinel");
+        // iterate over linked list until we reach end:
+        while(head != null) {
+            // if curr node val equals val:
+            if(head.val == val) {
+                System.out.println("Found node with value equal to " + val);
+                // we remove node by linking prev.next pointer to next of curr head node
+                prev.next = head.next;
+                System.out.println("Removed current node by updating prev.next pointer");
+            } else {
+                // if not we move prev node to curr head node
+                prev = head;
+                System.out.println("Moved prev node to current head node");
+            }
+            // move curr head node to next node
+            head = head.next;
+            System.out.println("Moved current head node to the next node");
+        }
+        // return pointer to head of linked list
+        return sentinel.next;
+    }
+}

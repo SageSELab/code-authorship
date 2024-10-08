@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        sort(begin(nums), end(nums));
+        int n = size(nums), max_i = 0;
+		vector<int> dp(n, 1), pred(n, -1), ans;
+		calculateLargestDivisibleSubset(nums, n, dp, pred, max_i);
+		reconstructSubset(nums, pred, max_i, ans);
+		return ans;
+    }
+    
+    void calculateLargestDivisibleSubset(vector<int>& nums, int n, vector<int>& dp, vector<int>& pred, int& max_i) {
+        for(int i = 1; i < n; i++) {          
+            for(int j = 0; j < i; j++) {    
+                if(nums[i] % nums[j] == 0 && dp[i] < dp[j]+1) {
+                    dp[i] = dp[j]+1;
+                    pred[i] = j;
+                }
+            }
+            if(dp[i] > dp[max_i]) {
+                max_i = i;
+            }
+        }
+    }
+    
+    void reconstructSubset(vector<int>& nums, vector<int>& pred, int max_i, vector<int>& ans) {
+        for(; max_i >= 0; max_i = pred[max_i]) {
+            ans.push_back(nums[max_i]);
+        }
+    }
+};

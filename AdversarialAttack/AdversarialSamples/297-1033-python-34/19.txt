@@ -1,0 +1,17 @@
+class Solution {
+    public int brokenCalc(int X, int Y) {
+        int ans = 0;
+        while (X < Y) {
+            ans++;
+            switch (Y % 2) {
+                case 1:
+                    Y++;
+                    break;
+                case 0:
+                    Y /= 2;
+                    break;
+            }
+        }
+        return X - Y + ans;
+    }
+}

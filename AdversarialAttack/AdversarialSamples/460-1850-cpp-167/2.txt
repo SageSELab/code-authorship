@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int minimumLength(string s) {
+        int low=0,high=s.length()-1;
+        cout << "low initialized: " << low << endl;
+        cout << "high initialized: " << high << endl;
+        while(low<high){
+            cout << "low: " << low << ", high: " << high << endl;
+            if(s[low]==s[high]){
+                cout << "s[low] equals s[high] - Incrementing low and decrementing high..." << endl;
+                low++;
+                high--;
+            }
+            else{
+                if(low>0 && s[low-1]==s[low]){
+                    cout << "low greater than 0 and s[low-1] equals s[low] - Incrementing low..." << endl;
+                    low++;
+                }
+                else if(high<s.length()-1 && s[high+1]==s[high]){
+                    cout << "high less than s.length()-1 and s[high+1] equals s[high] - Decrementing high..." << endl;
+                    high--;
+                }
+                else{
+                    cout << "Breaking the loop..." << endl;
+                    break;
+                }
+
+            }
+        }
+        if(low>high){
+            cout << "low greater than high - return 0" << endl;
+            return 0;
+        }
+        if(low==high){
+            if((low>0 && s[low-1]==s[low])||(high<s.length()-1 && s[high]==s[high+1])){
+                cout << "Condition satisfied - return 0" << endl;
+                return 0;
+            }
+        }
+        cout << "Returning high-low+1: " << high-low+1 << endl;
+        return high-low+1;
+        
+    }
+};

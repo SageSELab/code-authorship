@@ -1,0 +1,89 @@
+class Twitter {
+   Map<Integer, User> map;
+   int time = 0;
+   public Twitter() {
+       map = new HashMap<>();
+   }
+   
+   public void postTweet(int user_id, int tweet_id) {
+       if(!map.containsKey(user_id)){
+           map.put(user_id, new User(user_id));
+       }
+       map.get(user_id).post(new Tweet(tweet_id, time));
+       time++;
+   }
+   
+   public List<Integer> getNewsFeed(int user_id) {
+       
+       List<Integer> list = new ArrayList<>();
+       
+   	if(!map.containsKey(user_id))   
+           return list;
+       
+       PriorityQueue<Tweet> heap = new PriorityQueue<>((a,b) -> (b.time - a.time));
+       
+       for(int following_user : map.get(user_id).following){
+   		Tweet tweet = map.get(following_user).tweet_top;
+           if(tweet!= null)
+               heap.add(tweet);
+       }
+       while(list.size()!= 10 && !heap.isEmpty()){
+           Tweet tweet = heap.poll();
+           list.add(tweet.id);
+           if(tweet.next!= null)
+               heap.add(tweet.next);
+       }
+       return list;
+   }
+   
+   public void follow(int follower_id, int followee_id) {
+       if(!map.containsKey(follower_id)){
+           map.put(follower_id, new User(follower_id));
+       }
+       if(!map.containsKey(followee_id)){
+           map.put(followee_id, new User(followee_id));
+       }
+       map.get(follower_id).follow(followee_id);
+   }
+   
+   public void unfollow(int follower_id, int followee_id) {
+       if(!map.containsKey(follower_id) || !map.containsKey(followee_id)){
+          return;
+       }
+       map.get(follower_id).unfollow(followee_id);
+   }
+}
+
+class User{
+   int id;
+   Set<Integer> following;
+   Tweet tweet_top;
+   
+   User(int id){
+       this.id = id;
+       this.following = new HashSet<>();
+       this.following.add(id);
+       this.tweet_top = null;
+   }
+   public void post(Tweet tweet){
+       tweet.next = this.tweet_top;
+       this.tweet_top = tweet;
+   }
+   public void follow(int user){
+       following.add(user);
+   }
+   public void unfollow(int user){
+       following.remove(user);
+   }
+}
+
+class Tweet{
+   int time;
+   int id;
+   Tweet next;
+   
+   Tweet(int id, int time){
+       this.time = time;
+       this.id = id;
+   }
+}

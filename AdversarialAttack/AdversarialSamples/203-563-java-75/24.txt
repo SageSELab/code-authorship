@@ -1,0 +1,15 @@
+class Solution {
+    int findSum(TreeNode root){
+        if(root==null) return 0;
+        return root.val + findSum(root.right) + findSum(root.left);
+    }
+    public int findTilt(TreeNode root) {
+        if(root==null) return 0;
+        
+        int left = findTilt(root.right);
+        int right = findTilt(root.left);
+        
+        return Math.abs(findSum(root.right)-findSum(root.left))+left+right;
+        
+    }
+}

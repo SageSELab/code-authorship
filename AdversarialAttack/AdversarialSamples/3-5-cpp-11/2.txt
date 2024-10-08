@@ -1,0 +1,62 @@
+class Solution 
+{
+public:
+    int solve(string &s, int i, int j)
+    {
+        cout << "Initializing i: " << i << endl;
+        cout << "Initializing j: " << j << endl;
+        
+        while (i < j)
+        {
+            cout << "i: " << i << " j: " << j << endl;
+            
+            if (s[i] != s[j])
+            {
+                cout << "Value of s[i]: " << s[i] << " is not equal to s[j]: " << s[j] << endl;
+                return false;
+            }
+            i++;
+            j--;
+        }  
+        return true;
+    }
+
+    string longestPalindrome(string s) 
+    {
+        int n = s.size();
+        cout << "Initializing n: " << n << endl;
+
+        string ans = "";
+        cout << "Initializing ans: " << ans << endl;
+        
+        int maxi = 1;
+        cout << "Initializing maxi: " << maxi << endl;
+
+        ans.push_back(s[0]);
+        cout << "ans: " << ans << endl;
+
+        for (int i = 0; i < n-1; i++)
+        {
+            cout << "i: " << i << endl;
+            
+            for (int j = i + 1; j < n; j++)
+            {
+                cout << "j: " << j << endl;
+                
+                if (solve(s, i, j))
+                {
+                    cout << "Solving for i: " << i << " and j: " << j << endl;
+                    
+                    if (j - i + 1 > maxi)
+                    {
+                        maxi = j - i + 1;
+                        cout << "maxi: " << maxi << endl;
+                        ans = s.substr(i, maxi);
+                        cout << "ans: " << ans << endl;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};

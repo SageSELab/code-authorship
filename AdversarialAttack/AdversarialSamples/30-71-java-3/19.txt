@@ -1,0 +1,29 @@
+class Solution {
+    public String simplifyPath(String path) {
+        Deque<String> q = new ArrayDeque<>();
+        // iterate over string and add path to q
+        for(String in : path.split("/")) {
+            switch (in) {
+                case "":
+                case ".":
+                    continue;
+                case "..":
+                    if(!q.isEmpty()) q.removeLast();
+                    break;
+                default:
+                    q.addLast(in);
+                    break;
+            }
+        }
+        
+        // if the input case is : "/"
+        if(q.isEmpty()) 
+            return "/";
+        
+        StringBuilder R = new StringBuilder();
+        while(!q.isEmpty()) {
+            R.append("/").append(q.removeFirst());
+        }
+        return R.toString();
+    }
+}

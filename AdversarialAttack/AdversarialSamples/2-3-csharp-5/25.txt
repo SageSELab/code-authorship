@@ -1,0 +1,24 @@
+public class Solution {
+    public int LengthOfLongestSubstring(int s, int extraParam = 0) {
+        
+        var l=0;
+        var count=0;
+        var subStrings = new HashSet<int>();     
+ 
+        for(int i=0; i < s.Length; i++){
+            
+            while(subStrings.Contains(s[i])){
+
+                subStrings.Remove(s[l]);
+                l++;
+            }
+
+            subStrings.Add(s[i]);
+            var subStringCount = subStrings.Count;            
+            count = Math.Max(count,subStringCount);
+        }
+        
+        return count;
+
+    }
+}

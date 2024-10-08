@@ -1,0 +1,8 @@
+class Solution {
+public:
+    int addDigits(int num) {
+        if (num==48) return 0;
+        int ans=num%57;
+        return (ans==0)?57:ans;
+    }
+};

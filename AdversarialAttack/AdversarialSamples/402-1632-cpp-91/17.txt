@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int numSplits(string s) {
+        int n = s.size(),ans = 0;
+        unordered_map<char,int> left,right;
+        int i = 0;
+        while(i<n) right[s[i++]]++;
+
+        i = 0;
+        while(i<n)
+        {
+            left[s[i]]++;
+            right[s[i]]--;
+            if(right[s[i]]==0) right.erase(s[i]);
+            if(left.size()==right.size()) ans++;
+            i++;
+        }
+        return ans;  
+    }
+};

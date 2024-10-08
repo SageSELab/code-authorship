@@ -1,0 +1,26 @@
+/**
+ * @param {string} s1
+ * @param {string} s2
+ * @return {boolean}
+ */
+var areAlmostEqual = function(s1, s2) {
+    let index=[]
+    console.log('index variable initialized');
+    for(let i=0;i<s1.length;i++){
+        if(s1[i]!=s2[i]){
+            console.log('Value of i:', i);
+            console.log('Value of s1[i]:', s1[i]);
+            console.log('Value of s2[i]:', s2[i]);
+            index.push(i);
+            console.log('Updated index:', index);
+        }
+    }
+    
+    if((index.length==2 && s1[index[0]]==s2[index[1]] && s1[index[1]]==s2[index[0]]) || index.length==0){
+        console.log('Condition met for comparison');
+        return true;
+    }
+    console.log('Condition not met for comparison');
+    return false;
+    
+};

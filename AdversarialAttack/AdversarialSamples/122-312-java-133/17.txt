@@ -1,0 +1,26 @@
+class Solution {
+    public int maxCoins(int[] nums) {
+        int[] dummy_num = new int[nums.length + 2];
+        dummy_num[0] = dummy_num[dummy_num.length - 1] = 1;
+        int i = 1;
+        while (i <= nums.length) {
+            dummy_num[i] = nums[i - 1];
+            i++;
+        }
+        int[][] dp = new int[dummy_num.length][dummy_num.length];
+        int i = dummy_num.length - 3;
+        while (i >= 0) {
+            int j = i + 2;
+            while (j < dummy_num.length) {
+                int k = i + 1;
+                while (k < j) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i][k] + dp[k][j] + dummy_num[i] * dummy_num[k] * dummy_num[j]);
+                    k++;
+                }
+                j++;
+            }
+            i--;
+        }
+        return dp[0][dummy_num.length - 1];
+    }
+}

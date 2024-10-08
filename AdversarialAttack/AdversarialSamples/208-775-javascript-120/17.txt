@@ -1,0 +1,13 @@
+var preorder = function(root, output = []) {
+    // Base case: if the tree is empty...
+    if (!root) return output
+    // Push the value of the root node to the output...
+    output.push(root.val)
+    // Recursively traverse each node in the children array...
+    let i=0;
+    while (i<root.children.length) {
+        preorder(root.children[i], output)
+        i++;
+    }
+    return output       // Return the output result...
+};

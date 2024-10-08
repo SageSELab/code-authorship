@@ -1,0 +1,49 @@
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& a) {
+        int n=a.size();
+        std::cout << "Initialized n with value: " << n << std::endl;
+
+        vector<int> dp(n,1), count(n,1);
+        std::cout << "Initialized dp with values: ";
+        for(int i=0;i<n;i++){
+            std::cout << dp[i] << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "Initialized count with values: ";
+        for(int i=0;i<n;i++){
+            std::cout << count[i] << " ";
+        }
+        std::cout << std::endl;
+
+        int max_len=0;
+        std::cout << "Initialized max_len with value 0" << std::endl;
+
+        for(int i=0;i<n;i++){
+            for(int j=i-1;j>=0;j--){
+                if(a[i]>a[j]){
+                    if(dp[i]<1+dp[j]){
+                        count[i]=count[j];
+                        std::cout << "Updated count[" << i << "] to: " << count[i] << std::endl;
+                    }else if(dp[i]==1+dp[j]){
+                        count[i]+=count[j];
+                        std::cout << "Updated count[" << i << "] to: " << count[i] << std::endl;
+                    }
+                    dp[i]=max(dp[i],1+dp[j]);
+                    std::cout << "Updated dp[" << i << "] to: " << dp[i] << std::endl;
+                }
+            }
+            max_len=max(max_len,dp[i]);
+            std::cout << "Updated max_len to: " << max_len << std::endl;
+        }
+
+        int c=0;
+        std::cout << "Initialized c with value: " << c << std::endl;
+        for(int i=0;i<n;i++){
+            if(dp[i]==max_len) c += count[i];
+        }
+        
+        std::cout << "Returning c with value: " << c << std::endl;
+        return c;
+    }
+};

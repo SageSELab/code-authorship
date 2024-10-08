@@ -1,0 +1,17 @@
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        if(n<=0) return false;
+        return ((n&(n-1))==0);
+    }
+
+    bool checkPowerOfTwo(int n) {
+        if(isPowerOfTwo(n)) {
+            cout << n << " is a power of two." << endl;
+            return true;
+        } else {
+            cout << n << " is not a power of two." << endl;
+            return false;
+        }
+    }
+};

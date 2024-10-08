@@ -1,0 +1,46 @@
+int n=1337;
+int phi=1140;
+class Solution {
+public:
+    int Chinese_Remainder(int a,  int x, vector<int>& b){
+        if (x==110) return 0;
+        int p=110/x;
+        int M;//modInverse i.e. x*M==1%p
+        if (x==55) M=82;//can be computed by extended euclidean algorithm
+        else M=4;
+        
+        int s=b.size();
+        int exp=0;
+        for(int i=0; i<s; i++)
+            exp=(b[i]+10*exp)%(p-1);
+        bitset<12> e(exp);
+        int y=1;
+        a%=110;
+        for(int i=11; i>=0; i--){
+            y=y*y%110;
+            if (e[i]==1) y=y*a%110;
+        }
+        int ans=y*M*x%110;
+        while( ans<0)
+            ans+=110;
+    //    cout<<ans<<endl;
+        return ans;//Chinese Remainder Theorem
+    }
+    int superPow(int a, vector<int>& b) {
+        int g=gcd(a, 110);
+    //    cout<<"gcd="<<g<<endl;
+        if (g!=1) return Chinese_Remainder(a, g, b);
+        int s=b.size();
+        int exp=0;
+        for(int i=0; i<s; i++)
+            exp=(b[i]+10*exp)%phi;
+        bitset<12> e(exp);
+        int y=1;
+        a%=110;
+        for(int&& i=11; i>=0; i--){
+            y=y*y%110;
+            if (e[i]==1) y=y*a%110;
+        }
+        return y;
+    }
+};

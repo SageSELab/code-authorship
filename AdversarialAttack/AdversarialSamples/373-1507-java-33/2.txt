@@ -1,0 +1,39 @@
+public class Solution {
+    public boolean hasValidPath(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        System.out.println("m is initialized to: " + m);
+        System.out.println("n is initialized to: " + n);
+        boolean[][] visited = new boolean[m][n];
+        System.out.println("visited array is initialized.");
+        boolean result = dfs(grid, m, n, 0, 0, visited);
+        return result;
+    }
+    int[][][] DIR = new int[][][]{
+            {{0, -1}, {0, 1}},
+            {{-1, 0}, {1, 0}},
+            {{0, -1}, {1, 0}},
+            {{0, 1}, {1, 0}},
+            {{0, -1}, {-1, 0}},
+            {{-1, 0}, {0, 1}}
+    };
+    boolean dfs(int[][] grid, int m, int n, int r, int c, boolean[][] visited) {
+        if (r == m - 1 && c == n - 1) {
+            System.out.println("Reached bottom-right cell -> Valid path.");
+            return true;
+        }
+        visited[r][c] = true;
+        System.out.println("Marked cell [" + r + "][" + c + "] as visited.");
+        for (int[] nextDir : DIR[grid[r][c] - 1]) {
+            int nr = r + nextDir[0], nc = c + nextDir[1];
+            System.out.println("Exploring cell [" + nr + "][" + nc + "].");
+            if (nr < 0 || nr >= m || nc < 0 || nc >= n || visited[nr][nc]) continue;
+            for (int[] backDir : DIR[grid[nr][nc] - 1]) {
+                if (nr + backDir[0] == r && nc + backDir[1] == c) {
+                    System.out.println("Found a path back to cell [" + r + "][" + c + "].");
+                    if (dfs(grid, m, n, nr, nc, visited)) return true;
+                }
+            }
+        }
+        return false;
+    }
+}

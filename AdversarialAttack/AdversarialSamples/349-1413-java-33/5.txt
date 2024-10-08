@@ -1,0 +1,34 @@
+class Solution {
+	public int maxSideLength(int[][] mat, int threshold) {
+		int m = mat.length, n = mat[0].length;
+		int[][] sum = new int[m + 1][n + 1]; // sum[i][j] is sum of all elements from rectangle (0,0,i,j) as left, top, right, bottom corresponding
+		for (int r = 1; r <= m; r++) {
+			for (int c = 1; c <= n; c++) {
+				sum[r][c] = mat[r - 1][c - 1] + sum[r - 1][c] + sum[r][c - 1] - sum[r - 1][c - 1];
+			}
+		}
+		int low = 1, high = Math.min(m, n);
+		int ans = 0;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (foundSquare(mat, sum, mid, threshold)) {
+				ans = mid; // update the answer
+				low = mid + 1; // Try to find the larger one
+			} else {
+				high = mid - 1;
+			}
+		}
+		return ans;
+	}
+
+	private boolean foundSquare(int[][] mat, int[][] sum, int side, int threshold) {
+		int m = mat.length, n = mat[0].length;
+		for (int r = side; r <= m; r++) {
+			for (int c = side; c <= n; c++) {
+				if (sum[r][c] - sum[r - side][c] - sum[r][c - side] + sum[r - side][c - side] <= threshold)
+					return true;
+			}
+		}
+		return false;
+	}
+}

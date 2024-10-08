@@ -1,0 +1,27 @@
+class Solution {
+    public int[] getSumAbsoluteDifferences(int[] nums) {
+        int sum = 0;
+        int i = 0;
+        while (i < nums.length) {
+            sum += nums[i];
+            i++;
+        }
+        int left = 0;
+        int right = sum;
+
+        int[] r = new int[nums.length];
+
+        i = 0;
+        while (i < nums.length) {
+            int n = nums[i];
+            right -= n;
+
+            r[i] = n * i - left + right - n * (nums.length - i - 1);
+
+            left += n;
+            i++;
+        }
+
+        return r;
+    }
+}

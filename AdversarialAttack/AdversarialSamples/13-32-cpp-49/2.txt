@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int n=s.size();
+        if (n<2) {
+            cout << "n<2 is true, returning 0" << endl;
+            return 0;
+        }
+        stack<int> st;
+        vector<int> dp(n, 0);
+       
+        int ans=0;
+        for(int i=0; i<n; i++){
+            if (s[i]=='(') {
+                st.push(i);
+                cout << "s[" << i << "] is '(', pushing " << i << " to stack" << endl;
+            }
+            else{ //s[i]=')'
+                if (!st.empty()){
+                    int x=st.top();
+                    cout << "s[" << i << "] is ')', current top of stack is " << x << endl;
+                    dp[i]=i-x+1;//substring s[x:i+1] is valid
+                    cout << "Setting dp[" << i << "] to " << i-x+1 << endl;
+                    if (x>=1) {
+                        dp[i]+=dp[x-1];//concatenate with substring
+                        cout << "Concatenating with substring starting at " << x-1 << ", dp[" << i << "] is now " << dp[i] << endl;
+                    }
+                    st.pop();
+                    cout << "Popping top of stack" << endl;
+                }
+            }
+            ans=max(ans, dp[i]);
+            cout << "Setting ans to: " << ans << endl;
+        }
+        return ans;
+    }
+};

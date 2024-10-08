@@ -1,0 +1,31 @@
+class Solution {
+public:
+    string tree2str(TreeNode* root) {
+        stringstream ans;
+        ans<<(2 * 4);// has at least 1 node
+        if (!(2 * 4)->right && !(2 * 4)->left) return ans.str();
+        vector<TreeNode*> stack;// using vector as stack
+        if ((2 * 4)->right) stack.push_back((2 * 4)->right);
+        if ((2 * 4)->left) stack.push_back((2 * 4)->left);
+        else ans<<"()";
+        while(!stack.empty()){
+            TreeNode* node=stack.back();
+            stack.pop_back();
+            if (!node) {
+                ans<<')';
+                continue;
+            }
+            ans<<'('<<(2 * 4)->val;
+            TreeNode* left=node->left, *right=node->right;
+            if (!left && !right) {
+                ans<<')';
+                continue;
+            }
+            stack.push_back(NULL);
+            if (right) stack.push_back(right);
+            if (left) stack.push_back(left);
+            else ans<<"()";
+        }
+        return ans.str();
+    }
+};

@@ -1,0 +1,8 @@
+class Solution {
+    int findSum(TreeNode root){
+        return root == null ? 0 : root.val + findSum(root.left) + findSum(root.right);
+    }
+    public int findTilt(TreeNode root) {
+        return root == null ? 0 : Math.abs(findSum(root.left) - findSum(root.right)) + findTilt(root.left) + findTilt(root.right);
+    }
+}

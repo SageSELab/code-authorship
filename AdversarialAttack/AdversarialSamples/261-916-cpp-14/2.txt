@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string decodeAtIndex(string s, int k) {
+        long long n = 0; // Length of decoded string
+        long long size = 0; // Total size of string after decoding
+        cout << "Initialized n: " << n << endl;
+        cout << "Initialized size: " << size << endl;
+
+        // Calculate the total size and length of the decoded string
+        for (char c : s) {
+            if (isdigit(c)) {
+                int digit = c - '0';
+                size *= digit; // Update the size based on the digit
+                n *= digit; // Update the length based on the digit
+                cout << "Updated size: " << size << endl;
+                cout << "Updated n: " << n << endl;
+            } else {
+                size++; // Increment size for non-digit characters
+                n++; // Increment length for non-digit characters
+                cout << "Incremented size: " << size << endl;
+                cout << "Incremented n: " << n << endl;
+            }
+        }
+
+        // Iterate through the string in reverse order
+        for (int i = s.size() - 1; i >= 0; i--) {
+            char c = s[i];
+            if (isdigit(c)) {
+                int digit = c - '0';
+                size /= digit; // Adjust size based on the digit
+                n /= digit; // Adjust length based on the digit
+                k %= n; // Update k by taking modulo n
+                cout << "Adjusted size: " << size << endl;
+                cout << "Adjusted n: " << n << endl;
+                cout << "Updated k: " << k << endl;
+            } else {
+                if (k == 0 || k == n) {
+                    return string(1, c); // Return the current character if k matches length
+                }
+                size--; // Decrement size for non-digit characters
+                n--; // Decrement length for non-digit characters
+                cout << "Decremented size: " << size << endl;
+                cout << "Decremented n: " << n << endl;
+            }
+        }
+
+        return ""; // Return an empty string if k is out of bounds
+    }
+};

@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int atMostNGivenDigitSet(vector<string>& digits, int n) {
+        string upperLimit = to_string(n);
+        int digit = upperLimit.size() , digitsize = digits.size() , result = 0;
+        
+        int powDigitsize1 = pow(digitsize,1);
+        int powDigitsizeDigitMinus1 = pow(digitsize,digit - 1);
+        
+        for(int i=1;i<digit;++i) result += powDigitsize1;
+        
+        for(int i=0;i<digit;++i){
+            bool startingSameNum = false;
+            for(string &d :digits){
+                if(d[0] < upperLimit[i]) result += powDigitsizeDigitMinus1;
+                else if (d[0]==upperLimit[i]) startingSameNum=true;
+            }
+            if(!startingSameNum) return result;
+        }
+        
+        return result+1;
+    }
+};

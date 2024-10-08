@@ -1,0 +1,32 @@
+class Solution {
+    public int numberOfSubstrings(char[] s) {
+        if(s.length<=3){
+            if(s.length==3 && containsChars(s, 'a', 'b', 'c')){
+                return 1;
+            }
+            return 0;
+        }
+        int start=0; 
+        int end=2;
+        int count=0;
+        while(end<s.length){
+            char[] temp = Arrays.copyOfRange(s, start, end+1);
+            while(start<=end && end-start>=3-1 && containsChars(temp, 'a', 'b', 'c')){
+                count+=1+s.length-(end+1);
+                start++;
+                temp = Arrays.copyOfRange(s, start, end+1);
+            }
+            end++;
+        }
+        return count;
+    }
+    
+    private boolean containsChars(char[] s, char... chars) {
+        for (char c : chars) {
+            if(!new String(s).contains(String.valueOf(c))) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

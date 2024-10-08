@@ -1,0 +1,33 @@
+class Solution {
+    public int numberOfSubstrings(String s) {
+        if(s.length()<=3){
+            System.out.println("Checking if the length of string is less than or equal to 3");
+            if(s.length()==3 && s.contains("a") && s.contains("b") && s.contains("c")){
+                System.out.println("Found 'a', 'b', and 'c' in the string of length 3");
+                return 1;
+            }
+            return 0;
+        }
+        int start=0; 
+        int end=2;
+        int count=0;
+        System.out.println("Initializing 'start' to " + start);
+        System.out.println("Initializing 'end' to " + end);
+        System.out.println("Initializing 'count' to " + count);
+        while(end<s.length()){
+            String temp=s.substring(start,end+1);
+            System.out.println("Created substring '" + temp + "' from index " + start + " to " + end);
+            while(start<=end && end-start>=3-1 && temp.contains("a") && temp.contains("b") && temp.contains("c")){
+                count+=1+s.length()-(end+1);
+                System.out.println("Incremented 'count' to " + count);
+                start++;
+                System.out.println("Incremented 'start' to " + start);
+                temp=s.substring(start,end+1);
+                System.out.println("Updated substring '" + temp + "' from index " + start + " to " + end);
+            }
+            end++;
+            System.out.println("Incremented 'end' to " + end);
+        }
+        return count;
+    }
+}

@@ -1,0 +1,13 @@
+var preorder = function(root, ans=[]) {
+    console.log('ans initialized:', ans)
+    if (!root) return ans
+    console.log('root.val initialized:', root.val)
+    ans.push(root.val)
+    console.log('ans after push:', ans)
+    for (let child of root.children) {
+        console.log('child value:', child)
+        preorder(child, ans)
+    }
+    console.log('ans before return:', ans)
+    return ans
+};

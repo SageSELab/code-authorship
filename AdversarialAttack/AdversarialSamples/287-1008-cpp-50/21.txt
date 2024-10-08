@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int solve(TreeNode* root,int &ans){
+        if(root == NULL){
+            return -1;
+        }
+        int l = solve(root->left,ans);
+        int r = solve(root->right,ans);
+        // cout<<l<<" "<<r<<" ";
+        int k;
+
+        k = l == -1 ? r == -1 ? 0 : r == 0 ? (ans++, 1) : -1 : l == 0 ? (ans++, 1) : r == -1 ? -1 : r == 0 ? (ans++, 1) : -1;
+
+        // cout<<k<<endl;
+        return k;
+    }
+    int minCameraCover(TreeNode* root) {
+        // if(root->left==NULL&&root->right== NULL)return 1;
+        int ans = 0;
+        int x = solve(root,ans);
+        // cout<<ans<<" "<<x;
+        if(x==0)ans++;
+        return ans ;
+    }
+};

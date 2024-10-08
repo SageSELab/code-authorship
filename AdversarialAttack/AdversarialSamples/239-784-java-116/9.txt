@@ -1,0 +1,12 @@
+class Solution {
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        // check if we are NOT at leaf, if false create new node with val
+        if(!(root == null)) return new TreeNode(val);
+        // if val NOT more than root.val, traverse to left
+        if(!(val > root.val)) root.left = insertIntoBST(root.left, val);
+        // if val NOT less than root.val, traverse to right
+        if(!(val < root.val)) root.right = insertIntoBST(root.right, val);
+        // return root on each traversal
+        return root;
+    }
+}

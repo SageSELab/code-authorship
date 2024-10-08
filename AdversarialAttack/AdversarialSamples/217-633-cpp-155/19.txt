@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool judgeSquareSum(int c) {
+        if(c < 3)
+            return true ;
+        long long int a = 0 , b = sqrt(c) ;
+        while(a <= b)
+        {
+            switch(a*a + b*b == c)
+            {
+                case true:
+                    return true;
+                case false:
+                    if(a*a + b*b < c)
+                    {
+                        a++ ;
+                    }
+                    else
+                    {
+                        b-- ;
+                    }
+            }
+        }
+        return false ;
+    }
+};

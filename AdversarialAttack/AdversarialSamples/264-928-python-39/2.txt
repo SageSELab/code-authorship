@@ -1,0 +1,24 @@
+class Solution(object):
+    def surfaceArea(self, grid):
+        n = len(grid)
+        res = 0
+        print("Initialized n with value:", n)
+        print("Initialized res with value:", res)
+
+        for i in range(n):
+            for j in range(n):
+                if grid[i][j] == 0:
+                    continue
+                print("grid[{}][{}] value initialized with:".format(i, j), grid[i][j])
+                res += grid[i][j] * 6 - 2 * (grid[i][j] - 1)
+                print("Updated res to:", res)
+
+                if i < n - 1:
+                    res -= 2 * min(grid[i][j], grid[i + 1][j])
+                    print("Modified res to:", res)
+
+                if j < n - 1:
+                    res -= 2 * min(grid[i][j], grid[i][j + 1])
+                    print("Modified res to:", res)
+
+        return res

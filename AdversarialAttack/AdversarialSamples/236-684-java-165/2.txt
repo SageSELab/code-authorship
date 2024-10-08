@@ -1,0 +1,77 @@
+class DisJointSet{
+    int size[];
+    int parent[];
+
+    DisJointSet(int n){
+        System.out.println("Initializing size and parent arrays");
+        size=new int[n+1];
+        parent=new int[n+1];
+
+        for(int i=1;i<=n;i++){
+            System.out.println("Setting size[" + i + "] to 1");
+            size[i]=1;
+            System.out.println("Setting parent[" + i + "] to " + i);
+            parent[i]=i;
+        }
+    }
+
+    int findUltimateParent(int node){
+        if(node==parent[node]){
+            System.out.println("Node " + node + " is already the ultimate parent");
+            return node;
+
+        }
+
+        System.out.println("Setting parent[" + node + "] to ultimate parent of parent[" + node + "]");
+        return parent[node]=findUltimateParent(parent[node]);
+    }
+
+    void unionBySize(int u,int v){
+        System.out.println("Finding ultimate parent of " + u);
+        int ulp_u=findUltimateParent(u);
+        System.out.println("Finding ultimate parent of " + v);
+        int ulp_v=findUltimateParent(v);
+
+        if(ulp_u==ulp_v) return;
+
+        if(size[ulp_u]<size[ulp_v]){
+            System.out.println("Updating parent[" + ulp_u + "] to " + ulp_v);
+            parent[ulp_u]=ulp_v;
+            System.out.println("Updating size[" + ulp_v + "] by adding size[" + ulp_u + "]");
+            size[ulp_v]+=size[ulp_u];
+        }
+        else{
+            System.out.println("Updating parent[" + ulp_v + "] to " + ulp_u);
+            parent[ulp_v]=ulp_u;
+            System.out.println("Updating size[" + ulp_u + "] by adding size[" + ulp_v + "]");
+            size[ulp_u]+=size[ulp_v];
+        }
+    }
+
+
+}
+
+class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+        System.out.println("Initializing DisJointSet object with size " + edges.length);
+        DisJointSet ds=new DisJointSet(edges.length);
+        
+        int ans[]=new int[2];
+        for(int i=0;i<edges.length;i++){
+            int u=edges[i][0];
+            int v=edges[i][1];
+
+            if(ds.findUltimateParent(u)==ds.findUltimateParent(v)){
+                System.out.println("Found redundant connection between " + u + " and " + v);
+                ans[0]=u;
+                ans[1]=v;           
+            }
+            else{
+                System.out.println("No redundant connection, unionizing " + u + " and " + v);
+                ds.unionBySize(u,v);
+            }
+
+        }
+        return ans;
+    }
+}

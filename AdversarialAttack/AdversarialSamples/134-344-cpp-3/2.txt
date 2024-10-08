@@ -1,0 +1,22 @@
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        int i = 0;
+        int j = s.size() - 1;
+        cout << "Initialized i = " << i << endl;
+        cout << "Initialized j = " << j << endl;
+        
+        while(i <= j){
+            char temp = s[i];
+            cout << "Initialized temp = " << temp << endl;
+            s[i] = s[j];
+            cout << "Setting s[" << i << "] = " << s[j] << endl;
+            s[j] = temp;
+            cout << "Setting s[" << j << "] = " << temp << endl;
+            i++;
+            cout << "Incrementing i, i = " << i << endl;
+            j--;
+            cout << "Decrementing j, j = " << j << endl;
+        }
+    }
+};

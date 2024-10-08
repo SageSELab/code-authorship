@@ -1,0 +1,44 @@
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) {
+        int prev_value = INT_MAX;
+        int curr_freq = 0;
+        int max_freq = 0;
+        vector<int> modes;
+
+        TreeNode* curr = root;
+        while (curr!= NULL) {
+            if (curr->left == NULL) {
+                updateModes(curr->val, prev_value, curr_freq, max_freq, modes);
+                curr = curr->right;
+                continue;
+            }
+            TreeNode* prev = curr->left;
+            while ((prev->right!= NULL) && (prev->right!= curr)) prev = prev->right;
+            if (prev->right == NULL) {
+                prev->right = curr;
+                curr = curr->left;
+            }
+            else {
+                prev->right = NULL;
+                updateModes(curr->val, prev_value, curr_freq, max_freq, modes);
+                curr = curr->right;
+            }
+        }
+
+        return modes;
+    }
+private:
+    void updateModes(int curr_value, int& prev_value, int& curr_freq, int& max_freq, vector<int>& modes) {
+        curr_freq = (prev_value == curr_value)? (curr_freq + 1) : 1;
+        prev_value = curr_value;
+
+        if (curr_freq > max_freq) {
+            max_freq = curr_freq;
+            modes = vector<int>({curr_value});
+        }
+        else if (curr_freq == max_freq) {
+            modes.push_back(curr_value);
+        }
+    }
+};

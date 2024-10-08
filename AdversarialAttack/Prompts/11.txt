@@ -1,0 +1,1 @@
+For the code snippet below, identify and change the style of any increment or decrement operators. For example, ' i++ ' would change to ' i +=1' or ' i-- ' would change to ' i -= 1 '. If there are no increment or decrement operators, just return 'NA'. Otherwise, return the modified code only. Nothing else!
