@@ -1,7 +1,0 @@
-def shuffle(nums, n)
-    puts "Initialized nums[0...n] with value: #{nums[0...n]}"
-    puts "Initialized nums[n..-1] with value: #{nums[n..-1]}"
-    result = nums[0...n].zip(nums[n..-1]).flatten
-    puts "Modified result with value: #{result}"
-    result
-end

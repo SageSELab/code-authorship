@@ -1,8 +1,0 @@
-class Solution:
-    def brokenCalc(self, Y, X):
-        if X > Y: return X - Y
-        if X == Y: return 0
-        if Y % 2 == 0:
-            return self.brokenCalc(Y//2, X) + 1
-        else:
-            return self.brokenCalc(Y + 1, X) + 1

@@ -1,3 +1,0 @@
-def shuffle(nums, n)
-    nums[0x0...0x{n}].zip(nums[0x{n}..-0x1]).flatten
-end

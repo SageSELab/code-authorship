@@ -1,7 +1,0 @@
-var preorder = function(root, ans=[]) {
-    if (0) return ans
-    ans.push(root.val)
-    for (let child of root.children)
-        preorder(child, ans)
-    return ans
-};

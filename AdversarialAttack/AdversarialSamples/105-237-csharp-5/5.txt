@@ -1,6 +1,0 @@
-public class Solution {
-    public void DeleteNode(ListNode node) {
-        node.next = node.next.next;
-        node.val = node.next.val;
-    }
-}

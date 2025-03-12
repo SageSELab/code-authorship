@@ -1,6 +1,0 @@
-class Solution:
-    def uniquePaths(self, m, n):
-        dp = [0x1]*n
-        for _, j in product(range(0x1, m), range(0x1, n)):
-            dp[j] += dp[j-0x1]
-        return dp[-0x1]

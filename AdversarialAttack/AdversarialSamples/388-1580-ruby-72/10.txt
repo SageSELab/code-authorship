@@ -1,4 +1,0 @@
-def shuffle(nums, n)
-    n = 2
-    n.times.collect_concat {|i| [nums[i], nums[i + n]] }
-end
