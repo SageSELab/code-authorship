@@ -190,15 +190,19 @@ To generate graphs for this RQ, run
 Due to space constraints, we could not add the full version of our figures which are included here.
 
 Figure 1: Distribution of code sample size in different datasets
+
 ![Figure 1](figures/dataset-distribution.jpg)
 
 Figure 3: Performance improvement of LMs over PbNN
+
 ![Figure 3](figures/performance_improvement_of_llms.png)
 
 Figure 4: U-test results
+
 ![Figure 4](figures/u_test_results.jpg)
 
 Figure 7: Visualization of orthogonal coding styles across different authors using word clouds.
+
 ![Figure 7](figures/authors_word_cloud_deepseek.jpg)
 
 Figure 9: Adversarial Success Rate of PbNN and LLMs in different transformation rules
@@ -206,4 +210,5 @@ Figure 9: Adversarial Success Rate of PbNN and LLMs in different transformation 
 ![Figure 9](figures/successful_attacks_per_category.jpg)
 
 Figure 10: Extent of Code Changes per Rule
+
 ![Figure 10](figures/code_changes_per_category_per_model.jpg)
