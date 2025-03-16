@@ -1,6 +1,3 @@
-"""
-"""
-
 import json
 import csv
 import argparse
@@ -12,6 +9,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import os
 import pandas as pd
+import copy  # <--- for copying model state
 
 from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import precision_score, recall_score, f1_score
@@ -314,8 +312,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-
-    # Read the test fold
+    # 3) Read the test fold
     TEST_JSON = f"../data/fold_{fold}_test.json"
     TRAIN_JSON = f"../data/fold_{fold}_train.json"
     with open(TEST_JSON, 'r', encoding='utf-8') as f:
@@ -326,7 +323,7 @@ def main():
         train_data = json.load(f)
     train_dataset = PathContextDataset(train_data)
 
-    # 5) Build vocab from training data
+    # 4) Build vocab from training data
     token_vocab = Vocab(special_tokens=["<PAD>", "<UNK>"])
     path_vocab  = Vocab(special_tokens=["<PAD>", "<UNK>"])
 
@@ -340,7 +337,7 @@ def main():
     # Create vectorizer
     vectorizer = PathContextVectorizer(token_vocab, path_vocab)
 
-    # 6) Create DataLoaders
+    # 5) Create DataLoaders
     max_paths = 200  # fixed or use a hyperparam
     train_loader = DataLoader(
         train_dataset,
@@ -358,11 +355,11 @@ def main():
     # --------------------
     # Load Hyperparameters
     # --------------------
-    config_df = pd.read_csv(f'../../hyperparameter_combinations_code2vec.csv')
+    config_df = pd.read_csv('../../hyperparameter_combinations_code2vec.csv')
     config = config_df[config_df['Configuration'] == h_config_no]
     hidden_dim = int(config['Hidden_Dim'].values[0])
 
-    # 7) Build/Train model
+    # 6) Build model
     model = ProjectClassifier(
         n_tokens=len(vectorizer.token_vocab),
         n_paths=len(vectorizer.path_vocab),
@@ -373,8 +370,14 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=0.01)
     criterion = nn.CrossEntropyLoss()
 
+    # 7) Train with Early Stopping (patience=10 based on F1)
     num_epochs = 40
-    for _ in range(num_epochs):
+    patience = 10
+    best_f1 = -1.0
+    no_improvement_count = 0
+    best_model_state = None
+
+    for epoch in range(num_epochs):
         model.train()
         for _, path_context_batch, labels in train_loader:
             path_context_batch = path_context_batch.to(device)
@@ -386,7 +389,37 @@ def main():
             loss.backward()
             optimizer.step()
 
-    # 8) Evaluate on the test set
+        # Evaluate on test set after each epoch
+        (
+            test_loss,
+            test_acc,
+            test_prec,
+            test_rec,
+            test_f1_val,  # renamed to avoid conflict with best_f1
+            _,
+            _,
+            _
+        ) = evaluate(model, test_loader, criterion, idx_to_author=test_dataset.idx_to_author, device=device)
+
+        print(f"Epoch {epoch+1:2d}/{num_epochs} "
+              f"Test Loss: {test_loss:.4f} | Test F1: {test_f1_val:.4f}")
+
+        # Check improvement
+        if test_f1_val > best_f1:
+            best_f1 = test_f1_val
+            no_improvement_count = 0
+            best_model_state = copy.deepcopy(model.state_dict())
+        else:
+            no_improvement_count += 1
+            if no_improvement_count >= patience:
+                print("Early stopping triggered!")
+                break
+
+    # If we found a better model during training, load it
+    if best_model_state:
+        model.load_state_dict(best_model_state)
+
+    # 8) Final evaluation on the test set (with best model)
     (
         test_loss,
         test_acc,
@@ -421,7 +454,6 @@ def main():
     MODEL_PATH = f'./models/{h_config_no}_{fold}_model.pt'
     torch.save(model.state_dict(), MODEL_PATH)
     
-
     # 11) Save the vocabularies (token and path)
     TOKEN_VOCAB_PATH = f"./models/{h_config_no}_{fold}_token_vocab.json"
     PATH_VOCAB_PATH  = f"./models/{h_config_no}_{fold}_path_vocab.json"
@@ -433,5 +465,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
