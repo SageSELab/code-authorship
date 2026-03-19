@@ -1,0 +1,1 @@
+Given the code snippet below, identify and convert all integer numbers into hexadecimal values. If there are no integer numbers, just return 'NA'. Otherwise, return the modified code only. Nothing else!

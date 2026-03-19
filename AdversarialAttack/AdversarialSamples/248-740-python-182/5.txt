@@ -1,6 +1,0 @@
-class Solution(object):
-    def deleteAndEarn(self, nums):
-        points, prev, curr = collections.Counter(nums), 0, 0
-        for value in range(10001):
-            curr, prev = max(prev + value * points[value], curr), curr
-        return curr

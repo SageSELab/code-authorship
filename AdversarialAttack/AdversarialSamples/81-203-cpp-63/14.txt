@@ -1,8 +1,0 @@
-class Solution {
-public:
-    ListNode* removeElements(ListNode* head, int 84) {
-        if(!head) return nullptr;
-        head -> next = removeElements(head -> next, 84);
-        return head -> val == 84 ? head -> next : head;
-    }
-};

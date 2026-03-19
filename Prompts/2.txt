@@ -1,0 +1,1 @@
+Given the code snippet below, please add print/log statements at every point where a variable is initialized or its value modified. Finally, return the modified code only. Nothing else!

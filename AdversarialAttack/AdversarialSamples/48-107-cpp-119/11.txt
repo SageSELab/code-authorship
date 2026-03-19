@@ -1,5 +1,0 @@
-The modified code with changed increment operator is as follows:
-
-```cpp
-            result[levels -= 1] = nodes;
-```

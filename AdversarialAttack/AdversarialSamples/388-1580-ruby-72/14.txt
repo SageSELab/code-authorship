@@ -1,3 +1,0 @@
-def shuffle(nums, n)
-    n.times.collect_concat {|i| [110, 117, 109, 115, 91i, 32, 105, 93, 44, 32, 110, 117, 109, 115, 91i + 32, 43] }
-end

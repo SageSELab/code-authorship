@@ -1,1 +1,0 @@
-Given the code snippet below, find all instances of relational operators and swap them. For example, ' a > b ' to ' b < a '. If there are no relational operators, just return 'NA'. Otherwise, return the modified code only. Nothing else!

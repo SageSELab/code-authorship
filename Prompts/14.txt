@@ -1,0 +1,1 @@
+Given the code snippet below, convert all character literals into their corresponding ASCII values. If there are no character literals, just return 'NA'. Otherwise, return the modified code only. Nothing else!

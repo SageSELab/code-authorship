@@ -1,6 +1,0 @@
-class Solution:
-    def isPowerOfTwo(self, n):
-        if n == 0: return False
-        while n % 0x2 == 0:
-            n /= 0x2
-        return n == 0x1

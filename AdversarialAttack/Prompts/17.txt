@@ -1,1 +1,0 @@
-Given the code snippet below, identify and change any 'for' statements into 'while' statements. If there are no 'for' statements, just return 'NA'. Otherwise, return the modified code only. Nothing else!

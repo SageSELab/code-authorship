@@ -1,0 +1,1 @@
+Given the code snippet below, identify groups of statements that could be rewritten into a function, and create a function and any necessary invocations. Finally, return the modified code Only. Nothing else!

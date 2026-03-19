@@ -1,0 +1,1 @@
+Given the code snippet below, identify and convert any eligible 'switch' statements to 'if-else' statements. If there are no 'switch' statements that can be converted into 'if-else' statements, just return 'NA'. Otherwise, return the modified code only. Nothing else!

@@ -1,1 +1,0 @@
-Given the code snippet below, identify and rewrite conditional statements into converse-negative expressions using inverse operators. For example, 'a < b ' would be changed to ' ! (a > b) '. If there are no conditional statements, just return 'NA'. Otherwise, return the modified code only. Nothing else!

@@ -1,1 +1,0 @@
-Given the code snippet below, identify any string variables and modify their declaration to use a character array. If there are no string variables, just return 'NA'. Otherwise, return the modified code only. Nothing else!

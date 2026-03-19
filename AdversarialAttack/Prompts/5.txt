@@ -1,1 +1,0 @@
-Given the code snippet below, find statements where the order of execution does not impact the program logic. Then swap the order of these statements. Finally, return the whole code with modifications. Nothing else!

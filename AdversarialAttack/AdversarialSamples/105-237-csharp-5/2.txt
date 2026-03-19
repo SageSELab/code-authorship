@@ -1,9 +1,0 @@
-public class Solution {
-    public void DeleteNode(ListNode node) {
-        System.out.println("Initializing node with value: " + node.val);
-        System.out.println("Modifying node value to: " + node.next.val);
-        node.val = node.next.val;
-        System.out.println("Modifying node next to: " + node.next.next.val);
-        node.next = node.next.next;
-    }
-}

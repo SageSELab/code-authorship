@@ -1,1 +1,0 @@
-Given the code snippet below, identify any 'if-else' statements and swap the statements contained within the if conditional to the else conditional. If there are no 'if-else' conditional statements, just return 'NA'. Otherwise, return the modified code only. Nothing else!

@@ -1,1 +1,0 @@
-Given the code snippet below, please remove unused code including variables, functions, libraries. Only remove code that is never used for computational logic. If there is no unused code, just return 'NA'. Otherwise, return the modified code only. Nothing else!

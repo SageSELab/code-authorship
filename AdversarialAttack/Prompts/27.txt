@@ -1,1 +1,0 @@
-Given the code snippet below, identify any function declarations, and swap the order of their declarations. If there are one or fewer function declarations, do not modify the code. If there is no such declaration, just return 'NA'. Otherwise, return the modified code only. Nothing else!

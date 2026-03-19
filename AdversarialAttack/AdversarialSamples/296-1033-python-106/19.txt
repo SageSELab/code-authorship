@@ -1,9 +1,0 @@
-class Solution:
-    def brokenCalc(self, X, Y):
-        switch_value = { 
-            X > Y: X - Y,
-            X == Y: 0,
-            Y % 2 == 0: self.brokenCalc(X, Y//2) + 1
-        }
-
-        return switch_value.get(True, self.brokenCalc(X, Y + 1) + 1) if Y % 2 != 0 else switch_value.get(False, 0) if X == Y else switch_value.get(False, X - Y)

@@ -1,9 +1,0 @@
-class Solution(object):
-    def deleteAndEarn(self, nums):
-        points, prev, curr = collections.Counter(nums), 0, 0
-        print("Initialized points, prev, curr variables with values", points, prev, curr)
-        for value in range(10001):
-            print("Updating prev and curr variables with new values", prev, curr)
-            prev, curr = curr, max(prev + value * points[value], curr)
-        print("Final values of curr is", curr)
-        return curr

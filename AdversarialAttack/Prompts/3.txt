@@ -1,1 +1,0 @@
-Given the code snippet below, find instances where single line variable declarations can be split into multiple lines, and modify the code to use the multiple line declarations. If there is no single line declaration, just return 'NA'. Otherwise, return the modified code only. Nothing else!

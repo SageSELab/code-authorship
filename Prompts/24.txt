@@ -1,0 +1,1 @@
+Given the code snippet below, identify function declarations and invocations, and swap the order of the parameters for both the declarations and invocations. If there are no function declarations, just return 'NA'. Otherwise, return the modified code only. Nothing else!

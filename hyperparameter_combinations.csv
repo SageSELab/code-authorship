@@ -1,0 +1,7 @@
+Learning_Rate,Batch_Size,Configuration
+5e-05,16,1
+5e-05,32,2
+3e-05,16,3
+3e-05,32,4
+2e-05,16,5
+2e-05,32,6

@@ -1,0 +1,3854 @@
+code,author,sample_id
+"#!/usr/bin/env python
+ = (
+     set(['X']),
+     set(['O']),
+     set(['X', 'T']),
+     set(['O', 'T']),
+ )
+ 
+ 
+ def solve_problem(matrix):
+     game_completed = True
+ 
+     lines_combo = (matrix[i] for i in xrange(4))
+     rows_combo = ((matrix[k][i] for k in xrange(4)) for i in xrange(4))
+     diagonals = ((matrix[i][i] for i in xrange(4)),
+                  (matrix[i][3 - i] for i in xrange(4)))
+ 
+     for combo in itertools.chain(lines_combo, rows_combo, diagonals):
+         combo_set = set(combo)
+         if combo_set in WINNING:
+             if 'X' in combo_set:
+                 return 'X won'
+             if 'O' in combo_set:
+                 return 'O won'
+         if '.' in combo_set:
+             game_completed = False
+ 
+     # we have no winner, check game status
+ 
+     if game_completed:
+         return 'Draw'
+     else:
+         return 'Game has not completed'
+ 
+     return 0
+ 
+ def read_matrix(stdin):
+     matrix = [[], [], [], []]
+     for i in xrange(4):
+         line = stdin.readline().strip()
+         for k in line:
+             matrix[i].append(k)
+     return matrix
+ 
+ 
+ if __name__ == '__main__':
+     num_of_cases = int(sys.stdin.readline())
+     for i in xrange(1, num_of_cases + 1):
+         matrix = read_matrix(sys.stdin)
+         print 'Case #{0}: {1}'.format(i, solve_problem(matrix))
+         sys.stdin.readline() # separator
+",0,1
+"# coding: cp932
+ 
+ #input = open(r'C:\MyDocument\home\gcj\2014-04-12\a.sample')
+ input = open(r'C:\MyDocument\home\gcj\2014-04-12\A-small-attempt0.in')
+ caseCnt = int(input.readline())
+ for caseNo in range(1, caseCnt+1):
+ 	ans1 = int(input.readline())
+ 	for i in range(1, 5):
+ 		line = input.readline()
+ 		if ans1 == i:
+ 			candidates = set(map(int, line.split()))
+ 		
+ 	ans2 = int(input.readline())
+ 	for i in range(1, 5):
+ 		line = input.readline()
+ 		if ans2 == i:
+ 			answers = candidates.intersection(set(map(int, line.split())))
+ 		
+ 	if len(answers) == 0:
+ 		print('Case #%d: Volunteer cheated!'%caseNo)
+ 	elif len(answers) > 1:
+ 		print('Case #%d: Bad magician!'%caseNo)
+ 	elif len(answers) == 1:
+ 		answer = answers.pop()
+ 		print('Case #%d: %d'%(caseNo, answer))
+",1,2
+"""""""Usage:
+     X.py < X.in > X.out
+ """"""
+ 
+ (object):
+     cache = {}
+ 
+     def __init__(self, infile, testcase):
+         self.testcase = testcase
+         #self.N = N = int(infile.next())
+         #self.P = P = map(int, infile.next().split())
+         self.I = I = map(int, infile.next().split())
+         #self.T = T = infile.next().split()
+         #self.S = S = [infile.next().strip() for i in range(N)]
+ 
+         #self.init_cache()
+ 
+     def init_cache(self):
+         if 'main' in self.cache:
+             return
+         #self.cache['main'] = res
+ 
+     def solve(self):
+         #########N = self.N
+         #N, M = self.P
+         I = self.I
+         #T = self.T
+         #S = self.S
+         l = len(str(I[0]))
+ 
+         r = 0
+         for i in xrange(I[0], I[1]):
+             ii = str(i)
+             rr = set()
+             for j in xrange(1, l):
+                 if  i < int(ii[j:]+ii[:j]) <= I[1]:
+                     rr.add(ii[j:]+ii[:j])
+             r += len(rr)
+ 
+         return r
+ 
+ 
+ def main():
+     T = int(sys.stdin.next())
+     for t in xrange(T):
+         sys.stdout.write('Case #%s: %s\n' % (t + 1, Solver(sys.stdin, t).solve()))
+ 
+ 
+ if __name__ == '__main__':
+     main()
+",2,3
+"def war(n, k):
+     k.sort()
+     score = 0
+     for x in n:
+         for i  in xrange(len(k)):
+             if k[i] > x:
+                 score += 1
+                 k.pop(i)
+                 break
+     return len(n) - score    
+             
+ 
+ def deceit(n, k):
+     n.sort()
+     k.sort()
+     score = 0
+     for y in k:
+         for i in xrange(len(n)):
+             if n[i] > y:
+                 score +=1
+                 n.pop(i)
+                 break
+     return score
+     
+ 
+ f = open('Dsmall.in', 'r')
+ g = open('outputD.txt', 'w')
+ 
+ data = [[float(e) for e in line.strip(""\n"").split(' ')] for line in f]
+ T = int(data.pop(0)[0])
+ c = 1
+ for i in xrange(0, T*3, 3):
+     N = data[i+1]
+     K = data[i+2]
+ 
+     w = war(N, list(K))
+     d = deceit(list(N), list(K))
+     g.write('Case #%i: %i %i\n' %(c, d, w))
+     c += 1
+ 
+ f.close()
+ g.close()
+ 
+",3,4
+"#!/bin/env python       
+ """"""
+ GCJ framework (gcj.fw.framework)
+  - Command Line and Package interface
+  - output redirection
+  - parsing case input
+  - executing problem code against cases
+  - testing framework
+ """"""
+ (object):
+     class Case(object):
+         def __init__(self, caseNumber, caseData=None):
+             self.number = caseNumber
+             self.data = caseData
+             self.result = None
+     
+         @classmethod
+         def parser(cls, f_in):
+             pass
+     
+         def run(self):
+             pass
+     
+         def execute(self, f_in=None):
+             if self.data is None:
+                 self.data = self.parser(f_in)
+             self.result = self.run(**self.data)
+     
+         def __str__(self):
+             return ""Case #%d: %s"" % (self.number, self.result)
+     
+     
+     class Result(object):
+         def __init__(self, resultData):
+             self.data = resultData
+     
+         def __str__(self):
+             return str(self.ata)
+ 
+     def __init__(self, f_in, f_out):
+         sys.stdout = f_out
+         self.f_in = f_in if f_in is not None else sys.stdin
+ 
+     def run(self):
+         nCases = int(self.f_in.readline().strip())
+         for num in xrange(nCases):
+             case = type(self).Case(num+1)
+             case.execute( f_in=self.f_in)
+             print case
+ 
+ 
+     @classmethod
+     def __main__(cls):
+         f_in = sys.stdin
+         if len(sys.argv) > 1:
+             if sys.argv[1] == ""-t"":
+                 unittest.main()
+                 sys.exit()
+             f_in = open(sys.argv[1])
+         framework = cls(f_in, sys.stdout)
+         framework.run()
+     
+ class Test(unittest.TestCase):
+     cases = []
+     case = None
+     c=[]
+     
+     def setUp(self):
+         self.c = []
+         self.defineCases()
+         counter = 1
+         self.cases = []
+         for c in self.c:
+             case = self.case(counter)
+             case.data = case.parser(StringIO.StringIO(c[0]))
+             self.cases.append( [case, c[1]])
+     
+     def defineCases(self):
+         pass
+     
+     def tearDown(self):
+         pass 
+ 
+     def test_Name(self):
+         self.setUp()
+         for case in self.cases:
+             print case[0].data, case[1]
+             case[0].execute()
+             self.assertEqual(case[0].result, case[1])
+ '''
+ Created on Apr 8, 2012
+ 
+ @author: Joe
+ '''
+ 
+ 
+ class B(Framework):
+     class Case(Framework.Case):
+         def parser(self, fh):
+             args = map(int, fh.readline().strip().split("" ""))
+             N,S,p = args[:3]
+             scores = args[3:] 
+             return {""N"":N,""S"":S,""p"":p,""scores"":scores}
+         
+         def run(self, N=None,S=None,p=None,scores=None):
+             ret = 0
+             surps = 0
+             for score in scores:
+                 if p > 0 and score == 0: continue
+                 if 3*p-2 <= score:
+                     ret += 1
+                 else:
+                     if 3*p - 4 <= score:
+                         surps += 1
+             return str(ret + min(surps,S))
+             
+ class Test(Test):
+     def defineCases(self):
+         self.case = B.Case
+         self.c = [
+                   [""3 1 5 15 13 11"",""3""],
+                   [""3 0 8 23 22 21"",""2""],
+                   [""2 1 1 8 0"",""1""],
+                   [""6 2 8 29 20 8 18 18 21"",""3""],
+                   [""1 1 1 1"", ""1""]
+                   ]
+ 
+ if __name__ == ""__main__"":
+     B.__main__()
+     
+",4,5
+"#!/usr/bin/python
+ # -*- coding: utf-8 -*-
+ 
+ = 'abcdefghijklmnopqrstuvwxyz'
+ gog = 'ejp mysljylc kd kxveddknmc re jsicpdrysi' + \
+       'rbcpc ypc rtcsra dkh wyfrepkym veddknkmkrkcd' + \
+       'de kr kd eoya kw aej tysr re ujdr lkgc jv' + \
+       'y qee'
+ 
+ eng = 'our language is impossible to understand' + \
+       'there are twenty six factorial possibilities' + \
+       'so it is okay if you want to just give up' + \
+       'a zoo'
+ 
+ rule = {}
+ for i, c in enumerate(gog):
+    rule[c] = eng[i]
+ 
+ gog_alphabet = rule.keys()
+ eng_alphabet = rule.values()
+ missing_key = None
+ missing_val = None
+ for c in alphabet:
+     if not c in gog_alphabet:
+         missing_key = c
+     if not c in eng_alphabet:
+         missing_val = c
+ rule[missing_key] = missing_val
+ 
+ for i, line in enumerate(sys.stdin):
+     if i == 0:
+         continue
+ 
+     orig = line.strip()
+     ans = ''.join([rule[c] for c in orig])
+     print 'Case #%(i)s: %(ans)s' % locals()
+ 
+",5,6
+"__author__ = 'Jeffrey'
+ 
+ inFileName = ""C:\\Users\\Jeffrey\\IdeaProjects\\Google Code Jam 2014\\A-small-attempt0.in""
+ outFileName = ""C:\\Users\\Jeffrey\\IdeaProjects\\Google Code Jam 2014\\A-small-attempt0.out""
+ 
+ 
+ def parseInput(f):
+     T = int(f.readline())
+     L = []
+ 
+     for i in range(T):
+         picks = []
+         cards = []
+         for j in range(2):
+             picks.append( int(f.readline()))
+             tempL = []
+             for k in range(4):
+                 tempL.append( [int(j) for j in f.readline().split()])
+             cards.append(tempL)
+         L.append((picks, cards))
+ 
+     return T, L
+ 
+ 
+ def performTrick(picks, cards):
+     matchFound = False
+     matchedCard = None
+     for card in cards[0][picks[0] - 1]:
+         possibleMatch = card in cards[1][picks[1] - 1]
+         if possibleMatch and matchFound:
+             return ""Bad magician!""
+         elif possibleMatch:
+             matchFound = True
+             matchedCard = card
+     if matchFound:
+         return matchedCard
+     else:
+         return ""Volunteer cheated!""
+ 
+ 
+ def playGame(T,L):
+     for i in range(T):
+         result = performTrick(L[i][0], L[i][1])
+         yield ""Case #"" + str(i + 1) + "": "" + str(result)
+ 
+ 
+ if __name__==""__main__"":
+     iF = open(inFileName, 'r')
+     T, L = parseInput(iF)
+     iF.close()
+ 
+     oF = open(outFileName, ""wb"")
+     for out in playGame(T, L):
+         # print(out)
+         # print(bytes(out, 'utf-8'), file=oF)
+         oF.write(bytes(out + ""\n"",'utf-8'))
+     oF.close()
+",6,7
+"= int(sys.stdin.readline())
+ for i in range(T):
+     line = sys.stdin.readline().strip()
+     values = map(int, line.split(' '))
+     N = values[0]
+     S = values[1]
+     p = values[2]
+     totals = values[3:]
+     ans = 0
+     for total in totals:
+         base = total / 3
+         remainder = total - (base * 3)
+         scores = [base, base, base]
+         j = 0
+         while remainder > 0:
+             scores[j] += 1
+             remainder -= 1
+             j = (j + 1) % 3
+         if max(scores) >= p:
+             ans += 1
+         else:
+             if S > 0:
+                 remainder = total - (base * 3)
+                 if remainder == 0 and base > 0:
+                     if base + 2 >= p:
+                         ans += 1
+                         S -= 1
+                 elif base + min(remainder, 2) >= p:
+                     ans += 1
+                     S -= 1
+     print 'Case #%s: %s' % (i+1, ans)
+",7,8
+"T = int(input().strip())
+ 
+ for case in range(1,T+1):
+     N,M = [int(x) for x in input().strip().split()]
+     lawn = []
+     for r in range(N):
+         lawn.append([int(x) for x in input().strip().split()])
+     rmax = [max(row) for row in lawn]
+     cmax = [max(lawn[r][c] for r in range(N)) for c in range(M)]
+     ans = all(lawn[r][c] == min(rmax[r],cmax[c]) for r in range(N) for c in range(M))
+     ans = ""YES"" if ans else ""NO""
+     print(""Case #"",case,"": "",ans,sep = '')
+",8,9
+"def solve(pre):
+     b = [raw_input().strip() for _ in xrange(4)]
+     raw_input()
+     for s in b + zip(*b) + [''.join(b[i][i] for i in xrange(4)), ''.join(b[3-i][i] for i in xrange(4))]:
+         for c in 'XO':
+             if s.count('T') + s.count(c) == 4:
+                 print pre, c, ""won""
+                 return
+     if ''.join(b).count('.'):
+         print pre, ""Game has not completed""
+     else:
+         print pre, ""Draw""
+ 
+ n = int(raw_input())
+ for i in xrange(n):
+     solve(""Case #%d:"" % (i + 1))
+",9,10
+"= int(stdin.readline())
+ for i in xrange(1,T+1):
+ 	ns = map(int, stdin.readline().split())
+ 	N,S,p = ns[0:3]
+ 	
+ 	h = 0
+ 	z = 0
+ 
+ 	for n in ns[3:]:
+ 		if n <= 1:
+ 			if n >= p: h += 1	
+ 		elif (n+2) // 3 >= p:
+ 			h += 1
+ 		elif (n+4) // 3 >= p:
+ 			z += 1
+ 
+ 	print ""Case #%d: %d"" % (i, h + min(S,z))
+ 
+ 
+",10,11
+"= open( sys.argv[1] )
+ f.readline()
+ 
+ numcases = 1
+ input = f.readline()
+ while input != """":
+ 	inC,inF,inX = [float(x) for x in input.split()]
+ 
+ 	start = (0.0,0.0,2.0)
+ 	h = [start]
+ 	checked =set()
+ 
+ 	while h[0][1] < inX:
+ 		x = heapq.heappop(h)
+ 
+ 		if x in checked:
+ 			continue
+ 		else:
+ 			checked.add(x)	
+ 
+ 		time,numCookies,rate = x
+ 		#time to win
+ 		timeW = (inX - numCookies) / rate
+ 		heapq.heappush( h,(time+timeW,numCookies+rate*timeW,rate) )
+ 
+ 		#time to new farm
+ 		timeF = (inC - numCookies) / rate
+ 		newC = numCookies + rate*timeF
+ 		newT = time + timeF
+ 		heapq.heappush( h,(newT,(newC - inC),rate+inF) )
+ 		heapq.heappush( h,(newT,newC,rate) )
+ 		#print h
+ 
+ 	output = ""{:.7f}"".format(h[0][0])
+ 
+ 	print ""Case #""+str(numcases)+"": ""+output
+ 	input = f.readline()
+ 	numcases += 1
+ 	",11,12
+"#!/usr/bin/python
+ 
+ = open(sys.argv[1],'r')
+ 
+ num = int(f.readline())
+ 
+ def count(z, r, c):
+     return len(z_and_nei(z,r,c))
+ 
+ def nei(z, r, c):
+     s = z_and_nei(z, r, c)
+     s -= set(z)
+     return s
+ 
+ def z_and_nei(z, r, c):
+     s = set()
+     for x in z:
+         s.add(x)
+         s.add((x[0]-1,x[1]-1))
+         s.add((x[0]-1,x[1]))
+         s.add((x[0]-1,x[1]+1))
+         s.add((x[0],x[1]-1))
+         s.add((x[0],x[1]+1))
+         s.add((x[0]+1,x[1]-1))
+         s.add((x[0]+1,x[1]))
+         s.add((x[0]+1,x[1]+1))
+     o = set()
+     for x in s:
+         if x[0] < 0 or x[0] > r-1 or x[1] < 0 or x[1] > c-1:
+             o.add(x)
+     s-=o
+     return s
+ 
+ def find_config(z, r, c, t):
+     if count(z,r,c) == t:
+         return z
+     if count(z,r,c) > t:
+         return []
+     n = nei(z,r,c)
+     for x in n:
+         z.append(x)
+         if find_config(z,r,c,t) != []:
+             return z
+         z.pop()
+     return []
+ 
+ for i in range(num):
+     print 'Case #{}:'.format(i+1)
+     r, c, m = [int(x) for x in f.readline().split()]
+     if r*c-m == 1:
+         print 'c' + '*'*(c-1)
+         for i in range(r-1):
+             print '*'*c
+     else:
+         z = find_config([(0,0)], c, r, c*r-m)
+         if z == []:
+             print ""Impossible""
+         else:
+             s = z_and_nei(z, c, r)
+             for j in range(r):
+                 for k in range(c):
+                     if j == 0 and k == 0:
+                         print 'c',
+                     elif (k,j) in s:
+                         print '.',
+                     else:
+                         print '*',
+                 print
+ 
+ 
+",12,13
+"= int(input())
+ 
+ for t in range(T):
+     N = int(input())
+     naomi = sorted(list(map(float, input().split())))
+     ken = sorted(list(map(float, input().split())))
+     naomi_dw = naomi[:]
+     ken_dw = ken[:]
+     war = 0
+     dwar = 0
+     for pn in naomi:
+         pk = bisect.bisect_left(ken, pn)
+         if pk == len(ken):
+             war += 1
+             ken.pop(0)
+         else:
+             ken.pop(pk)
+     for pn in naomi_dw:
+         if pn > ken_dw[0]:
+             dwar += 1
+             ken_dw.pop(0)
+         else:
+             ken_dw.pop()
+     print('Case #{}: {} {}'.format(t + 1, dwar, war))
+",13,14
+"def solve(grid, M, N):
+     row_max = {}
+     column_max = {}
+     for i in range(M):
+         row_max[i] = max(grid[i])
+     for i in range(N):
+         column_max[i] = max([grid[j][i] for j in range(M)])
+     for i in range(M):
+         for j in range(N):
+             v = grid[i][j]
+             if v < row_max[i] and v < column_max[j]:
+                 return ""NO""
+     return ""YES""
+ 
+ if __name__ == ""__main__"":
+     T = int(raw_input())
+     for i in range(1,T+1):
+         M,N = [int(x) for x in raw_input().split()]
+         grid = [[int(x) for x in raw_input().split()] for j in range(M)]
+         print ""Case #%d: %s"" % (i, solve(grid, M,N))
+",14,15
+"# python 3
+ (board, xr, xc, nfree):
+     to_refill = xr*xc - nfree
+     for r in reversed(range(2, xr)):
+         for c in reversed(range(2, xc)):
+             if not to_refill:
+                 return
+             assert(board[r][c] == '.')
+             board[r][c] = '*'
+             to_refill -= 1
+     # Bad board, but valid one
+     for r in reversed(range(xr)):
+         for c in reversed(range(xc)):
+             if not to_refill:
+                 return
+             if board[r][c] == '.':
+                 board[r][c] = '*'
+                 to_refill -= 1
+     assert(to_refill == 0)
+     
+ def generate_board(nrows, ncols, nmines):
+     nfree = nrows*ncols - nmines
+     xr=1; xc=1;
+     while True:
+         if xr*xc >= nfree:
+             break
+         if xr < nrows:
+             xr += 1
+         if xr*xc >= nfree:
+             break
+         if xc < ncols:
+             xc += 1
+     board = [['*' for c in range(ncols)] for r in range(nrows)]
+     for r in range(xr):
+         for c in range(xc):
+             board[r][c] = '.'
+     mines_refill(board, xr, xc, nfree)
+     board[0][0] = 'c'
+     return board
+         
+ def find_click_point(board):
+     nrows = len(board)
+     ncols = len(board[0])
+     for r in range(nrows):
+         for c in range(ncols):
+             if board[r][c] == 'c':
+                 return (r,c)
+     raise ValueError('Start point not present')
+ 
+ def enum_neighbour_coords(r0, c0, nrows, ncols):
+     for r in range(r0-1, r0+2):
+         if r<0 or r>=nrows:
+             continue
+         for c in range(c0-1, c0+2):
+             if c<0 or c>=ncols:
+                 continue
+             yield (r,c)
+ 
+ def click_board(board, click_coords):
+     nrows = len(board)
+     ncols = len(board[0])
+     points = [click_coords]
+     while points:
+         r0,c0 = points.pop()
+         mines_cnt = 0
+         for r,c in enum_neighbour_coords(r0, c0, nrows, ncols):
+             if board[r][c] == '*':
+                 mines_cnt += 1
+         board[r0][c0] = str(mines_cnt)
+         if not mines_cnt:
+             for r,c in enum_neighbour_coords(r0, c0, nrows, ncols):
+                 if board[r][c] == '.':
+                     points.append((r,c))
+ 
+ def all_fields_checked(board):
+     nrows = len(board)
+     ncols = len(board[0])
+     for r in range(nrows):
+         for c in range(ncols):
+             if board[r][c] == '.':
+                 return False
+     return True
+ 
+ def is_board_oneclick(original_board):
+     board = [row[:] for row in original_board] # deep copy
+     assert(board[0][0] == 'c')
+     r,c = find_click_point(board)
+     click_board(board, (r,c))
+     is_oneclick = all_fields_checked(board)
+     return is_oneclick
+ 
+ def board2result(board):
+     return [''.join(row) for row in board]
+ 
+ def process_case(nrows, ncols, nmines):
+     board = generate_board(nrows, ncols, nmines)
+     if is_board_oneclick(board):
+         result = board2result(board)
+     else:
+         result = ['Impossible']
+     return result
+ 
+ def result_gen(lines):
+     ncases = int(next(lines))
+     for ci in range(1,ncases+1):
+         R, C, M = line_of_numbers(next(lines))
+         result = process_case(R, C, M)
+         yield 'Case #{0}:\n'.format(ci, result)
+         for res_line in result:
+             yield res_line + '\n'
+     
+ def line_of_numbers(s):
+     return [int(sub) for sub in s.split()]
+ 
+ def input_gen(f_in):
+     for line in f_in:
+         if line.endswith('\n'):
+             line = line[:-1]
+         yield line
+ 
+ def start(basename):
+     infile = basename + '.in'
+     outfile = basename + '.out'
+     f_in = open(infile, 'r')
+     f_out = open(outfile, 'w')
+     f_out.writelines(result_gen(input_gen(f_in)))
+     f_in.close()
+     f_out.close()
+ 
+ ##start('C-test')
+ start('C-small-attempt0')
+ ##start('C-large')
+",15,16
+"(n):
+     generators = []
+     for ii in range(1, n + 1):
+         generators += get_generators_length_n(ii)
+     return generators        
+ 
+ def get_generators_length_n(length):
+     if length % 2 == 0: return get_even_generators_length_n(length)
+     else: return get_odd_generators_length_n(length)
+ 
+ def get_odd_generators_length_n(length):
+     if length == 1: return [1, 2, 3]
+     else: 
+         n = length / 2
+         generators = []
+         for ii in range(min(n, 4)):
+             for comb in itertools.combinations(range(1, n), ii):
+                 first_half = [""1""] + [""0""] * (n-1)
+                 for jj in comb:
+                     first_half[jj] = ""1""
+                 second_half = list(first_half)
+                 second_half.reverse()
+                 palin = first_half + [""0""] + second_half
+                 generators.append(int("""".join([elem for elem in palin])))
+                 palin[n] = ""1""
+                 generators.append(int("""".join([elem for elem in palin])))
+                 if ii <= 1:
+                     palin[n] = ""2""
+                     generators.append(int("""".join([elem for elem in palin])))
+         generators.append(int("""".join([elem for elem in ([""2""] + [""0""] * (n - 1) + [""0""] + [""0""] * (n - 1) + [""2""])])))
+         generators.append(int("""".join([elem for elem in ([""2""] + [""0""] * (n - 1) + [""1""] + [""0""] * (n - 1) + [""2""])])))
+         generators.sort()
+         return generators
+ 
+ def get_even_generators_length_n(length):
+     if length == 2: return [11, 22]
+     n = length / 2
+     generators = []
+     for ii in range(min(n, 4)):
+         for comb in itertools.combinations(range(1, n), ii):
+             first_half = [""1""] + [""0""] * (n-1)
+             for jj in comb:
+                 first_half[jj] = ""1""
+             second_half = list(first_half)
+             second_half.reverse()
+             palin = first_half + second_half
+             generators.append(int("""".join([elem for elem in palin])))
+     generators.append(int("""".join([elem for elem in ([""2""] + [""0""] * (length - 2) + [""2""])])))
+     generators.sort()
+     return generators
+ 
+ def is_palin(num):
+     string = str(num)
+     length = len(string)
+     ii = 0
+     while ii < length/2:
+         if string[ii] != string[-(1+ii)]:
+             return False
+         ii += 1
+     return True
+ 
+ def gen_fair_and_squares(upper_limit):
+     fair_and_squares = []
+     for ii in range(1, upper_limit + 1):
+         if (is_palin(ii) and is_palin(ii*ii)):
+             fair_and_squares.append(ii)
+     return fair_and_squares
+ 
+ f = open(sys.argv[1])
+ T = int(f.readline())
+ gens = get_generators_up_to_length_n(60)
+ squares = map(lambda x: x*x, gens)
+ 
+ for t in range(T):
+     A, B = map(int, f.readline().strip().split())
+     total = 0
+     for elem in squares:
+         assert(is_palin(elem))
+         if elem >= A and elem <= B: total += 1
+         if elem > B:
+             break
+ 
+     print ""Case #%d:"" % (t + 1), total
+",16,17
+"# coding: utf-8
+ (v):
+     pass#print(v)
+ 
+ def read(f):
+     t = tuple(int(v) for v in f.readline().split())
+     debug(t)
+     return t
+ 
+ def readf(f):
+     t = tuple(float(v) for v in f.readline().split())
+     debug(t)
+     return t
+ 
+ def answer(f, X, ans):
+     out = ""Case #{}:\n{}"".format(X, ans)
+     f.write(out)
+     f.write(""\n"")
+     print(out)
+ 
+ def answer_cells(f, X, cells):
+     out = ""Case #{}:"".format(X)
+     f.write(out)
+     f.write(""\n"")
+     print(out)
+     for row in cells:
+         out = """".join(row)
+         f.write(out)
+         f.write(""\n"")
+         print(out)
+ 
+ def main(inf, outf):
+     T, = read(inf)
+     for casenmbr in range(1, T + 1):
+         R, C, M = read(inf)
+ 
+         if M == 0:
+             cells = [['.'] * C for i in range(R)]
+             cells[0][0] = 'c'
+             answer_cells(outf, casenmbr, cells)
+             continue
+ 
+         empty = R * C - M
+ 
+         if empty == 1:
+             cells = [['*'] * C for i in range(R)]
+             cells[0][0] = 'c'
+             answer_cells(outf, casenmbr, cells)
+             continue
+ 
+         if R == 1 or C == 1:
+             cells = [['.'] * C for i in range(R)]
+             m = 0
+             for r in range(R):
+                 for c in range(C):
+                     cells[r][c] = '*'
+                     m += 1
+                     if m == M:
+                         break
+                 else:
+                     continue
+                 break
+             cells[-1][-1] = 'c'
+             answer_cells(outf, casenmbr, cells)
+             continue
+ 
+         if empty in (2, 3, 5, 7):
+             answer(outf, casenmbr, ""Impossible"")
+             continue
+ 
+         if (R == 2 or C == 2) and empty % 2:
+             answer(outf, casenmbr, ""Impossible"")
+             continue
+ 
+         cells = [['*'] * C for i in range(R)]
+ 
+ 
+         cells[0][0] = 'c'
+         empty -= 1
+         cc = 1
+         rr = 1
+         while empty > 0:
+             if cc < C:
+                 for r in range(rr):
+                     if empty == 2 and r == rr - 1:
+                         break
+                     cells[r][cc] = '.'
+                     empty -= 1
+                     if empty == 0:
+                         break
+                 cc += 1
+             if rr < R and empty > 0:
+                 for c in range(cc):
+                     if empty == 2 and c == cc - 1:
+                         break
+                     cells[rr][c] = '.'
+                     empty -= 1
+                     if empty == 0:
+                         break
+                 rr += 1            
+ 
+         # cnt = 0
+         # for row in cells:
+         #     for v in row:
+         #         if v == '*':
+         #             cnt += 1
+         # if cnt != M:
+         #     raise ""!""
+         answer_cells(outf, casenmbr, cells)
+ 
+ 
+ if __name__==""__main__"":
+     infname = sys.argv[1]
+     outfname = os.path.splitext(infname)[0] + "".out""
+     with open(infname, ""r"") as inf:
+         with open(outfname, ""w"") as outf:
+             main(inf, outf)
+",17,18
+"YES = 0
+ NO = 1
+ 
+ messages = [
+     ""YES"",
+     ""NO""
+ ]
+ 
+ # def check_height(lawn, N, M, height, was, levels):
+ #     for x, y in levels[height]:
+ #         if x not in was['row'] and y not in was['col']:
+ #             # Try the row
+ #             good_row = True
+ #             for i in xrange(M):
+ #                 if lawn[x][i] > height:
+ #                     good_row = False
+ #                     break
+ #             if good_row:
+ #                 was['row'].add(x)
+ #                 continue
+ #             good_col = True
+ #             for i in xrange(N):
+ #                 if lawn[i][y] > height:
+ #                     good_col = False
+ #                     break
+ #             if good_col:
+ #                 was['col'].add(y)
+ #                 continue
+ #             # There is no good cut for this field
+ #             return False
+ #     return True
+ 
+ # def check_lawn(lawn, N, M):
+ #     heights_dict = {i: False for i in xrange(1,101)}
+ #     for i in xrange(N):
+ #         for j in xrange(M):
+ #             heights_dict[lawn[i][j]] = True
+ 
+ #     heights = [key for key in sorted(heights_dict.keys()) if heights_dict[key]]
+ #     if len(heights) == 1:
+ #         return YES
+ #     levels = {height: [] for height in heights}
+ 
+ #     for i in xrange(N):
+ #         for j in xrange(M):
+ #             levels[lawn[i][j]].append((i, j))
+ 
+ #     was = {
+ #         ""row"": set()
+ #         ""col"": set()
+ #     }
+ 
+ #     for i, height in enumerate(heights[:-1]):
+ #         if not check_height(lawn, N, M, height, was, levels):
+ #             return NO
+ 
+ #     return YES
+ 
+ def check_lawn(lawn, N, M):
+     row_maxs = [0 for _ in xrange(N)]
+     col_maxs = [0 for _ in xrange(M)]
+ 
+     for i in xrange(N):
+         cmax = -1
+         for j in xrange(M):
+             if lawn[i][j] > cmax:
+                 cmax = lawn[i][j]
+         row_maxs[i] = cmax
+ 
+     for j in xrange(M):
+         cmax = -1
+         for i in xrange(N):
+             if lawn[i][j] > cmax:
+                 cmax = lawn[i][j]
+         col_maxs[j] = cmax
+ 
+     for i in xrange(N):
+         for j in xrange(M):
+             if row_maxs[i] > lawn[i][j] and col_maxs[j] > lawn[i][j]:
+                 return NO
+ 
+     return YES
+ 
+ 
+ T = int(raw_input().strip())
+ for i in xrange(T):
+     N, M = map(int, raw_input().strip().split(' '))
+     lawn = [[] for j in xrange(N)]
+     for j in xrange(N):
+         lawn[j] = map(int, raw_input().strip().split(' '))
+     print ""Case #%s: %s"" % (i + 1, messages[check_lawn(lawn, N, M)])
+",18,19
+"T = int(raw_input())
+ 
+ def readSq(n):
+     res = []
+     for i in xrange(n):
+         res.append(set(map(int, raw_input().split())))
+     return res
+ 
+ def solve():
+     a1 = int(raw_input())
+     s1 = readSq(4)
+     a2 = int(raw_input())
+     s2 = readSq(4)
+     ans = s1[a1-1] & s2[a2-1]
+     if len(ans) == 0:
+         return ""Volunteer cheated!""
+     if len(ans) > 1:
+         return ""Bad magician!""
+     return str(list(ans)[0])
+ 
+ for z in xrange(T):
+     print ""Case #%d: %s"" % (z+1, solve())
+",19,20
+"#!/usr/bin/env python
+ 
+ = ""tiny""
+ if 1:
+     INPUT = ""C-small-attempt0.in""
+ 
+ def debug(*args):
+     pass #print str(args)
+ 
+ class Memoize:
+     def __init__(self,function):
+         self._cache = {}
+         self._callable = function
+             
+     def __call__(self, *args, **kwds):
+         cache = self._cache
+         key = self._getKey(*args,**kwds)
+         try: return cache[key]
+         except KeyError:
+             cachedValue = cache[key] = self._callable(*args,**kwds)
+             return cachedValue
+     
+     def _getKey(self,*args,**kwds):
+         return kwds and (args, ImmutableDict(kwds)) or args
+ 
+ def is_palindrome(N):
+     s = str(N)
+     return s == ''.join(reversed(s))
+ 
+ def fair_and_square_set(max_N):
+     p = ""squareset_%d"" % max_N
+     try:
+         s = pickle.load(file(p))
+         return s
+     except:
+         pass
+     s = set()
+     for i in range(1,max_N+1):
+         if is_palindrome(i) and is_palindrome(i*i):
+             s.add(i*i)
+     pickle.dump(s, file(p, ""wb""))
+     return s
+ 
+ MAX_N = int(1e7)
+ SQUARE_SET = fair_and_square_set(MAX_N)
+ #print(SQUARE_SET)
+ 
+ def do_trial(A, B):
+     count = 0
+     for ss in SQUARE_SET:
+         if A <= ss <= B:
+             count += 1
+     return count
+ 
+ f = file(INPUT)
+ T = int(f.readline()[:-1])
+ for i in range(T):
+     A, B = [int(x) for x in f.readline().split()]
+     v = do_trial(A, B)
+     print ""Case #%d: %s"" % (i+1, v)
+",20,21
+"def esPal(x):
+ 	return str(x) == str(x)[::-1]
+ 
+ t = int(raw_input())
+ 
+ for case in range(t):
+ 	line = raw_input().split(' ')
+ 	a = int(line[0])
+ 	b = int(line[1])
+ 
+ 	i = int(a**.5)
+ 	if i*i != a:
+ 		i += 1
+ 	max = int(b**.5)
+ 	cantidad = 0
+ 	while i <= max:
+ 		if esPal(i) and esPal(i*i):
+ 			cantidad += 1
+ 		i += 1
+ 
+ 	print 'Case #'+str(case+1)+':', cantidad
+",21,22
+"#!/usr/bin/env python
+ 
+ FILE_NAME_BASE = 'B-small-attempt0'
+ NUM_PROCESSES = 0
+ MEM_LIMIT_GB = 1.5 # per worker process
+ RECURSION_LIMIT = 1000
+ 
+ def parse(inp):
+ 	cost, prod, goal = (float(x) for x in inp.readline().split())
+ 	return cost, prod, goal
+ 
+ def solve(cost, prod, goal):
+ 	rate = 2
+ 	now = 0
+ 	while True:
+ 		nobuyEnd = goal / rate
+ 		buyEnd = cost / rate + goal / (rate + prod)
+ 		if buyEnd < nobuyEnd:
+ 			now += cost / rate
+ 			rate += prod
+ 		else:
+ 			return '%0.7f' % (now + nobuyEnd)
+ 
+ def main():
+ 	(RECURSION_LIMIT)
+ 
+ 	= resource.getrlimit(resource.RLIMIT_AS)
+ 	resource.setrlimit(resource.RLIMIT_AS, (MEM_LIMIT_GB * 1024 ** 3, hard))
+ 
+ 	inp = open(FILE_NAME_BASE + '.in', 'r')
+ 	numCases = int(inp.readline())
+ 	if NUM_PROCESSES == 0:
+ 		results = [
+ 			solve(*parse(inp))
+ 			for _ in range(numCases)
+ 			]
+ 	else:
+ 		= Pool(NUM_PROCESSES)
+ 		results = [
+ 			pool.apply_async(solve, parse(inp))
+ 			for _ in range(numCases)
+ 			]
+ 	inp.close()
+ 	out = open(FILE_NAME_BASE + '.out', 'w')
+ 	for case, result in enumerate(results):
+ 		value = result if NUM_PROCESSES == 0 else result.get()
+ 		out.write('Case #%d: %s\n' % (case + 1, value))
+ 		out.flush()
+ 	out.close()
+ 
+ if __name__ == '__main__':
+ 	main()
+",22,23
+"# -*- coding: utf-8 -*-
+ 
+ T = int(raw_input())
+ for test_case in xrange(1, T + 1):
+     C, F, X = map(float, raw_input().split())
+     answer = X / 2
+     i = 0
+     last_tc = 0
+     while True:
+         tc = last_tc + C / (2 + (i * F))
+         if answer < tc:
+             break
+         answer = min(tc + X / (2 + (i + 1) * F), answer)
+ 
+         i += 1
+         last_tc = tc
+     print 'Case #{}: {:.7f}'.format(test_case, answer)
+",23,24
+"#use combinations!
+ (filepath):	#1lpc = 1 line per case
+ 	with file(filepath, 'rb') as f_in:
+ 		for line_index, line in enumerate(f_in):
+ 			if line_index == 0: #T
+ 				continue
+ 			yield line_index, line.strip().split(' ')
+ 
+ def iterate_cases_nlpc(filepath, n):	#1lpc = n line per case
+ 	with file(filepath, 'rb') as f_in:
+ 		case_counter = 1
+ 		case = []
+ 		for line_index, line in enumerate(f_in):
+ 			if line_index == 0: #T
+ 				continue
+ 			case.append(line.strip().split(' '))
+ 			if not line_index % n:
+ 				yield case_counter, case
+ 				case_counter += 1
+ 				case = []
+ 
+ def iterate_cases_glpc(filepath):		#glpc - given lines per case
+ 	with file(filepath, 'rb') as f_in:
+ 		case_counter = 0
+ 		new_case = True
+ 		for line_index, line in enumerate(f_in):
+ 			if line_index == 0: #T
+ 				continue
+ 			if new_case:
+ 				new_case = False
+ 				case_counter += 1
+ 				case = []
+ 				assert len(line.strip().split(' ')) == 1
+ 				lines_left = int(line.strip())
+ 				if not lines_left:
+ 					new_case = True
+ 					yield case_counter, case
+ 				continue
+ 			if lines_left:
+ 				lines_left -= 1
+ 				case.append(line.strip().split(' '))
+ 			if not lines_left:
+ 				new_case = True
+ 				yield case_counter, case
+ 			
+ def part_of_list_to_int(array, flags):
+ 	assert len(array) == len(flags)
+ 	output = []
+ 	for index, elem in enumerate(array):
+ 		if flags[index]:
+ 			output.append(int(elem))
+ 		else:
+ 			output.append(elem)
+ 	return output
+ 
+ def list_to_int(array):
+ 	return part_of_list_to_int(array, [True] * len(array))
+ 
+ def part_of_list_to_float(array, flags):
+ 	assert len(array) == len(flags)
+ 	output = []
+ 	for index, elem in enumerate(array):
+ 		if flags[index]:
+ 			output.append(float(elem))
+ 		else:
+ 			output.append(elem)
+ 	return output
+ 
+ def list_to_float(array):
+ 	return part_of_list_to_float(array, [True] * len(array))
+ 
+ def get_max_array_on_index(array, index):
+ 	elem_len = len(array[0])
+ 	assert index < elem_len
+ 	for elem in array:
+ 		assert elem_len == len(elem)
+ 	max_sub = array[0][index]
+ 	max_elem = array[0]
+ 	for elem in array:
+ 		if elem[index] > max_sub:
+ 			max_sub = elem[index]
+ 			max_elem = elem
+ 	return max_elem
+ 
+ def list_index_in_sorted_with_position(a_list, value, pos):
+ 	list_len = len(a_list)
+ 	if list_len == 1:
+ 		if a_list[0] == value:
+ 			return pos
+ 		return -1
+ 	if a_list[list_len/2] > value:
+ 		return list_index_in_sorted_with_position(a_list[:(list_len/2)], value, pos)
+ 	else:
+ 		return list_index_in_sorted_with_position(a_list[(list_len/2):], value, pos + (list_len/2))
+ 	
+ def list_index_in_sorted_list(a_list, value):
+ 	return list_index_in_sorted_with_position(a_list, value, 0)
+ 
+ def copy_list(list):
+ 	res = []
+ 	for elem in list:
+ 		res.append(elem)
+ 	return res	
+ 
+ ############################################################
+ #### add solution here 									####
+ #### don't forget to change data from str to int/float  ####
+ ############################################################
+ 
+ def conj_mat(a):
+ 	R = len(a)
+ 	C = len(a[0])
+ 	res = [['.' for _ in xrange(R)] for __ in xrange(C)]
+ 	for i in xrange(R):
+ 		for j in xrange(C):
+ 			res[j][i] = a[i][j]
+ 	return res
+ 
+ def one_line_builder(R, C, M):
+ 	res = []
+ 	res.extend(['*'] * M)
+ 	res.extend(['.'] * (C - M))
+ 	res[-1] = 'c'
+ 	return [res]
+ 	
+ def two_line_builder(R, C, M):
+ 	line = []
+ 	line.extend(['*'] * (M / 2))
+ 	line.extend(['.'] * (C - M / 2))
+ 	res = [line, copy_list(line)]
+ 	res[1][-1] = 'c'
+ 	if M%2 == 1:
+ 		res[0][-1] = '*'
+ 	return res
+ 	
+ def three_line_builder(R, C, M):
+ 	res = [['.' for _ in xrange(C)] for __ in xrange(R)]
+ 	res[-1][-1] = 'c'
+ 	m = min([M, R * C - 9])
+ 	stop_flag = False
+ 	for j in xrange(C):
+ 		if stop_flag:
+ 			break
+ 		for i in xrange(R):
+ 			if m == 0:
+ 				stop_flag = True
+ 				break
+ 			res[i][j] = '*'
+ 			m -= 1
+ 	print i,j
+ 	if i == 2:
+ 		res[1][j-1] = '.'
+ 		if j == C - 3:
+ 			res[0][j] = '*'
+ 		else:
+ 			res[0][-1] = '*'
+ 	
+ 	if M <= R * C - 9:
+ 		return res
+ 	else:
+ 		m = M - (R * C - 9)
+ 		assert m not in [2, 4, 6, 7, 9]
+ 		assert m > 0
+ 		assert m < 10
+ 		
+ 		res[-3][-3] = '*'
+ 		m -= 1
+ 		if m == 0: return res
+ 		res[-2][-3] = '*'
+ 		res[-1][-3] = '*'
+ 		m -= 2
+ 		if m == 0: return res
+ 		res[-3][-2] = '*'
+ 		res[-3][-1] = '*'
+ 		m -= 2
+ 		if m == 0: return res
+ 		res[-2][-2] = '*'
+ 		res[-2][-1] = '*'
+ 		res[-1][-2] = '*'
+ 		m -= 3
+ 		if m == 0: return res
+ 		assert False
+ 	
+ 	
+ 	
+ def over_three_line_builder(R, C, M):
+ 	if M <= (R - 3) * C:
+ 		res = [['*' for _ in xrange(C)] for __ in xrange(M / C)]
+ 		flag = False
+ 		if (M % C) != (C - 1):
+ 			line = ['*' for _ in xrange(M % C)]
+ 			line.extend(['.' for _ in xrange(C - (M % C))])
+ 		else:
+ 			line = ['*' for _ in xrange((M % C) - 1)]
+ 			line.extend(['.' for _ in xrange((C - (M % C)) + 1)])
+ 			flag = True
+ 		res.append(line)
+ 		index = len(res)
+ 		res.extend([['.' for _ in xrange(C)] for __ in xrange(R - len(res))])
+ 		if flag:
+ 			res[index][0] = '*'
+ 		res[-1][-1] = 'c'
+ 		assert len(res) == R
+ 		assert len(res[0]) == C
+ 		return res
+ 	else:
+ 		res = [['*' for _ in xrange(C)] for __ in xrange(R - 3)]
+ 		M -= (R - 3) * C
+ 		tmp = three_line_builder(3, C, M)
+ 		if len(tmp) != 3: # error msg
+ 			return tmp
+ 		res.extend(tmp)
+ 		return res
+ 	
+ def solve(R, C, M):
+ 	res = None
+ 	
+ 	if M == R * C:
+ 		return 'Impossible'
+ 	if R >= 3 and C >= 3:
+ 		if R*C - M in [7, 5, 3, 2]:
+ 			return 'Impossible'
+ 		return over_three_line_builder(R, C, M)
+ 		
+ 	elif R != 1 and C != 1:  #which means one of them is 2, and the other not 1
+ 		if (R*C - M) % 2 == 1:
+ 			if M < R*C - 1:
+ 				return 'Impossible'
+ 		if M + 2 == R * C:
+ 			return 'Impossible'
+ 		else:
+ 			if R == 2:
+ 				return two_line_builder(R, C, M)
+ 			else:
+ 				tmp = two_line_builder(C, R, M)
+ 				return conj_mat(tmp)
+ 	
+ 	else:					#which means one of them is 1
+ 		if R == 1:
+ 			return one_line_builder(R, C, M)
+ 		else:
+ 			tmp = one_line_builder(C, R, M)
+ 			return conj_mat(tmp)
+ 		
+ 	return res
+ 
+ def mat_to_str(a):
+ 	if a in ['Impossible', 'Not Implemented']:
+ 		return a
+ 	str_out = ''
+ 	for row in a:
+ 		for elem in row:
+ 			str_out += elem
+ 		str_out += '\n'
+ 	return str_out[:-1]
+ 	
+ def calc_result(case):
+ 	result = None
+ 	
+ 	R = int(case[0])
+ 	C = int(case[1])
+ 	M = int(case[2])
+ 	print R, C, M
+ 	
+ 	result = solve(R, C, M)
+ 	
+ 	str_out = mat_to_str(result)
+ 	m = str_out.count('*')
+ 	assert (m==0 or m==M)
+ 	print str_out
+ 	
+ 	return '\n%s' % str_out
+ 
+ def main(filepath):
+ 	start_time = time.time()
+ 	with file('output.txt', 'wb') as f_out:
+ 		
+ 		######################################
+ 		#### select input iteration type: ####
+ 		####	- iterate_cases_1lpc	  ####
+ 		####	- iterate_cases_nlpc +n	  ####
+ 		####	- iterate_cases_glpc	  ####
+ 		######################################
+ 		for case_index, case in iterate_cases_1lpc(filepath):
+ 			
+ 			print ""case #%d: time:%.02f"" % (case_index, time.time() - start_time)
+ 			result = calc_result(case)
+ 			
+ 			#######################
+ 			#### format output ####
+ 			#######################
+ 			f_out.write(""Case #%d: %s\n"" % (case_index, result))
+ 				
+ if __name__ == '__main__':
+ 	main(sys.argv[1])
+",24,25
+"#!/usr/bin/env python
+ # -*- coding:utf-8 -*-
+ #
+ # Problem C. Minesweeper Master
+ # https://code.google.com/codejam/contest/2974486/dashboard#s=p2
+ #
+ 
+ (R, C, M, _board):
+     # deepcopy
+     board = [line[:] for line in _board]
+ 
+     pos = [(0, 0)]
+     while pos:
+         row, col = pos.pop()
+         # neighbor cell list
+         neighbor = []
+         for r in (-1, 0, 1):
+             r += row
+             for c in (-1, 0, 1):
+                 c += col
+                 if r >= 0 and r < R and c >= 0 and c < C:
+                     neighbor.append((r, c))
+         # count bomb
+         count = len([1 for r, c in neighbor if board[r][c] == '*'])
+         board[row][col] = str(count)
+         # push next cell
+         if count == 0:
+             for r, c in neighbor:
+                 if board[r][c] == '.':
+                     pos.append((r, c))
+ 
+     flat = ''.join(''.join(line) for line in board)
+     result = not flat.count('.')
+     if not result and False: # for DEBUG
+         print '-' * 20
+         print R, C, M
+         print '\n'.join(''.join(line) for line in _board)
+         print '-' * 20
+     assert flat.count('*') == M
+     return result
+ 
+ 
+ def solve(R, C, M):
+     # initialize
+     board = [['.'] * C for row in range(R)]
+     board[0][0] = 'c'
+     row = R
+     col = C
+     mine = M
+ 
+     # phase 1: right edge, bottom edge
+     while mine:
+         if 0 < row <= col and mine >= row:
+             for r in range(row):
+                 board[row - r - 1][col - 1] = '*'
+             mine -= row
+             col -= 1
+         elif 0 < col <= row and mine >= col:
+             for c in range(col):
+                 board[row - 1][col - c - 1] = '*'
+             mine -= col
+             row -= 1
+         else:
+             break
+ 
+     # phase 2:
+     if mine:
+         #print '\n'.join(''.join(line) for line in board)
+         #print 'left', mine
+         while mine and row > 2:
+             for r in range(min(mine, row - 2)):
+                 board[row - r - 1][col - 1] = '*'
+                 mine -= 1
+             col -= 1
+         while mine and col > 2:
+             for c in range(min(mine, col - 2)):
+                 board[row - 1][col - c - 1] = '*'
+                 mine -= 1
+             row -= 1
+ 
+     # phase 3
+     if mine:
+         # col == row == 2
+         if mine:
+             board[1][1] = '*'
+             mine -= 1
+         if mine:
+             board[1][0] = '*'
+             mine -= 1
+         if mine:
+             board[0][1] = '*'
+             mine -= 1
+ 
+     assert mine == 0
+     return '\n'.join(''.join(line) for line in board) if check(R, C, M, board) else 'Impossible'
+ 
+ 
+ def main(IN, OUT):
+     T = int(IN.readline())
+     for index in range(T):
+         R, C, M = map(int, IN.readline().split())
+         OUT.write('Case #%d:\n%s\n' % (index + 1, solve(R, C, M)))
+ 
+ 
+ def makesample(maxSize=5, T=230):
+     (T):
+         R = random.randint(1, maxSize)
+         C = random.randint(1, maxSize)
+         print R, C, random.randint(0, R * C - 1)
+ 
+ 
+ def makesample():
+     pattern = []
+     for R in range(1, 5+1):
+         for C in range(1, 5+1):
+             for M in range(R * C):
+                 pattern.append((R, C, M))
+     print len(pattern)
+     for R, C, M in pattern:
+         print R, C, M
+ 
+ 
+ if __name__ == '__main__':
+     if '-makesample' in sys.argv[1:]:
+         makesample()
+     else:
+         main(sys.stdin, sys.stdout)
+ 
+",25,26
+"(board, mapping):
+     val = int(board.translate(string.maketrans(mapping, ""1100"")), 2)
+     for v in [0x000f, 0x00f0, 0x0f00, 0xf000,
+               0x1111, 0x2222, 0x4444, 0x8888,
+               0x1248, 0x8421]:
+         if (val & v) == v:
+             return True
+     return False
+ 
+ 
+ def finished(board):
+     return '.' not in board
+ 
+ 
+ def compute(board):
+     if won(board, 'XTO.'):
+         return ""X won""
+     if won(board, 'OTX.'):
+         return ""O won""
+     if finished(board):
+         return ""Draw""
+     return ""Game has not completed""
+ 
+ 
+ def parse():
+     board = []
+     for i in xrange(4):
+         board.append(sys.stdin.readline().strip())
+     sys.stdin.readline()
+     return (''.join(board),)
+ 
+ 
+ if __name__ == ""__main__"":
+     sys.setrecursionlimit(100000)
+     T = int(sys.stdin.readline().strip())
+     count = 1
+     part = 0
+     if len(sys.argv) == 3:
+         part = int(sys.argv[1])
+         count = int(sys.argv[2])
+     for i in xrange(T):
+         data = parse()
+         if i * count >= part * T and i * count < (part + 1) * T:
+             result = compute(*data)
+             print ""Case #%d: %s"" % (i + 1, result)
+",26,27
+"def read_line():
+     return raw_input().strip()
+ 
+ def read_words():
+     return read_line().split()
+ 
+ def read_integer():
+     return int( read_line() )
+ 
+ def read_integers():
+     return [ int( x ) for x in read_words() ]
+ 
+ T = read_integer()
+ for t in range( T ):
+     print 'Case #%i:' % ( t + 1 ),
+     A, B = read_integers()
+     length = len( str( A ) )
+     pairs = set()
+     for n in range( A, B ):
+         digits = str( n )
+         for start in range( 1, length ):
+             m = int( digits[ start : ] + digits[ : start ] )
+             if n < m <= B:
+                 pairs.add( ( n, m ) )
+     print len( pairs )
+",27,28
+"#!/usr/bin/python
+ 
+ (file):
+   """"""
+     input:
+ 
+ 		T (number of test cases)
+ 
+ 		N M
+ 		N lines of M numbers (desired height of grass)
+ 
+   """"""
+ 
+   tests = []
+ 
+   T = int(file.readline().strip())
+ 
+   for i in xrange(T):
+ 		test = {}
+ 
+ 		line = file.readline().strip()
+ 		parts = line.split(' ')
+ 
+ 		if len(parts) != 2:
+ 			print ""HORRIBLE ERROR in TEST %d!"" % (i+1, )
+ 			return None
+ 
+ 		N = int(parts[0])
+ 		M = int(parts[1])
+ 
+ 		test['N'] = N
+ 		test['M'] = M
+ 		test['desired'] = []
+     
+ 		for j in xrange(N):
+ 			line = file.readline().strip()
+ 			parts = line.split(' ')
+ 
+ 			if len(parts) != M:
+ 				print ""TERRIBLE ERROR in TEST %d!"" % (i+1, )
+ 				return None
+ 
+ 			for p in parts:
+ 				k = int(p)
+ 				test['desired'].append(k)
+ 
+ 		tests.append(test)
+ 
+   return tests
+ 
+ def run(test):
+ 	""""""
+ 		Run a test and return output.
+ 	""""""
+ 
+ 	# Figure out row/col min and max
+ 	test['row'] = []
+ 	test['col'] = []
+ 
+ 	for row in xrange(test['N']):
+ 		r = []
+ 
+ 		for col in xrange(test['M']):
+ 			i = row * test['M'] + col
+ 
+ 			r.append(test['desired'][i])
+ 
+ 		test['row'].append({'min' : min(r), 'max' : max(r)})
+ 
+ 	for col in xrange(test['M']):
+ 		c = []
+ 
+ 		for row in xrange(test['N']):
+ 			i = row * test['M'] + col
+ 
+ 			c.append(test['desired'][i])
+ 
+ 		test['col'].append({'min' : min(c), 'max' : max(c)})
+ 
+ 	for x in xrange(test['M']):
+ 		for y in xrange(test['N']):
+ 			i = y * test['M'] + x
+ 			v = test['desired'][i]
+ 
+ 			# If you are smaller than someone in both directions, it's impossible
+ 			rowmax = test['row'][y]['max']
+ 			colmax = test['col'][x]['max']
+ 			if (v < rowmax) and (v < colmax):
+ 				#print ""(%d,%d) = %d, row = %d, col = %d"" % (x, y, v, rowmax, colmax)
+ 				return ""NO""
+ 
+ 	return ""YES""
+ 
+ file = open(sys.argv[1], ""rt"")
+ 
+ tests = readfile(file)
+ 
+ file.close()
+ 
+ case = 1
+ 
+ for test in tests:
+ #if True:
+   #test = tests[0]
+   result = run(test)
+   print ""Case #%d: %s"" % (case, result)
+   case = case + 1
+",28,29
+"# -*- coding: utf-8 -*-
+ = sys.stdin
+ T = int(fin.readline())
+ for case in range(1,T+1):
+     numbers = map(int, fin.readline().split())
+     N, S, p = numbers[:3]
+     T = numbers[3:]
+     normal_limit = p + 2*max(0, (p-1))
+     surpising_limit = p + 2*max(0, (p-2))
+ 
+     normal_count = 0
+     surprising_count = 0
+ 
+     for t in T:
+         if t >= normal_limit:
+             normal_count += 1
+         elif t >= surpising_limit:
+             surprising_count += 1
+ 
+     result = normal_count + min(surprising_count, S)
+ 
+     print ""Case #%d: %s"" % (case, result)
+ 
+",29,30
+"#!/usr/bin/python
+ (state, coord):
+     if coord[0] < 0 or coord[1] < 0:
+         return False
+     elif coord[0] > (len(state) - 1):
+         return False
+     elif coord[1] > (len(state[coord[0]]) - 1):
+         return False
+     else:
+         return True
+ 
+ def clear(state, coord):
+     for r in range(-1,2):
+         for c in range(-1,2):
+             row = coord[0] + r
+             col = coord[1] + c
+             if check_bounds(state, (row, col)):
+                 state[row][col] = 0
+ 
+ def count(state):
+     return sum([sum(x) for x in state])
+ 
+ def state_print(state):
+     print(""c"" + """".join([""*""  if x else ""."" for x in state[0][1:]]))
+     for line in state[1:]:
+         print("""".join([""*""  if x else ""."" for x in line]))
+ 
+ def solve(state, mines):
+     prev_state = deepcopy(state)
+     for row in range(len(state)):
+         for col in range(len(state[row])):
+             new_state = deepcopy(state)
+             clear(new_state, (row, col))
+             c = count(new_state)
+             # print(c)
+             # state_print(state)
+             if(c < mines):
+                 state = prev_state
+             elif( c == mines):
+                 state_print(new_state)
+                 return True
+             else:
+                 if col == len(state[row]) -2:
+                     prev_state = deepcopy(state)
+                 state = new_state
+     print(""Impossible"")
+     return False
+ 
+ 
+ 
+ 
+ def main():
+     filename = ""C-small-attempt0.in""
+     # filename = ""C-large.in""
+     # filename = ""sample.in""
+ 
+ 
+     inp = open(filename, ""rU"")
+ 
+     n = int(inp.readline().strip())
+ 
+     for case in range(1, n + 1):
+         R, C, M = map(int, inp.readline().strip().split("" ""))
+         state = [[1 for x in range(C)] for y in range(R)]
+         print(""Case #{}:"".format(case))
+         solve(state, M)
+     # state = [[1 for x in range(7)] for y in range(4)]
+     # solve(state, 13)
+ 
+ main()",30,31
+"=0 #no. of Test cases
+ for line in fileinput.input():
+     if fileinput.isfirstline():
+         T=int(line)
+         print ""no. of test cases:"", T
+         continue
+     
+     nums=[int(x) for x in line.split()]
+     N=nums[0] #no. of googlers
+     S=nums[1] #no. of surprising triplets
+     p=nums[2] #max value
+     #print ""N S p:"", N, S, p
+     
+     del nums[:3]
+     count=0
+     for num in nums:
+         quo=num//3
+         rem=num%3
+         #print ""num, quo, rem"", num, quo, rem
+         if quo >= p:
+             count += 1
+             continue
+         elif quo+1 == p and rem > 0:
+             count += 1
+             continue
+         elif quo+1 ==p and rem == 0 and quo > 0 and S > 0:
+             count += 1
+             S -= 1
+             continue
+         elif quo+2 >= p and rem == 2 and S > 0:
+             count += 1
+             S -= 1
+     
+     print ""Case #%(k)i: %(count)i"" % {""k"":fileinput.lineno()-1,""count"":count}
+",31,32
+"filename = raw_input(""Name of file: "")
+ infile = open(filename, ""r"")
+ outfile = open(filename + "".out"", ""w"")
+ 
+ 
+ T = int(infile.readline()[:-1])
+ ## Code starts here
+ 
+ 
+ def getMinTime(c, f, x):
+     p0 = 2.0
+     s_prev = x / p0
+     s_curr = c / p0
+     prev_item = 0
+     next_item = x / (p0 + f)
+     n = 1
+     while s_prev + prev_item > s_curr + next_item:
+         s_prev = s_curr
+         prev_item = next_item
+         s_curr += c / (p0 + (n * f))
+         next_item = x / (p0 + ((n + 1) * f))
+         n += 1
+     return s_prev + prev_item
+ 
+ for t in range(1, T + 1):
+     items = infile.readline()[:-1].split("" "")
+     c = float(items[0])
+     f = float(items[1])
+     x = float(items[2])
+     time = getMinTime(c, f, x)
+     outfile.write(""Case #%d: %.7f\n"" %(t, time))
+     
+         
+     
+ ## code ends here
+ 
+ outfile.close()
+ infile.close()
+",32,33
+"(object):
+     def __init__(self):
+         pass
+     
+     def solve(self, inputs):
+         nn = [float(x) for x in inputs[1].split()]
+         nn.sort()
+         kk = [float(x) for x in inputs[2].split()]
+         kk.sort()
+         dw = self.dwar(nn[:], kk[:])
+         w = self.war(nn[:], kk[:])
+         return '%d %d'%(dw, w)
+         pass
+     
+     def dwar(self, nn, kk):
+         turn = len(nn)
+         cnt = 0
+         for i in range(turn):
+             i = i
+             if nn[-1] < kk[-1]:
+                 nn.pop(0)
+                 kk.pop(-1)
+             elif nn[0] < kk[0]:
+                 nn.pop(0)
+                 kk.pop(-1)
+             else:
+                 cnt += 1
+                 nn.pop(0)
+                 kk.pop(0)
+         return cnt
+     
+     def war(self, nn, kk):
+         turn = len(nn)
+         cnt = 0
+         for i in range(turn):
+             i = i
+             j = bisect.bisect_left(kk, nn[0])
+             if j == len(kk):
+                 cnt += 1
+                 kk.pop(0)
+             else:
+                 kk.pop(j)
+             nn.pop(0)
+         return cnt
+     
+     def feed(self, inputs):
+         lines = [x.strip() for x in inputs]
+         outputs = []
+         test_case_n = int(lines[0])
+         cur = 1
+         for i in range(test_case_n):
+             i = i
+             case_line_cnt = 3
+             case_inputs = lines[cur:cur+case_line_cnt]
+             cur += case_line_cnt
+             outputs.append(self.solve(case_inputs))
+         return outputs
+ 
+ if __name__ == '__main__':
+     iname = 'D-small-attempt0.in'
+ #     iname = 'foo'
+     sample_in = '''
+ 4
+ 1
+ 0.5
+ 0.6
+ 2
+ 0.7 0.2
+ 0.8 0.3
+ 3
+ 0.5 0.1 0.9
+ 0.6 0.4 0.3
+ 9
+ 0.186 0.389 0.907 0.832 0.959 0.557 0.300 0.992 0.899
+ 0.916 0.728 0.271 0.520 0.700 0.521 0.215 0.341 0.458
+     '''
+     sample_out = '''
+ Case #1: 0 0
+ Case #2: 1 0
+ Case #3: 2 1
+ Case #4: 8 4
+     '''
+     if os.path.exists(iname):
+         with open(iname) as f:
+             inputs = f.readlines()
+     else:
+         inputs = [x.strip() for x in sample_in.split('\n') if x.strip()]
+     solver = Solver()
+     outputs = solver.feed(inputs)
+     fail_flag = False
+     if os.path.exists(iname):
+         with open(iname+'.out', 'w') as f:
+             for i, v in enumerate(outputs):
+                 print >> f, 'Case #%d: %s'%(i+1, str(v))
+     else:
+         ans = set([x.strip() for x in sample_out.split('\n') if x.strip()])
+         for i, v in enumerate(outputs):
+             t = 'Case #%d: %s'%(i+1, str(v))
+             if t not in ans:
+                 print '!!! Wrong:', t
+                 fail_flag = True
+     print '===================================================='
+     for i, v in enumerate(outputs):
+         print 'Case #%d: %s'%(i+1, str(v))
+     print '===================================================='
+     print 'done' if not fail_flag else 'fail'
+     pass",33,34
+"():
+     height, width = sys.stdin.readline().split()
+     width = int(width)
+     height = int(height)
+ 
+     lawn = [[0 for c in range(width)] for r in range(height)]
+     mark = [[0 for c in range(width)] for r in range(height)]
+     settings = []
+ 
+     for r in range(height):
+         row = sys.stdin.readline().split()
+         for c in range(width):
+             h = int(row[c])
+             lawn[r][c] = h
+             if h not in settings: settings.append(h)
+ 
+     settings = sorted(settings)
+ 
+     for i in range(len(settings)):
+         h = settings[i]
+         h_next = 0
+         if i < len(settings) - 1:
+             h_next = settings[i + 1]
+ 
+         # check row
+         for r in range(height):
+             count = 0
+             for c in range(width):
+                 if lawn[r][c] == h: count = count + 1
+             if count == width:
+                 for c in range(width): mark[r][c] = h
+ 
+         # check col
+         for c in range(width):
+             count = 0
+             for r in range(height):
+                 if lawn[r][c] == h: count = count + 1
+             if count == height:
+                 for r in range(height): mark[r][c] = h
+ 
+         # anything left?
+         for c in range(width):
+             for r in range(height):
+                 if lawn[r][c] == h:
+                     if mark[r][c] != h: return ""NO""
+                     lawn[r][c] = h_next
+ 
+     return ""YES""
+ 
+         
+ 
+ def main():
+ 
+     count = int(sys.stdin.readline())
+     for index in range(count):
+         result = process()
+         print ""Case #%d: %s"" % (index + 1, result)
+ 
+ if __name__ == '__main__':
+     main()
+",34,35
+"(rows,cols,width,height):
+     # Calculate the lowest setting that can be used when cutting a row or col.
+     row_mins = [max(row) for row in rows]
+     col_mins = [max(col) for col in cols]
+     for row_idx in range(height):
+         for col_idx in range(width):
+             if row_mins[row_idx] > rows[row_idx][col_idx] \
+                and col_mins[col_idx] > rows[row_idx][col_idx]:
+                 return ""NO""
+     return ""YES""
+ 
+ 
+ def parse_case(data,width,height):
+     data_line = [int(entry) for entry in reduce(lambda x,y: x+y, data, [])]
+     rows = []
+     cols = []
+     for idx in range(height):
+         offset = idx * width
+         # Pull rows
+         rows.append(data_line[offset:offset+width])
+     for idx in range(width):
+         # Pull columns
+         cols.append(data_line[idx::width][:height])
+     return (rows, cols, width, height)
+ 
+ def main():
+     parser = OptionParser()
+     parser.add_option(""-f"", ""--file"", dest=""filename"",
+                       help=""read input from FILE"", metavar=""FILE"")
+ 
+     (options, args) = parser.parse_args()
+     if not options.filename:
+         parser.error(""Must provide a filename."")
+     input_file = open(options.filename, ""r"")
+     total_cases = int(input_file.readline())
+     case_number = 0
+     while case_number < total_cases:
+         case_number += 1
+         height,width = input_file.readline().split()
+         width = int(width)
+         height = int(height)
+         data = []
+         for idx in range(height):
+             data.append(input_file.readline().split())
+         data_args = parse_case(data, width, height)
+         print ""Case #%d: %s"" % (case_number, solve(*data_args))
+ 
+ if __name__ == ""__main__"":
+     main()",35,36
+"= "".out""
+ IN_S = ""small.in""
+ IN_L = ""large.in""
+ CASE_PRFX = ""Case #%s: ""
+ 
+ ddd = {}
+ 
+ def read_input(filename):
+     data = []
+     with open(filename, ""r"") as f:
+         cases = int(f.readline())
+         for _ in xrange(cases):
+             code = f.readline()
+             data.append(code)
+     return data
+ 
+ def make_output(fname, output):
+     fname = fname + OEXT
+     with open(fname, ""w"") as f:
+         restext = []
+         for i, v in enumerate(output):
+             restext.append(CASE_PRFX % (i+1,) + v)
+         f.writelines(restext)
+     
+ def main(fname):
+     data = read_input(fname)
+     output = []
+     for code in data:
+         output.append("""".join([ddd[k] for k in code]))
+     print output
+     make_output(fname, output)
+     
+ def mainex(fname):
+     with open(fname, ""r"") as f:
+         cases = int(f.readline())
+         for _ in xrange(cases):
+             code = f.readline()
+             trans = f.readline()
+             for i, c in enumerate(code):
+                 ddd.setdefault(c, trans[i])
+     
+     abc = string.ascii_lowercase + "" \n""
+     for c in abc:
+         if c not in ddd.values():
+             print ""not in trans:"", c
+             missingt = c
+         if c not in ddd.keys():
+             print ""not in code:"", c
+             missingc = c
+     ddd.setdefault(missingc, missingt)
+     print ddd
+     print len(ddd)
+     return ddd
+     
+     
+     
+ mainex(""examples.in"")
+ main(""examples_raw.in"")
+ main(""small.in"")",36,37
+"(): return stdin.readline().rstrip('\n')
+ def read_int(): return int(stdin.readline())
+ def read_ints(): return map(int, stdin.readline().split())
+ def read_floats(): return map(float, stdin.readline().split())
+ 
+ 
+ def solve_case():
+     C, F, X = read_floats()
+     rate = 2
+     current = 0
+     best = X / rate
+     
+     while True:
+         current += C / rate
+         rate += F
+         next = current + X / rate
+         if next < best:
+             best = next
+         else:
+             break
+     
+     return best
+ 
+     
+ def main():
+     cases = read_int()
+     for case in range(1, cases + 1):
+         print('Case #{}: {:.7f}'.format(case, solve_case()))
+ 
+         
+ main()
+",37,38
+"(IN):
+     def rstr(): return IN.readline().strip()
+     def rint(): return int(rstr())
+     def rints(): return map(int, rstr().split())
+     def nrints(N): return [rints() for i in xrange(N)]
+     N, M = rints()
+     A = nrints(N)
+     R = [max(row) for row in A]
+     C = [max(col) for col in izip(*A)]
+     for i, r in enumerate(R):
+         for j, c in enumerate(C):
+             if A[i][j] != min(r,c):
+                 return ""NO""
+     return ""YES""
+ 
+ def RUN(IN, OUT):
+     t = int(IN.readline().strip())
+     for i in xrange(1,t+1):
+         OUT.write(""Case #%i: %s\n"" % (i, CASE(IN)))
+ 
+ if __name__ == ""__main__"":
+     (sys.stdin, sys.stdout)
+",38,39
+"#!/usr/bin/env python
+ =100000
+ def Solve(C,F,X):
+     best_time=float('inf')
+     for n in xrange(0,BIG_NUM):
+         if n==0:
+             farm_time=0
+         else:
+             farm_time += C/(2+(n-1)*F)
+         if best_time<=farm_time: break
+         cookie_time=X/(2+n*F)
+ 
+         if farm_time+cookie_time<best_time:
+             best_time=farm_time+cookie_time
+ 
+     return '%.9f'%best_time
+ 
+ 
+ 
+ def parse(infile):
+     C,F,X=map(float, infile.readline().split() )
+     return C,F,X
+ 
+ 
+ 
+ class GCJ_Parser( object ):
+     def __init__(self,fname):
+         self.infile=open(fname,'r')
+         self.NumCases=int(self.infile.readline().strip() )
+         self.caseNum=0
+ 
+     def __iter__(self): return self
+ 
+     def next(self):
+         if self.caseNum==self.NumCases: raise StopIteration
+         self.caseNum += 1
+         args=parse(self.infile)
+         return self.caseNum , args
+ 
+ 
+ def runmain():
+     myCases=GCJ_Parser(sys.argv[1])
+ 
+     #Open output file, but don't overwrite old ones (for comparison)
+     outname=sys.argv[1].rstrip('.in')+'.out'
+     if os.path.isfile(outname):
+         oldout=outname+'.old'
+         ii=0
+         while os.path.isfile(oldout):
+             ii+=1
+             oldout=outname+'.old'+str(ii)
+         os.rename(outname,oldout)
+         print 'Rename: %s -> %s'%(outname,oldout)   
+  
+     outfile=open(outname,'w')
+ 
+     for iCase, args in myCases:
+         answer=Solve(*args)
+ 
+         print 'Case #'+str(iCase)+':',answer
+         print >> outfile, 'Case #'+str(iCase)+':',answer
+ 
+ 
+ 
+ 
+ if __name__=='__main__':
+     runmain()
+",39,40
+"#!/usr/bin/python3
+ 
+ = int(sys.stdin.readline().strip())
+ 
+ for t in range(1, ncases+1):
+     values = sys.stdin.readline().split()
+     c = float(values[0])
+     f = float(values[1])
+     x = float(values[2])
+     r = 2
+ 
+     time = 0
+ 
+     while True:
+         tdirect = x/r
+         tfactory = c/r + x/(r+f)
+ 
+         if tdirect<tfactory:
+             time += tdirect
+             break
+         else:
+             time += c/r
+             r += f
+ 
+     print(""Case #{0}: {1:.7f}"".format(t, time))
+",40,41
+"#!/usr/bin/env python
+ 
+ (N, ns, ks):
+     """"""Return Naomi's score in regular War
+ 
+     Strategy: Naomi and Ken both play their smallest possible block. When Ken
+     runs out of winning blocks, Naomi's score is the number of remaining blocks.
+ 
+     Ken's strategy is to select the smallest block which will beat Naomi's
+     choice, or if there is none, then his smallest block.
+     """"""
+     i = 0   # position through naomi's blocks
+     j = 0   # position through ken's blocks
+ 
+     # Play each of Naomi's blocks:
+     while i < N:
+         # Invariant: i <= j
+         # Find a block for Ken to play
+         while j < N and ks[j] < ns[i]:
+             j += 1
+ 
+         # If Ken is out of playable blocks, game is over.
+         if j == N:
+             break
+ 
+         # Move on to the next block for each player
+         i += 1
+         j += 1
+ 
+     return N - i
+ 
+ def deceit(N, ns, ks):
+     """"""Return Naomi's score in Deceitful War
+ 
+     Strategy: Naomi selects the smallest block with size > min(ks), and sets
+     Told_N > max(ks). Ken will choose to play min(ks), and lose the round.
+     If all of Naomi's blocks are smaller than all of Ken's, she cannot win any
+     more rounds, and her score is the number of blocks used (which is also equal
+     to N - the number of remaining blocks).
+ 
+     This happens to be the same strategy as regular war, with ks and ns swapped,
+     and the final score subtracted from N. (At least, I'm pretty sure it'll work).
+     """"""
+     return N - war(N, ks, ns)
+ 
+ 
+ def solve(N, ns, ks):
+     ns.sort()
+     ks.sort()
+     return ""{} {}"".format(deceit(N, ns, ks), war(N, ns, ks))
+ 
+ if __name__ == '__main__':
+     fin = open(sys.argv[1], 'rU') if sys.argv[1:] else sys.stdin
+     fout = open(sys.argv[2], 'w') if sys.argv[2:] else sys.stdout
+     with fin, fout:
+         T = int(fin.readline())
+         for case in xrange(1, T+1):
+             n = int(fin.readline())
+             ns = map(float, fin.readline().split())
+             ks = map(float, fin.readline().split())
+             soln = solve(n, ns, ks)
+             print >> fout, ""Case #{0}: {1}"".format(case, soln)
+ 
+",41,42
+"#!/usr/bin/python
+ 
+ (C, F, X):
+     rate = 2.0
+     time_to_win = X / rate
+ 
+     time_used = C / rate
+     rate += F
+     time_to_win_new = time_used + X / rate
+ 
+     while time_to_win_new < time_to_win:
+         time_to_win = time_to_win_new
+         
+         time_used += C / rate
+         rate += F
+         time_to_win_new = time_used + X / rate
+ 
+     return time_to_win
+ 
+ def main():
+     N = int(sys.stdin.readline()) # number of testcases
+     for i in range(N):
+         [C, F, X] = [float(x) for x in sys.stdin.readline().rstrip().split()]
+ 
+         result = solve(C, F, X)
+         print (""Case #%s: %.7f"" % (i+1, result))
+ 
+ if __name__ == '__main__':
+     main()
+",42,43
+"== ""__main__"":
+     f = sys.stdin
+     if len(sys.argv) >= 2:
+         fn = sys.argv[1]
+         if fn != '-':
+             f = open(fn)
+ 
+     T = int(f.readline())
+     for _T in xrange(T):
+         a1 = int(f.readline())
+         l1 = [map(int, f.readline().split()) for _ in xrange(4)]
+         a2 = int(f.readline())
+         l2 = [map(int, f.readline().split()) for _ in xrange(4)]
+ 
+         poss = list(set(l1[a1-1]) & set(l2[a2-1]))
+ 
+         print ""Case #%d:"" % (_T + 1),
+         if len(poss) == 0:
+             print ""Volunteer cheated!""
+         elif len(poss) == 1:
+             print poss[0]
+         else:
+             print ""Bad magician!""
+",43,44
+"*
+ 
+ class Test(unittest.TestCase):
+ 	def test_1(self):
+ 		self.assertEqual(main(1, 4), 2)
+ 	def test_2(self):
+ 		self.assertEqual(main(10, 120), 0)
+ 	def test_3(self):
+ 		self.assertEqual(main(100, 100000000000000), 2)
+ 
+ tCase = int(sys.stdin.readline())
+ 
+ 
+ def main(matriz, M, N):
+ 	#print matriz
+ 	
+ 	for i in xrange(M):
+ 		for j in xrange(N):
+ 			ana = matriz[i + 1, j + 1]
+ 			#print ana
+ 			maiores_linha = 0
+ 			for x in xrange(M + 2):
+ 				if matriz[x, j + 1] > ana:
+ 					maiores_linha += 1
+ 			
+ 			if maiores_linha == 0:
+ 				continue
+ 			
+ 			maiores_coluna = 0 
+ 			for y in xrange(N + 2):
+ 				if matriz[i + 1, y] > ana:
+ 					maiores_coluna += 1
+ 					
+ 			if maiores_linha >= 1 and maiores_coluna >= 1:
+ 				#print ana, maiores_linha, maiores_coluna
+ 				return 'NO'
+ 				
+ 	return 'YES'
+ 	
+ 
+ 
+ 	
+ if __name__ == '__main__':
+ 	#unittest.main()
+ 	for i in xrange(tCase):	
+ 		##Numbers
+ 		N,M = [int(x) for x in sys.stdin.readline().split(' ')]
+ 		
+ 		matriz = zeros((N + 2, M + 2), dtype=int)
+ 		
+ 		for j in xrange(N + 2):
+ 			matriz[j][0] = 0
+ 			matriz[j][M + 1] = 0
+ 			
+ 		for j in xrange(M + 2):
+ 			matriz[0][j] = 0
+ 			matriz[N + 1][j] = 0
+ 		
+ 		for k in xrange(N):
+ 			j = 1
+ 			line = [str(x) for x in sys.stdin.readline().split(' ')]
+ 			for n in line:
+ 				matriz[k + 1][j] = n		
+ 				j += 1
+ 		#matriz = zeros((N + 2, M + 2), dtype=int)
+ 		
+ 		print ""Case #%d: %s"" % (i + 1, main(matriz, N, M))",44,45
+"inputFile = open('C-small-attempt8.in', 'r')
+ lines = inputFile.readlines()
+ inputFile.close()
+ 
+ outputFile = open('C-small-attempt8.out', 'w')
+ 
+ numTests = int(lines[0])
+ 
+ for i in range(1, numTests+1):
+     [r, c, m] = map(lambda x: int(x), lines[i].split())
+ 
+     openCells = r*c - m
+ 
+     works = False
+     matrix = [['*']*c for j in range(r)]
+     # Try case analysis first, see if my knowledge of minesweeper can cover everything
+     # This is getting painful :(
+     if r >= 3 and c >= 3:
+         order = [(0,0), (0,1), (1,0), (1,1), (0,2), (1,2),
+                  (2,0), (2,1)]
+         if openCells == 1 or openCells == 4 or openCells == 6:
+             works = True
+             for (x,y) in order[:openCells]:
+                 matrix[x][y] = '.'
+             matrix[0][0] = 'c'
+             
+         elif openCells >= 8:
+             works = True
+             filledRows = openCells / c
+             if filledRows >= 2:
+                 if filledRows == r:
+                     matrix = [['.']*c for j in range(r)]
+                     matrix[0][0] = 'c'
+                 else:
+                     remainder = openCells%c
+                     if not remainder == 1:
+                         for j in range(filledRows):
+                             matrix[j] = ['.']*c
+                         matrix[filledRows] = ['.']*remainder + ['*'] * (c-remainder)
+                     elif filledRows > 2:
+                         for j in range(filledRows-1):
+                             matrix[j] = ['.']*c
+                         matrix[filledRows-1] = ['.']*(c-1) + ['*']
+                         matrix[filledRows] = ['.', '.'] + ['*']*(c-2)
+                     else:
+                         matrix[0] = ['.']*(c-1) + ['*']                        
+                         matrix[1] = ['.']*(c-1) + ['*']
+                         matrix[2] = ['.', '.', '.'] + ['*']*(c-3)
+                     matrix[0][0] = 'c'
+                 
+             else:
+                 for (x,y) in order:
+                     matrix[x][y] = '.'
+                 remainingOpen = openCells - 8
+                 if remainingOpen % 2 == 0:
+                     for j in range(remainingOpen/2):
+                         matrix[0][j+3] = '.'
+                         matrix[1][j+3] = '.'
+                 else:
+                     matrix[2][2] = '.'
+                     remainingOpen -= 1
+                     for j in range(remainingOpen/2):
+                         matrix[0][j+3] = '.'
+                         matrix[1][j+3] = '.'
+                 matrix[0][0] = 'c'
+ 
+     elif r == 1:
+         works = True
+         matrix[0] = ['.']*(c-m) + ['*']*m
+         matrix[0][0] = 'c'
+     elif c == 1:
+         works = True
+         for j in range(r-m):
+             matrix[j][0] = '.'
+         matrix[0][0] = 'c'
+ 
+     #Only cases left are one or both dimensions being two
+     elif r == 2 and c == 2:
+         if m == 3:
+             works = True
+             matrix[0][0] = 'c'
+         elif m == 0:
+             works = True
+             matrix = [['c', '.'], ['.', '.']]
+     elif r == 2:
+         if m % 2 == 0 and r*c-m > 2:
+             works = True
+             matrix[0] = ['.']*(c-m/2) + ['*']*(m/2)
+             matrix[1] = ['.']*(c-m/2) + ['*']*(m/2)
+             matrix[0][0] = 'c'
+         elif r*c-m == 1:
+             works = True
+             matrix[0][0] = 'c'
+     elif c == 2:
+         if m % 2 == 0 and r*c-m > 2:
+             works = True
+             for j in range((r*c-m)/2):
+                 matrix[j] = ['.', '.']
+             matrix[0][0] = 'c'
+         elif r*c-m == 1:
+             works = True
+             matrix[0][0] = 'c'
+     
+ 
+     outputFile.write('Case #'+str(i)+':\n')
+     '''if len(matrix) != r:
+         print i, matrix
+     count = 0
+     for j in range(len(matrix)):
+         for k in range(len(matrix[j])):
+             if matrix[j][k] == '*':
+                 count += 1
+     if count != m:
+         print i, matrix'''
+     if not works:
+         outputFile.write('Impossible\n')
+     else:
+         for x in range(len(matrix)):
+             for y in range(len(matrix[0])):
+                 outputFile.write(matrix[x][y])
+             outputFile.write('\n')
+ outputFile.close()
+             
+",45,46
+"# Making up a dictionary
+ # Sample
+ googlerese = ""ejp mysljylc kd kxveddknmc re jsicpdrysi rbcpc ypc rtcsra dkh wyfrepkym veddknkmkrkcd de kr kd eoya kw aej tysr re ujdr lkgc jv""
+ english = ""our language is impossible to understand there are twenty six factorial possibilities so it is okay if you want to just give up""
+ # Hints
+ d = {""y"":""a"", ""e"":""o"", ""q"":""z""}
+ 
+ for i in xrange(len(googlerese)):
+ 	d[googlerese[i]] = english[i]
+ 
+ # One letter still missing: z:q
+ d[""z""] = ""q""
+ 
+ inp = file(""input.in"")
+ n = eval(inp.readline())
+ out = file(""output.txt"", ""w"")
+ 
+ for i in xrange(n):
+ 	G = inp.readline().strip()
+ 	S = """"
+ 	for letter in G:
+ 		S += d[letter]
+ 	out.write(""Case #%d: "" %(i + 1) + S + ""\n"")
+",46,47
+"'''
+ ...
+ ...
+ ...
+ ...
+ ...
+ '''
+ 
+ for i in range(int(input())):
+ 
+     r, c, m = tuple(map(int, str.split(input())))
+     count = r * c - m
+     field = dict(map(lambda c: (c, ""*""), itertools.product(range(c), range(r))))
+     answer = ""Impossible""
+ 
+     if m == 0:
+ 
+         answer = field
+ 
+     elif 1 in (r, c):
+ 
+         for p in itertools.islice(itertools.product(range(c), range(r)), count):
+ 
+             field[p] = "".""
+ 
+         answer = field
+ 
+     elif count in (0, 2, 3, 5, 7):
+ 
+         pass
+ 
+     elif count == 1:
+ 
+         answer = field
+ 
+     elif count // 2 < c or count == c * 2 + 1:
+ 
+         if count % 2 != 0:
+ 
+             tail = 3
+             ncount = count - 3
+ 
+         else:
+ 
+             tail = 0
+             ncount = count
+ 
+         for x in range(ncount // 2):
+ 
+             field[(x, 0)] = field[(x, 1)] = "".""
+ 
+         for x in range(tail):
+ 
+             field[(x, 2)] = "".""
+ 
+         answer = field
+ 
+     elif not (c == 2 and count % c == 1):
+ 
+         for x in range(c):
+ 
+             field[(x, 0)] = field[(x, 1)] = "".""
+ 
+         count -= 2 * c
+         tail = 0
+         if count % c == 1:
+ 
+             tail = 2
+             count -= 1
+ 
+         y = 2
+         while count > 0:
+ 
+             rx = min(count, c)
+             for x in range(rx):
+ 
+                 field[(x, y)] = "".""
+ 
+             count -= rx
+             y += 1
+ 
+         for x in range(tail):
+ 
+             field[(x, y)] = "".""
+ 
+         answer = field
+ 
+     field[(0, 0)] = ""c""
+     print(str.format(""Case #{}:"", i + 1))
+     if isinstance(answer, dict):
+ 
+         for y in range(r):
+ 
+             print(str.join("""", map(lambda x: field[(x, y)], range(c))))
+ 
+     else:
+ 
+         print(answer)
+",47,48
+"'''
+ Created on 13 Apr 2013
+ 
+ @author: mengda
+ '''
+ board = []
+ 
+ def whoIsWinner(num):
+     if num == 4000 or num == 3010:
+         return 'X'
+     if num == 400 or num == 310:
+         return 'O'
+     return False
+ 
+ def process(board):
+     full = True
+     newboard = []
+     for i in range(4):
+         line = []
+         for j in range(4):
+             c = board[i][j]
+             if   c == 'X':
+                 line.append(1000)
+             elif c == 'O':
+                 line.append(100)
+             elif c == 'T':
+                 line.append(10)
+             elif c == '.':
+                 line.append(1)
+                 full = False
+         newboard.append(line)
+     board = newboard
+     for i in range(4):
+         sumH = 0
+         sumV = 0
+         for j in range(4):
+             sumH += board[i][j]
+             sumV += board[j][i]
+         winner = whoIsWinner(sumH)
+         if winner:
+             return winner + ' won'
+         winner = whoIsWinner(sumV)
+         if winner:
+             return winner + ' won'
+     sumD0 = board[0][0] + board[1][1] + board[2][2] + board[3][3]
+     winner = whoIsWinner(sumD0)
+     if winner:
+         return winner + ' won'
+     sumD1 = board[3][0] + board[2][1] + board[1][2] + board[0][3]
+     winner = whoIsWinner(sumD1)
+     if winner:
+         return winner + ' won'
+     if full:
+         return 'Draw'
+     return 'Game has not completed'
+ 
+ f = open('A-small-attempt0.in', 'r')
+ N = int(f.readline())
+ outLine = []
+ 
+ for i in range(1, N + 1):
+     board = []
+     for j in range(4):
+         board.append(f.readline())
+     outLine.append('Case #%d: %s\n' % (i, process(board)))
+     f.readline()
+     print outLine[-1],
+ 
+ f.close()
+ outFile = open('1.out', 'w')
+ outFile.writelines(outLine)
+ outFile.close()
+",48,49
+"#!/usr/bin/env python
+ 
+ 
+ _inp = (
+     'ejp mysljylc kd kxveddknmc re jsicpdrysi',
+     'rbcpc ypc rtcsra dkh wyfrepkym veddknkmkrkcd',
+     'de kr kd eoya kw aej tysr re ujdr lkgc jv',
+ )
+ 
+ _out = (
+     'our language is impossible to understand',
+     'there are twenty six factorial possibilities',
+     'so it is okay if you want to just give up',
+ )
+ 
+ def compute_lang_map(inp, out):
+     lang_map = {}
+     for gs, ss in zip(inp, out):
+         for gl, sl in zip(gs, ss):
+             lang_map[gl] = sl
+     lang_map['q'] = 'z'
+     lang_map['z'] = 'q'
+     return lang_map
+ 
+ _lang_map = compute_lang_map(_inp, _out)
+ def conv(s):
+     out = ''
+     for l in s:
+         out += _lang_map[l]
+     return out
+ 
+ def main():
+     with open('input-file', 'r') as f:
+         f.readline()            # skip T
+         n = 0
+         for line in f:
+             n += 1
+             print 'Case #%d: %s' % (n, conv(line.strip()))
+ 
+ if __name__ == '__main__':
+     main()
+",49,50
+"#Template code developed by Brett Olsen (brett.olsen@gmail.com), 2013
+ #for the Google Code Jam programming contest
+ 
+ ###############################################################################
+ # Imports go here
+ ###############################################################################
+ 
+ ###############################################################################
+ # Global variables (for caching, etc.) go here
+ ###############################################################################
+ 
+ #Set up the input/output files: problem-tagsuffix.in / *.out
+ problem = ""B""
+ tag = ""small"" #commonly sample, small, or large
+ #tag = ""large""
+ #tag = ""sample""
+ suffix = ""-attempt0"" #used sometimes for indexing later input files
+ #suffix = """"
+ 
+ ###############################################################################
+ # Helper functions go here
+ ###############################################################################
+ 
+ 
+ def read_input(infile):
+     """"""This function should take an open input file, load in all of the
+     relevant information for a single case of the problem, and output it
+     as a single object.    
+     """"""
+     #Some utility functions to read in particular types of input
+     def read_int():
+         return int(infile.readline().strip())
+     def read_ints():
+         return np.array(infile.readline().split(), dtype=int)
+     def read_float():
+         return float(infile.readline().strip())
+     def read_floats():
+         return np.array(infile.readline().split(), dtype=float)
+     def read_string():
+         return infile.readline().strip()
+     def read_strings():
+         return np.array(infile.readline().split(), dtype=object) #change the dtype?
+     
+     N, M = read_ints()
+     
+     lawn = np.empty((N, M), dtype=int)
+     for i in range(N):
+         row = read_ints()
+         assert len(row) == M
+         lawn[i,:] = row
+     
+     return lawn
+ 
+ def solve_case(case):
+     """"""Take the input data (structured in case) and perform any necessary
+     calculations to obtain the desired output, formatted as the appropriate
+     string.    
+     """"""
+     
+     lawn = case
+     undefined = np.zeros(lawn.shape, dtype=bool)
+     
+     colvals, rowvals = np.meshgrid(range(lawn.shape[1]), range(lawn.shape[0]))
+     
+     while not undefined.all():
+         #Find the lowest still-defined point in the lawn
+         valid = undefined == False
+         minval = lawn[valid].min()
+     
+         minindex = np.where(lawn[valid] == minval)[0][0]
+         minrow = rowvals[valid][minindex]
+         mincol = colvals[valid][minindex]
+         #Check to see if this point's row could have been mowed
+         if (lawn[minrow,:][valid[minrow,:]] == minval).all():
+             #Undefine this row
+             undefined[minrow,:] = True
+             continue
+         
+         #Otherwise, check to see if this point's column could have been mowed
+         if (lawn[:,mincol][valid[:,mincol]] == minval).all():
+             #Undefine this column
+             undefined[:,mincol] = True
+             continue
+         
+         #Otherwise, it's invalid!
+         return ""NO""
+     
+     return ""YES""
+ 
+ ###############################################################################
+ # Main execution path
+ ###############################################################################
+ 
+ if __name__ == ""__main__"":
+     #Open up the input & output files
+     infile = open(""%s-%s%s.in"" % (problem, tag, suffix), 'r')
+     outfile = open(""%s-%s%s.out"" % (problem, tag, suffix), 'w')
+     
+     #Read in the number of cases (the first input line) to iterate through
+     cases = int(infile.readline().strip('\n'))
+     for i in range(cases):
+         
+         #Read in the input data for this case
+         case = read_input(infile)
+         
+         #Solve the problem for this case
+         output = solve_case(case)
+         
+         #Write out the output of this case
+         outfile.write('Case #%i: %s\n' % (i+1, output))
+         print 'Case #%i: %s\n' % (i+1, output)
+     
+     #Close files
+     infile.close()
+     outfile.close()",50,51
+"():
+ 	a = int(sys.stdin.readline().strip())
+ 	for j in range(a - 1):
+ 		sys.stdin.readline()
+ 	read_set = set(sys.stdin.readline().strip().split("" ""))
+ 	for j in range(5 - a - 1):
+ 		sys.stdin.readline()
+ 		
+ 	return read_set
+ 
+ 
+ t = int(sys.stdin.readline().strip())
+ 
+ for i in range(t):
+ 	print ""Case #"" + str(i + 1) + "":"",
+ 
+ 	set1 = read_row()
+ 	set2 = read_row()
+ 	
+ 	intersect = set1.intersection(set2)
+ 	
+ 	if 1 == len(intersect):
+ 		print intersect.pop()
+ 	elif 0 == len(intersect):
+ 		print ""Volunteer cheated!""
+ 	else:
+ 		print ""Bad magician!""
+",51,52
+"== ""__main__"":
+     f = sys.stdin
+     if len(sys.argv) >= 2:
+         fn = sys.argv[1]
+         if fn != '-':
+             f = open(fn)
+ 
+     t = int(f.readline())
+     for _t in range(t):
+ 
+         R, C, M = [int(x) for x in f.readline().split()]
+         free_spots = R * C - M - 1
+ 
+         if M == 0:
+             answer = [[""."" for x in range(C)] for y in range(R)]
+             answer[0][0] = ""c""
+         elif R == 1:
+             answer = [[""c""] + [""."" for x in range(free_spots)] + [""*"" for m in range(M)]]
+         elif C == 1:
+             answer = [[""c""] + [""."" for x in range(free_spots)] + [""*"" for m in range(M)]]
+             answer = zip(*answer[::-1])
+         elif free_spots >= 3: # and M % R >= 2:
+             answer = [[""*"" for x in range(C)] for y in range(R)]
+             answer[0][0] = ""c""
+             answer[0][1] = "".""
+             answer[1][1] = "".""
+             answer[1][0] = "".""
+             free_spots -= 3
+             tr, br, c = 0, 1, 2
+             if c >= C:
+                 tr, br, c = 2, 3, 0
+             for _i in range(free_spots):
+                 #pprint.pprint(answer)
+                 if answer[tr][c] == ""*"":
+                     answer[tr][c] = "".""
+                 elif answer[br][c] == ""*"":
+                     answer[br][c] = "".""
+                     if c < C-1:
+                         c+=1
+                     else:
+                         tr, br = tr + 2, br + 2
+                         c = 0
+                         if br == R:
+                             br, tr = br-1, tr-1
+                 
+         else:
+             answer = [""Impossible"",]
+ 
+         
+         
+         print (""Case #"" + str(_t+1) + "":"")
+         for _i in answer:
+             print """".join(_i)
+     
+ 
+",52,53
+"# !/usr/bin/python
+ #solve case function
+ def solve_case(naomi_blocks, ken_blocks, case_number):
+     naomi_blocks_for_deceitful = naomi_blocks[:]
+     ken_blocks_for_deceitful = ken_blocks[:]
+     deceitful_war_point = 0
+     while len(naomi_blocks_for_deceitful) > 0:
+         naomi_call = naomi_blocks_for_deceitful.pop(0)
+         min_ken_call = ken_blocks_for_deceitful[0]
+         if naomi_call < min_ken_call:
+             naomi_call = ken_blocks_for_deceitful[-1] - 0.000001
+         else:
+             # Naomi may call the same kg many times but Ken should not realize it ;)
+             # The important point is that she must call heavier than Ken's max.
+             naomi_call = ken_blocks_for_deceitful[-1] + 0.000001
+ 
+         ken_candidate = filter(lambda x: x > naomi_call, ken_blocks_for_deceitful)
+         if len(ken_candidate) > 0:
+             ken_call = ken_blocks_for_deceitful.pop(ken_blocks_for_deceitful.index(ken_candidate.pop(0)))
+         else:
+             ken_call = ken_blocks_for_deceitful.pop(0)
+ 
+         if naomi_call > ken_call:
+             deceitful_war_point += 1
+ 
+     war_point = 0
+     while len(naomi_blocks) > 0:
+         naomi_call = naomi_blocks.pop(0)
+         ken_candidate = filter(lambda x: x > naomi_call, ken_blocks)
+         if len(ken_candidate) > 0:
+             ken_call = ken_blocks.pop(ken_blocks.index(ken_candidate.pop(0)))
+         else:
+             ken_call = ken_blocks.pop(0)
+ 
+         if naomi_call > ken_call:
+             war_point += 1
+ 
+     print ""Case #%d: %d %d"" % (case_number, deceitful_war_point, war_point)
+ 
+ #main
+ r_file = sys.stdin
+ 
+ if len(sys.argv) > 1:
+     r_file = open(sys.argv[1], 'r')
+ 
+ total_cases = r_file.readline()
+ for case_number in range(1, int(total_cases) + 1):
+     r_file.readline()
+     n_values = map(float, r_file.readline().split(' '))
+     k_values = map(float, r_file.readline().split(' '))
+     solve_case(sorted(n_values), sorted(k_values), case_number)
+ 
+",53,54
+"(sys.argv) == 1:
+     sys.stdin = open(""C.in"")
+ else:
+     sys.stdin = open(sys.argv[1])
+ 
+ def to_ints(s):
+     return map(int, s.split())
+ 
+ def get_ints():
+     return to_ints(raw_input())
+ 
+ sys.setrecursionlimit(4000)
+ 
+ def fill(rows, cols, mines):
+     seen = set()
+     visited = set()
+ 
+     # we are trying to carve through a mountain 
+     # and leave 'mine' squares unseen
+     def search(numbered, zeros, min_numbered):
+         left = (rows * cols - mines) - len(numbered)
+         #print left, numbered,  min_numbered, zeros
+         if left == 0:
+             raise StopIteration((numbered, zeros))
+         if left < 0:
+             return
+         for n in xrange(min_numbered, len(numbered)):
+             number = numbered[n]
+             if number in zeros:
+                 continue
+             row, col = number
+             neigh = []
+             if row > 0:
+                 if col > 0: neigh.append((row - 1, col - 1))
+                 neigh.append((row - 1, col))
+                 if col < cols - 1: neigh.append((row - 1, col + 1))
+             if col > 0: neigh.append((row, col - 1))
+             if col < cols - 1: neigh.append((row, col + 1))
+             if row < rows - 1:
+                 if col > 0: neigh.append((row + 1, col - 1))
+                 neigh.append((row + 1, col))
+                 if col < cols - 1: neigh.append((row + 1, col + 1))
+             # BUG: we might try to walk to a diagonal, oh well
+             neigh = list(set(neigh) - set(numbered))
+             zeros.add(number)
+             search(numbered + neigh, zeros, n + 1)
+             zeros.remove(number)
+ 
+     try:
+         for row in xrange(rows):
+             for col in xrange(cols):
+                 search([(row, col)], set(), 0)
+     except StopIteration, e:
+         numbered, zeros = e.message
+         board = {}
+         for row, col in numbered + list(zeros):
+             board[row, col] = '.'
+         if zeros:
+             board[zeros.pop()] = 'c'
+         else: # case where first click is on a number
+             board[0, 0] = 'c'
+         out = ''
+         for row in xrange(rows):
+             for col in xrange(cols):
+                 out += board.get((row, col), '*')
+             out += '\n'
+         return out.strip()
+     return 'Impossible'
+ 
+ n_cases = input()
+ for case in xrange(1, n_cases + 1):
+     rows, cols, mines = get_ints()
+ 
+     result = fill(rows, cols, mines)
+ 
+     print ""Case #%d:"" % case
+     print result
+",54,55
+"= Test {
+       cout     :: Double
+     , bonus    :: Double
+     , objectif :: Double
+     } deriving Show
+ 
+ newtype Solution = Solution { temps :: Double }
+ 
+ instance Show Solution where
+     show (Solution t) = show t
+ 
+ main = do
+     interact (unlines . map showCase . zip [1..] . map resoudre . goTest . tail . lines)
+ 
+   where
+     goTest [] = []
+     goTest (l:ls) =
+         let [c, f, x] = map read $ words l
+         in Test c f x : goTest ls
+ 
+     showCase :: (Int, Solution) -> String
+     showCase (i, s) = printf ""Case #%d: %s"" i (show s)
+ 
+ resoudre :: Test -> Solution
+ resoudre Test {..} | premierAchat > sansAchat = Solution sansAchat
+                    | otherwise                = go premierAchat 2
+   where
+     go t prod | tempsAvecAchat >= tempsSansAchat = Solution (t + tempsSansAchat)
+               | otherwise                        =
+                   go (t + delaiProchainAchat) prod'
+       where
+         prod' = prod + bonus
+ 
+         tempsAvecAchat = objectif / prod'
+         tempsSansAchat = (objectif - cout) / prod
+ 
+         delaiProchainAchat = cout / prod'
+ 
+     premierAchat = cout / 2
+     sansAchat    = objectif / 2
+",55,56
+"def PlayDevious(list1, list2):
+     Ret = 0;
+     i = 0;
+     j = 0;
+     while (i < len(list1)):
+         if list1[i] > list2[j]:
+             j += 1;
+         i += 1;
+     return j;
+ 
+ def PlayWar(list1, list2):
+     j = 0;      Score = 0;
+     for entry in list1:
+         winner = False;
+         while (not winner):
+             if j != len(list2):
+                 if list2[j] > entry:
+                     winner = True;
+                 j += 1;
+             else:
+                 Score += 1;
+                 winner = True;
+ 
+     return Score;
+ 
+ def PlayWar2(list1, list2):
+     L1 = [];        L2 = [];        Score = 0;
+ 
+     for i in range(len(list1)):
+         L1.append(list1[i]);        L2.append(list2[i]);
+     L1.reverse();
+ 
+     Score = 0;
+     for play in L1:
+         index =  0;
+         for i in range(1, len(L2)):
+             if L2[i] > play > L2[i-1]:
+                 index = i;
+ 
+         if play > L2[index]:
+             Score += 1;
+         L2.pop(index);
+     return Score           
+ 
+ 
+ T = int(raw_input());
+ for q in range(T):
+     N = int(raw_input());
+     Nlist = map(float, raw_input().split());
+     Klist = map(float, raw_input().split());
+ 
+     Nlist.sort();
+     Klist.sort();
+     
+     print ""Case #%d:"" % (q+1),
+     print PlayDevious(Nlist, Klist), PlayWar(Nlist, Klist)#, PlayWar2(Nlist, Klist);
+",56,57
+"= input()
+ for case in range( 1, numCases + 1 ):
+   C, F, X = raw_input().split()
+   C = float(C)
+   F = float(F)
+   X = float(X)
+   time = 0.0
+   rate = 2.0
+   
+   while ( True ):
+     timeToFinish = X / rate
+     timeToFarm   = C / rate
+     farmPayoffTime = C / F
+ 
+     if timeToFinish < ( timeToFarm + farmPayoffTime ):
+       time += timeToFinish
+       break
+     else:
+       time += timeToFarm
+       rate += F
+ 
+ 
+   output = '{0:0.15f}'.format( time )
+ 
+   print 'Case #' + str( case ) + ': ' + str( output )
+",57,58
+"INPUT = 'C-small-attempt0.in'
+ OUTPUT = 'C-small-attempt0.out'
+ 
+ 
+ def solve(R, C, M):
+     grid = [[0 for c in range(C)] for r in range(R)]
+ 
+     def get_cell(cell_r, cell_c):
+         if not(0 <= cell_r < R):
+             return None
+         if not(0 <= cell_c < C):
+             return None
+         return grid[cell_r][cell_c]
+ 
+     def for_each_neighbour(cell_r, cell_c, func):
+         ret = []
+         coords = (
+             (cell_r - 1, cell_c - 1), (cell_r - 1, cell_c), (cell_r - 1, cell_c + 1),
+             (cell_r, cell_c - 1), (cell_r, cell_c + 1),
+             (cell_r + 1, cell_c - 1), (cell_r + 1, cell_c), (cell_r + 1, cell_c + 1)
+         )
+         for nb in coords:
+             if get_cell(nb[0], nb[1]) is not None:
+                 ret.append(func(nb[0], nb[1]))
+         return ret
+ 
+     def mark_dirty(cell_r, cell_c):
+         if grid[cell_r][cell_c] != '*':
+             grid[cell_r][cell_c] += 1
+     
+     def unmark_dirty(cell_r, cell_c):
+         if grid[cell_r][cell_c] != '*':
+             grid[cell_r][cell_c] -= 1
+ 
+     def check_empty_neighbours(cell_r, cell_c):
+         return (0 in for_each_neighbour(cell_r, cell_c, lambda r, c: get_cell(r, c)))
+ 
+     def click():
+         for i, row in enumerate(grid):
+             for j, cell in enumerate(row):
+                 if cell != '*':
+                     if cell == 0 or ((R * C - M) == 1):
+                         grid[i][j] = 'c'
+                         return
+ 
+     def place_mine():
+         for i, row in enumerate(grid):
+             for j, cell in enumerate(row):
+                 if cell == '*':
+                     continue
+                 prevstate = grid[i][j]
+                 grid[i][j] = '*'
+                 for_each_neighbour(i, j, mark_dirty)
+                 if not (True in for_each_neighbour(i, j, check_empty_neighbours)):
+                     grid[i][j] = prevstate
+                     for_each_neighbour(i, j, unmark_dirty)
+                 else:
+                     return True
+         return False
+ 
+     for m in range(M):
+         if not place_mine():
+             return 'Impossible\n'
+ 
+     click()
+ 
+     ret = ''
+     for row in grid:
+         ret = ret + ''.join(map(lambda c: '.' if isinstance(c, int) else c, row)) + '\n'
+ 
+     return ret
+ 
+ 
+ if __name__ == '__main__':
+     inp = open(INPUT)
+     out = open(OUTPUT, 'w')
+     
+     T = int(inp.readline())
+ 
+     for case in range(T):
+         sol = solve(*map(int, inp.readline().split()))
+         out.write('Case #%i:\n%s' % (case + 1, sol))",58,59
+"def solve_case(t):
+     interested_row = int(raw_input().strip())
+     i = 1
+     while i <= 4:
+         row = raw_input()
+         if i == interested_row:
+             first_set = set(row.strip().split())
+         i += 1
+     interested_row = int(raw_input().strip())
+     i = 1
+     while i <= 4:
+         row = raw_input()
+         if i == interested_row:
+             second_set = set(row.strip().split())
+         i += 1
+     ans_set = first_set & second_set
+     if len(ans_set) == 1:
+         print 'Case #%d: %s' % (t, ans_set.pop(),)
+     elif len(ans_set) > 1:
+         print 'Case #%d: Bad magician!' % (t,)
+     else:
+         print 'Case #%d: Volunteer cheated!' % (t,)
+ 
+ def main():
+     t = int(raw_input().strip())
+     for i in range(1, t + 1):
+         solve_case(i)
+ 
+ if __name__ == '__main__':
+     main()
+",59,60
+"#
+ # Google Code Jam 2014
+ # Roaund 0: B. Cookie Clicker Alpha
+ # submission by EnTerr
+ #
+ 
+ '''
+ Input
+ The first line of the input gives the number of test cases, T. T lines follow. 
+ Each line contains three space-separated real-valued numbers: C, F and X.
+ 
+ Output
+ For each test case, output one line containing ""Case #x: y"", where x is 
+ the test case number (starting from 1) and y is the minimum number of seconds 
+ it takes before you can have X delicious cookies.
+ 
+ We recommend outputting y to 7 decimal places, but it is not required. 
+ y will be considered correct if it is close enough to the correct number: 
+ within an absolute or relative error of 10^-6. 
+ 
+ Limits
+ 1 <= T <= 100.
+ 
+ Small dataset
+ 1 <= C <= 500.
+ 1 <= F <= 4.
+ 1 <= X <= 2000.
+ 
+ Large dataset
+ 1 <= C <= 10000.
+ 1 <= F <= 100.
+ 1 <= X <= 100000.
+ 
+ 
+ ---Input  
+ 4
+ 30.0 1.0 2.0
+ 30.0 2.0 100.0
+ 30.50000 3.14159 1999.19990
+ 500.0 4.0 2000.0
+ 
+ ---Output 
+ Case #1: 1.0000000
+ Case #2: 39.1666667
+ Case #3: 63.9680013
+ Case #4: 526.1904762
+ 
+ '''
+ 
+ 
+ 
+ = open(sys.argv[1])
+ def input(): return f.readline().strip();
+ 
+ def bestTime(C, F, X):
+     #C= cost of cookie farm, ck
+     #F= farm production, ck/sec
+     #X= goal, ck
+     v = 2   #speed of production, cookies/sec
+     t = 0   #total time of production, sec
+     while True:
+         tX = X / v          #time to reach goal at current speed
+         tC = C / v          #time to buy farm
+         tXc = X / (v + F)   #time to reach goal after adding farm
+         if tX <= tC + tXc:
+             #no more farms
+             break
+         #we are buying farm
+         t += tC
+         v += F
+     #finishing at current speed
+     t += tX
+     return t
+ 
+ #clk = clock()
+ 
+ for caseNo in xrange(1, int(input())+1):
+     C, F, X = map(float, input().split())
+     #print >>sys.stderr, caseNo
+     print 'Case #%d: %.7f' % (caseNo, bestTime(C, F, X))
+     
+ #print >>sys.stderr, 'time= %.1f seconds' % (clock()-clk )
+ 
+ 
+",60,61
+"():
+     return int(sys.stdin.readline())
+ 
+ def readfloatarray():
+     return map(float, sys.stdin.readline().strip().split())
+ 
+ def readintarray():
+     return map(int, sys.stdin.readline().strip().split())
+ 
+ def readpairs(start=0):
+     elems = readintarray()[start:]
+     return [elems[i:i+2] for i in xrange(0, len(elems), 2)]
+ 
+ def readstring():
+     return sys.stdin.readline()[:-1]
+ 
+",61,62
+"fin = open('A-small-attempt0.in', 'r')
+ fout = open('A-output.txt', 'w')
+ 
+ translation = {'y': 'a', 'e': 'o', 'q': 'z'}
+ 
+ knownresults = {
+     'ejp mysljylc kd kxveddknmc re jsicpdrysi': 'our language is impossible to understand',
+     'rbcpc ypc rtcsra dkh wyfrepkym veddknkmkrkcd': 'there are twenty six factorial possibilities',
+     'de kr kd eoya kw aej tysr re ujdr lkgc jv': 'so it is okay if you want to just give up'
+     }
+ 
+ for key in knownresults :
+     for letter in range(len(key)) :
+         translation[key[letter]] = knownresults[key][letter]
+ 
+ missingkey = [i for i in translation.values() if i not in translation.keys()][0]
+ missingvalue = [i for i in translation.keys() if i not in translation.values()][0]
+ 
+ translation[missingkey] = missingvalue
+ 
+ cases = int(fin.readline()[:-1])
+ 
+ for case in range(cases) :
+     line = fin.readline()[:-1]
+     res = [translation[line[i]] for i in range(len(line))]
+     res = ''.join(res)
+     fout.write('Case #' + str(case+1) + ': ' + res + '\n')
+     
+ fin.close()
+ fout.close()
+",62,63
+"(f):
+     return next(f).strip()
+ 
+ def read_int(f, b=10):
+     return int(read_word(f), b)
+ 
+ def read_letters(f):
+     return list(read_word(f))
+ 
+ def read_digits(f, b=10):
+     return [int(x, b) for x in read_letters(f)]
+ 
+ def read_words(f, d=' '):
+     return read_word(f).split(d)
+ 
+ def read_ints(f, b=10, d=' '):
+     return [int(x, b) for x in read_words(f, d)]
+ 
+ def read_floats(f, d=' '):
+     return [float(x) for x in read_words(f, d)]
+ 
+ def read_arr(f, R, reader=read_ints, *args, **kwargs):
+     return [reader(f, *args, **kwargs) for i in range(R)]
+ 
+ def solve(solver, fn, out_fn=None):
+     in_fn = fn + '.in'
+     if out_fn is None:
+         out_fn = fn + '.out'
+     with open(in_fn, 'r') as fi:
+         with open(out_fn, 'w') as fo:
+             T = read_int(fi)
+             for i in range(T):
+                 case = read_case(fi)
+                 res = solver(case)
+                 write_case(fo, i, res)
+ 
+ ################################################################################
+ 
+ def read_case(f):
+     N = read_int(f)
+     MN = read_floats(f)
+     MK = read_floats(f)
+     return (N, MN, MK)
+ 
+ def write_case(f, i, res):
+     f.write('Case #%d: '%i)
+     f.write('%d %d'%res)
+     f.write('\n')
+ 
+ ################################################################################
+ 
+ def solve_small(case):
+     (N, MN, MK) = case
+     MN = sorted(MN)
+     MK = sorted(MK)
+     y = 0
+     i = 0
+     for j in range(N):
+         while i < N and MN[i] < MK[j]:
+             i += 1
+         if i < N:
+             y += 1
+             i += 1
+     z = N
+     j = 0
+     for i in range(N):
+         while j < N and MN[i] > MK[j]:
+             j += 1
+         if j < N:
+             z -= 1
+             j += 1
+     return (y, z)
+ 
+ def solve_large(case):
+     return solve_small(case)
+ 
+ DEBUG = 'i'
+ 
+ from run import *
+",63,64
+"directory = 'C:/users/hai/my projects/google code jam/2013/qualification/C/'
+ 
+ 
+ def is_palindrome (n):
+     l = list(str(n))
+     return list(reversed(l)) == l
+ 
+ def prepare ():
+     global fair_and_squares
+     fair_and_squares = []
+     
+     for i in range(1,10**7):
+         if is_palindrome(i):
+             sqr = i**2
+             if is_palindrome(sqr):
+                 fair_and_squares.append(sqr)
+     return
+ 
+         
+ def solve (f_in, f_out):
+     prepare()
+     T = int(f_in.readline())
+     for testcase in range(1,T+1):
+         A,B = [int(x) for x in f_in.readline().split()]
+         count = len([x for x in fair_and_squares if (x>=A and x<=B)])
+         f_out.write('Case #' + str(testcase) + ': ' + str(count) + '\n')
+ 
+ 
+ 
+ def main_run():
+     = [x for x in os.listdir (directory)]
+     filenames = [x for x in filenames if x.endswith('.in')]
+     l1 = [(os.stat(directory+x).st_ctime, x) for x in filenames]
+     chosen_filename =  sorted(l1)[-1][1][:-3]
+ 
+     print ('Directory : ', directory)
+     print ('Chosen Filename : ',chosen_filename)
+     print()
+     print ('Start : ', time.ctime())
+     print()
+     
+     f_in = open(directory+chosen_filename+'.in')
+     f_out = open(directory+chosen_filename+'.out', 'w')
+     solve(f_in,f_out)
+     f_in.close()
+     f_out.close()
+ 
+     print ()
+     print ('End : ', time.ctime())
+ 
+ 
+ main_run()
+",64,65
+"'''
+ Created on Apr 14, 2012
+ 
+ @author: moatasem
+ '''
+ lan={'z':'q','q':'z',' ':' '}
+ 
+ s1=list(""ejp mysljylc kd kxveddknmc re jsicpdrysi"")
+ e1=list (""our language is impossible to understand"")
+ s2=list(""rbcpc ypc rtcsra dkh wyfrepkym veddknkmkrkcd"")
+ e2=list (""there are twenty six factorial possibilities"")
+ s3=list(""de kr kd eoya kw aej tysr re ujdr lkgc jv"")
+ e3=list (""so it is okay if you want to just give up"")
+ for i in xrange(len(s1)):
+     if(lan.get(s1[i])==None and s1[i]!="" ""):
+         lan[s1[i]]=e1[i]
+     if(lan.get(s2[i])==None and s2[i]!="" ""):
+         lan[s2[i]]=e2[i]
+     if(lan.get(s3[i])==None and s3[i]!="" ""):
+         lan[s3[i]]=e3[i]
+         
+ f = open(""A-small-attempt0.in"", ""r"")
+ n=int(f.readline().strip())
+ for i  in xrange(n):
+     line=f.readline().strip()
+     res='Case #'+str((i+1))+"": ""
+     for j in xrange(len(line)):
+         res+=str(lan.get(line[j]))
+     print res
+         
+     
+ 
+",65,66

@@ -1,8 +1,0 @@
-class Solution(object):
-    def removeElement(self, nums, val):
-        i = 0
-        for x in nums:
-            if x != val:
-                i += 1
-                nums[i-1] = x
-        return i

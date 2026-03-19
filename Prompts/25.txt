@@ -1,0 +1,1 @@
+Given the code snippet below, identify function declarations and invocations, and add one extra integer parameter with a default value of zero. If there are no function declarations, just return 'NA'. Otherwise, return the modified code only. Nothing else!
