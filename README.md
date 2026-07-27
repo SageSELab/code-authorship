@@ -395,6 +395,7 @@ repository; **generated** means a pipeline step produces it.
 | `data/{dataset}/data/fold_*.csv` | shipped | — |
 | `src/rq3_adversarial/prompts/{0..27}.txt` | shipped | — |
 | `config/hyperparameter_combinations*.csv` | shipped | — |
+| `config/adversarial_prompts_with_category.csv` | shipped | — (hand-curated: maps each of the 28 rules to its category code, read by `rq3-results.py`) |
 | `data/{dataset}/data/fold_*.json` | generated | `src/pathcontexts/generate_path_contexts.sh` (Step 2) |
 | `data/{dataset}/{model}/results/*` | generated | `src/training/run-*-cv.sh` (Step 3) |
 | `data/{dataset}/{model}/models/*` | generated | `src/training/run-*-cv.sh` (Step 3) |
@@ -406,7 +407,6 @@ repository; **generated** means a pipeline step produces it.
 | `adversarial-samples-GPT4.csv`, `adversarial_samples_GPT4_accepted.csv` | generated | `get-all-accepted-samples.py` (Step 6c) |
 | `adversarial_samples_GPT4_verified.csv` | generated | `verify-adversarial-samples.py` (Step 6c) |
 | `positive_contributions.csv` | generated | `tsne_plot.py` (Step 5) |
-| `adversarial_prompts_with_category.csv` | **required input, not yet in this repo** | hand-curated: maps each of the 28 rules to its category. Needed by `rq3-results.py`. |
 
 ### What is not in this repository
 
@@ -416,9 +416,6 @@ repository; **generated** means a pipeline step produces it.
   non-deterministic third-party services, so regenerating them will not
   reproduce the exact set the paper reports on. To check the RQ3 numbers rather
   than the RQ3 method, use the shipped samples if you have them.
-- **`adversarial_prompts_with_category.csv`.** `rq3-results.py` will fail
-  without it. It is a small hand-curated mapping and matches the category table
-  under [Transformation rules](#transformation-rules).
 
 ---
 
@@ -442,16 +439,22 @@ Compose loads it automatically; `.env` is gitignored.
 The 28 semantics-preserving transformations used in RQ3. Each has a prompt given
 to GPT-4o, a checker that validates the result, and unit tests.
 
-| Category | Rules | Transformations | Checkers |
-|---|---|---|---|
-| Miscellaneous | 0–2 | remove comments; remove unused code; add logging statements | `check_rule_0` … `check_rule_2` |
-| Statement | 3–5 | split declarations; merge declarations; reorder independent statements | `check_rule_3` … `check_rule_5` |
-| Name | 6–7 | switch variable naming style; switch function naming style | `check_rule6_and_7` |
-| Operator | 8–12 | swap relational operators; rewrite integer literals as expressions; change increment/decrement style | `check_rule_8` … `check_rule_12` |
-| Data | 13–16 | integers to hex; chars to ASCII; strings to char arrays; booleans to integers | `check_rule_13` … `check_rule_16` |
-| Loop | 17–18 | `for` ↔ `while` | `check_rule_17_and_18` |
-| Control flow | 19–23 | `if-else` ↔ `switch`; `if-else` ↔ ternary; swap `if`/`else` bodies | `check_rule_19_and_20`, `check_rule_21` … `check_rule_23` |
-| Function | 24–27 | swap parameter order; add a defaulted parameter; extract a function; reorder declarations | `check_rule_24` … `check_rule_27` |
+| Code | Category | Rules | Transformations | Checkers |
+|---|---|---|---|---|
+| H | Miscellaneous | 0–2 | remove comments; remove unused code; add logging statements | `check_rule_0` … `check_rule_2` |
+| A | Statement | 3–5 | split declarations; merge declarations; reorder independent statements | `check_rule_3` … `check_rule_5` |
+| B | Name | 6–7 | switch variable naming style; switch function naming style | `check_rule6_and_7` |
+| C | Operator | 8–12 | swap relational operators; rewrite integer literals as expressions; change increment/decrement style | `check_rule_8` … `check_rule_12` |
+| D | Data | 13–16 | integers to hex; chars to ASCII; strings to char arrays; booleans to integers | `check_rule_13` … `check_rule_16` |
+| E | Loop | 17–18 | `for` ↔ `while` | `check_rule_17_and_18` |
+| F | Control flow | 19–23 | `if-else` ↔ `switch`; `if-else` ↔ ternary; swap `if`/`else` bodies | `check_rule_19_and_20`, `check_rule_21` … `check_rule_23` |
+| G | Function | 24–27 | swap parameter order; add a defaulted parameter; extract a function; reorder declarations | `check_rule_24` … `check_rule_27` |
+
+The **Code** column is the single-letter category used on the x-axis of the RQ3
+figures. It comes from
+[`config/adversarial_prompts_with_category.csv`](config/adversarial_prompts_with_category.csv),
+which maps each rule id to its code; `rq3-results.py` reads that file to group
+attacks by category.
 
 Full prompt text is in [`src/rq3_adversarial/prompts/`](src/rq3_adversarial/prompts/)
 — `prompts/N.txt` is rule `N`. Checkers live in
@@ -486,9 +489,6 @@ transformations operate on.
   changes over time, so regenerating adversarial samples will not reproduce the
   exact set used in the paper. LeetCode's submission API is unofficial and its
   cookie auth breaks periodically.
-- **`rq3-results.py` needs `adversarial_prompts_with_category.csv`**, which is
-  not currently in the repository — see
-  [Artifact provenance](#artifact-provenance).
 - **`legacy/` is not maintained** and is excluded from the smoke test. See
   [`legacy/README.md`](legacy/README.md).
 

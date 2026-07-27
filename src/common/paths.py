@@ -18,7 +18,7 @@ SRC_DIR = REPO_ROOT / "src"
 #: The six datasets, each holding data/ plus one directory per model.
 DATA_DIR = REPO_ROOT / "data"
 
-#: Hyperparameter grids.
+#: Hand-curated experiment inputs: hyperparameter grids, rule categories.
 CONFIG_DIR = REPO_ROOT / "config"
 
 #: Compiled Tree-sitter grammars, when not overridden by TREE_SITTER_SO_DIR.

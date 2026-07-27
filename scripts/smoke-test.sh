@@ -113,6 +113,7 @@ for p in \
     src/rq3_adversarial/rq3-results.py \
     src/rq3_adversarial/prompts/0.txt \
     config/hyperparameter_combinations.csv \
+    config/adversarial_prompts_with_category.csv \
     data/gcj-cpp/data/fold_0_test.csv \
     data/LeetCode/PbNN \
     tests/test_rule_0.py

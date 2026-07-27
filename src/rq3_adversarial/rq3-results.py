@@ -8,7 +8,7 @@ import sys as _sys
 from pathlib import Path as _Path
 
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[1]))
-from common.paths import DATA_DIR
+from common.paths import CONFIG_DIR, DATA_DIR
 
 
 
@@ -42,7 +42,7 @@ def calculate_line_changes(original_code: str, adversarial_code: str):
     return percentage_change
 
 
-adversarial_prompts = pd.read_csv("adversarial_prompts_with_category.csv")
+adversarial_prompts = pd.read_csv(CONFIG_DIR / "adversarial_prompts_with_category.csv")
 
 
 plt.rcParams.update({
