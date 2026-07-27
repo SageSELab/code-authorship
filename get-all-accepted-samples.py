@@ -100,7 +100,7 @@ def get_models(location):
     return filter_df['PbNN'].values[0], filter_df['CodeBERT'].values[0],filter_df['GraphCodeBERT'].values[0], filter_df['ContraBERT_C'].values[0],filter_df['ContraBERT_G'].values[0], filter_df['UniXcoder'].values[0], filter_df['DeepSeek'].values[0], filter_df['CodeLlama'].values[0]
 
 
-adversarial_samples_GPT4_df['Code2Vec'], adversarial_samples_GPT4_df['CodeBERT'], adversarial_samples_GPT4_df['GraphCodeBERT'], adversarial_samples_GPT4_df['ContraBERT_C'], adversarial_samples_GPT4_df['ContraBERT_G'], adversarial_samples_GPT4_df['UniXcoder'], adversarial_samples_GPT4_df['DeepSeek'], adversarial_samples_GPT4_df['CodeLlamaLoRA'] = zip(*adversarial_samples_GPT4_df['location'].apply(get_models))
+adversarial_samples_GPT4_df['PbNN'], adversarial_samples_GPT4_df['CodeBERT'], adversarial_samples_GPT4_df['GraphCodeBERT'], adversarial_samples_GPT4_df['ContraBERT_C'], adversarial_samples_GPT4_df['ContraBERT_G'], adversarial_samples_GPT4_df['UniXcoder'], adversarial_samples_GPT4_df['DeepSeek'], adversarial_samples_GPT4_df['CodeLlama'] = zip(*adversarial_samples_GPT4_df['location'].apply(get_models))
 
 
 adversarial_samples_GPT4_df = adversarial_samples_GPT4_df[adversarial_samples_GPT4_df["submission_status"] == "Accepted"]

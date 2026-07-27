@@ -1,65 +1,65 @@
-# Install python dependencies
-pip install tree-sitter
-pip install pandas
+#!/usr/bin/env bash
+#
+# Generate AST path contexts for every dataset fold. These JSON files are the
+# input to pbnn-training.py (the PbNN baseline); the language models train
+# directly from the CSVs and do not need this step.
+#
+# Usage:
+#   scripts/build-tree-sitter.sh          # once, unless running in Docker
+#   ./generate_path_contexts.sh           # all datasets
+#   ./generate_path_contexts.sh gcj-cpp   # a single dataset
+#
+# Runtime warning: path-context extraction is O(leaves^2) per snippet. The full
+# sweep over all six datasets takes many hours on one core. Prefer generating
+# only the dataset you intend to train on.
 
-# Clone tree-sitter grammars
-git clone https://github.com/tree-sitter/tree-sitter-java.git
-git clone https://github.com/tree-sitter/tree-sitter-ruby.git
-git clone https://github.com/tree-sitter/tree-sitter-cpp.git
-git clone https://github.com/tree-sitter/tree-sitter-c.git
-git clone https://github.com/tree-sitter/tree-sitter-python.git
-git clone https://github.com/tree-sitter/tree-sitter-c-sharp.git
-git clone https://github.com/tree-sitter/tree-sitter-javascript.git
+set -euo pipefail
 
-# Generate tree-sitter grammars
-npm install tree-sitter-cli
-npx
+cd "$(dirname "$0")"
 
-cd tree-sitter-java
-tree-sitter generate
-gcc -shared -o tree-sitter-java.so -fPIC src/parser.c
+PYTHON="${PYTHON:-python}"
 
-cd tree-sitter-c
-tree-sitter generate
-gcc -shared -o tree-sitter-c.so -fPIC src/parser.c
+# dataset<TAB>language<TAB>number-of-folds
+#
+# gcj-cpp has 8 folds; every other dataset has 10. 'auto' means the generator
+# reads each row's own 'language' column, which only LeetCode carries.
+DATASETS=$(
+    cat <<'EOF'
+gcj-cpp	cpp	8
+gcj-java	java	10
+gcj-python	python	10
+github-c	c	10
+github-java	java	10
+LeetCode	auto	10
+EOF
+)
 
-cd ../tree-sitter-ruby
-gcc -shared -o tree-sitter-ruby.so -fPIC src/parser.c src/scanner.c
+if [ "$#" -gt 0 ]; then
+    DATASETS=$(echo "$DATASETS" | grep -E "^$1	") || {
+        echo "Unknown dataset: $1" >&2
+        echo "Choose one of: gcj-cpp gcj-java gcj-python github-c github-java LeetCode" >&2
+        exit 1
+    }
+fi
 
-cd ../tree-sitter-cpp
-gcc -shared -o tree-sitter-cpp.so -fPIC src/parser.c src/scanner.c
+while IFS=$'\t' read -r dataset language folds; do
+    [ -n "$dataset" ] || continue
+    echo "=== ${dataset} (${language}, ${folds} folds) ==="
 
-cd ../tree-sitter-python
-gcc -shared -o tree-sitter-python.so -fPIC src/parser.c src/scanner.c
+    for i in $(seq 0 $((folds - 1))); do
+        for split in train test; do
+            out="./${dataset}/data/fold_${i}_${split}.json"
+            if [ -f "$out" ]; then
+                echo "[skip] ${out}"
+                continue
+            fi
+            echo "[gen]  ${out}"
+            "$PYTHON" generate_path_contexts.py \
+                --language="${language}" \
+                --input_csv="./${dataset}/data/fold_${i}_${split}.csv" \
+                --output_json="${out}"
+        done
+    done
+done <<<"$DATASETS"
 
-cd ../tree-sitter-c-sharp
-gcc -shared -o tree-sitter-c-sharp.so -fPIC src/parser.c src/scanner.c
-
-cd ../tree-sitter-javascript
-gcc -shared -o tree-sitter-javascript.so -fPIC src/parser.c src/scanner.c
-
-cd ..
-
-# Generate path contexts for gcj-cpp dataset
-
-for i in {0..7}
-do
-  python generate_path_contexts_cpp.py --input_csv=./gcj-cpp/data/fold_${i}_train.csv --output_json=./gcj-cpp/data/fold_${i}_train.json
-  python generate_path_contexts_cpp.py --input_csv=./gcj-cpp/data/fold_${i}_test.csv --output_json=./gcj-cpp/data/fold_${i}_test.json
-done
-
-# Generate path contexts for gcj-python dataset
-
-for i in {0..9}
-do
-  python generate_path_contexts_python.py --input_csv=./gcj-python/data/fold_${i}_train.csv --output_json=./gcj-python/data/fold_${i}_train.json
-  python generate_path_contexts_python.py --input_csv=./gcj-python/data/fold_${i}_test.csv --output_json=./gcj-python/data/fold_${i}_test.json
-done
-
-# Generate path contexts for LeetCode dataset
-
-for i in {0..9}
-do
-  python generate_path_contexts_leetcode.py --input_csv=./LeetCode/data/fold_${i}_train.csv --output_json=./leetcode/data/fold_${i}_train.json
-  python generate_path_contexts_leetcode.py --input_csv=./LeetCode/data/fold_${i}_test.csv --output_json=./leetcode/data/fold_${i}_test.json
-done
+echo "Done."

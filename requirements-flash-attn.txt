@@ -1,0 +1,17 @@
+# Optional: FlashAttention-2, used by the Code Llama and DeepSeek-Coder scripts.
+#
+# This is what the paper's experiments ran with. It is kept out of
+# requirements.txt because it cannot be resolved in the same pass: the build
+# needs torch already installed, and it compiles CUDA kernels from source
+# (20-40 minutes, several GB of RAM). It also requires an Ampere-or-newer
+# NVIDIA GPU (compute capability >= 8.0).
+#
+# Install it AFTER requirements.txt, inside the GPU image:
+#
+#     pip install -r requirements.txt
+#     pip install -r requirements-flash-attn.txt --no-build-isolation
+#
+# Skipping it is safe. attn_backend.py falls back to PyTorch SDPA, which is
+# slower and uses more memory but produces the same results.
+
+flash-attn==2.5.8

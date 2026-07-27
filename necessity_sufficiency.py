@@ -4,7 +4,7 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 
-models = ["CodeBERT", "ContraBERT_C", "ContraBERT_G", "GraphCodeBERT", "UniXcoder", "DeepSeek", "CodeLlamaLoRA"]
+models = ["CodeBERT", "ContraBERT_C", "ContraBERT_G", "GraphCodeBERT", "UniXcoder", "DeepSeek", "CodeLlama"]
 
 x_labels = [
     r"$\mathit{CodeBERT}$", r"$\mathit{ContraBERT\_C}$", 

@@ -7,6 +7,7 @@ import torch
 import math
 from tqdm import tqdm
 from peft import PeftModel
+from attn_backend import attn_implementation
 
 # Reduce memory fragmentation
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
@@ -66,7 +67,7 @@ df['fold_no'] = df['location'].apply(lambda x: x.split("_")[1])
 df_grouped = df.groupby('fold_no')
 
 for fold_no, group in df_grouped:
-    base_model = AutoModelForSequenceClassification.from_pretrained(f'./models/{h_config}_{fold_no}_model', num_labels=no_of_classes, attn_implementation="flash_attention_2", torch_dtype=dtype)
+    base_model = AutoModelForSequenceClassification.from_pretrained(f'./models/{h_config}_{fold_no}_model', num_labels=no_of_classes, attn_implementation=attn_implementation(), torch_dtype=dtype)
     if tokenizer.pad_token == '[PAD]':
         base_model.resize_token_embeddings(len(tokenizer))
     

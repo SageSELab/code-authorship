@@ -21,6 +21,8 @@ from datasets import load_dataset
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.preprocessing import LabelEncoder
 from peft import LoraConfig, get_peft_model, TaskType
+from attn_backend import attn_implementation
+
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
@@ -213,7 +215,7 @@ config.hidden_dropout_prob = 0.1
 config.attention_probs_dropout_prob = 0.1
 config.trust_remote_code = True
 
-model = AutoModelForSequenceClassification.from_pretrained(model_path, config=config, attn_implementation="flash_attention_2")
+model = AutoModelForSequenceClassification.from_pretrained(model_path, config=config, attn_implementation=attn_implementation())
 
 if tokenizer.pad_token == '[PAD]':
     model.resize_token_embeddings(len(tokenizer))

@@ -18,9 +18,9 @@ contra_c <- sample(df$ContraBERT_C)
 contra_g <- sample(df$ContraBERT_G)
 graphcodebert <- sample(df$GraphCodeBERT)
 unixcoder <- sample(df$UniXcoder)
-#code2vec <- sample(df$Code2Vec)
+#pbnn <- sample(df$PbNN)
 deepseek <- sample(df$DeepSeek)
-codellama <- sample(df$CodeLlamaLoRA)
+codellama <- sample(df$CodeLlama)
 
 venn_list <- list(codellama, codebert, contra_c, contra_g, graphcodebert, unixcoder, deepseek)
 

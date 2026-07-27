@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+title: >-
+  Replication package for "Reassessing Code Authorship Attribution in the Era
+  of Language Models"
+message: >-
+  If you use this software or the accompanying datasets, please cite both the
+  paper and this repository.
+type: software
+license: MIT
+repository-code: "https://github.com/SageSELab/code-authorship"
+
+# TODO before submission: expand the given names for A. K. Dipongkor and Z. Yao
+# if you want them spelled out, add ORCIDs, and fill in the DOI once TOSEM
+# assigns one.
+authors:
+  - family-names: Dipongkor
+    given-names: A. K.
+  - family-names: Yao
+    given-names: Z.
+  - family-names: Moran
+    given-names: K.
+
+keywords:
+  - code authorship attribution
+  - language models
+  - adversarial robustness
+  - empirical software engineering
+
+preferred-citation:
+  type: article
+  title: "Reassessing Code Authorship Attribution in the Era of Language Models"
+  authors:
+    - family-names: Dipongkor
+      given-names: A. K.
+    - family-names: Yao
+      given-names: Z.
+    - family-names: Moran
+      given-names: K.
+  journal: "ACM Transactions on Software Engineering and Methodology (TOSEM)"
+  publisher:
+    name: "Association for Computing Machinery"
+  year: 2026
+  notes: "Accepted"
+  # doi: 10.1145/XXXXXXX

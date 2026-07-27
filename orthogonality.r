@@ -18,9 +18,9 @@ contra_c <- sample(df$ContraBERT_C)
 contra_g <- sample(df$ContraBERT_G)
 graphcodebert <- sample(df$GraphCodeBERT)
 unixcoder <- sample(df$UniXcoder)
-code2vec <- sample(df$Code2Vec)
+pbnn <- sample(df$PbNN)
 
-venn_list <- list(code2vec, codebert, contra_c, contra_g, graphcodebert, unixcoder)
+venn_list <- list(pbnn, codebert, contra_c, contra_g, graphcodebert, unixcoder)
 
 pdf.options(family = "Times", pointsize = 12)
 
@@ -28,7 +28,7 @@ pdf("all_dataset_orthogonality.pdf")
 
 
 
-venn(venn_list, ilabels = FALSE, ilcs=.78,box = FALSE, snames = "Code2Vec, CodeBERT, ContraBERT_C, ContraBERT_G, GraphCodeBERT, UniXcoder")
+venn(venn_list, ilabels = FALSE, ilcs=.78,box = FALSE, snames = "PbNN, CodeBERT, ContraBERT_C, ContraBERT_G, GraphCodeBERT, UniXcoder")
 
 
 dev.off()

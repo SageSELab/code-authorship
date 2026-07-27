@@ -355,7 +355,7 @@ def main():
     # --------------------
     # Load Hyperparameters
     # --------------------
-    config_df = pd.read_csv('../../hyperparameter_combinations_code2vec.csv')
+    config_df = pd.read_csv('../../hyperparameter_combinations_pbnn.csv')
     config = config_df[config_df['Configuration'] == h_config_no]
     hidden_dim = int(config['Hidden_Dim'].values[0])
 

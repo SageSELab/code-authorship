@@ -1,0 +1,76 @@
+# Replication environment for "Reassessing Code Authorship Attribution in the
+# Era of Language Models" (TOSEM 2026).
+#
+#   docker compose build caa-cpu                          # no GPU needed
+#   docker compose run --rm caa-cpu scripts/smoke-test.sh # verify the image
+#   docker compose run --rm caa-cpu bash                  # interactive shell
+#
+#   docker compose build caa-gpu                          # requires an NVIDIA host
+#   docker compose run --rm caa-gpu bash
+#
+# The repository is bind-mounted at /workspace, so results, models and figures
+# land in your checkout and survive the container.
+#
+# Configuration comes from a .env file in this directory (copy .env.example).
+# Docker Compose reads it automatically; it supplies both the API credentials
+# below and CAA_UID/CAA_GID. On Linux, set those to your own `id -u` / `id -g`
+# so files the container writes into the bind mount stay yours. On macOS and
+# Windows, Docker Desktop remaps ownership already and the defaults are fine.
+
+x-common: &common
+  working_dir: /workspace
+  volumes:
+    - .:/workspace
+    - hf-cache:/opt/hf-cache
+  environment:
+    # Empty defaults so the services start whether or not .env exists.
+    OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    LEETCODE_CSRF_TOKEN: ${LEETCODE_CSRF_TOKEN:-}
+    LEETCODE_SESSION: ${LEETCODE_SESSION:-}
+    HF_TOKEN: ${HF_TOKEN:-}
+    ATTN_IMPLEMENTATION: ${ATTN_IMPLEMENTATION:-}
+    # Keep BLAS thread pools from oversubscribing cores inside the container.
+    OMP_NUM_THREADS: ${OMP_NUM_THREADS:-4}
+  stdin_open: true
+  tty: true
+
+services:
+  # Full environment: fine-tuning, explainers, adversarial attacks.
+  caa-gpu:
+    <<: *common
+    image: caa:gpu
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: gpu
+      args:
+        BASE_IMAGE: nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+        UID: ${CAA_UID:-1000}
+        GID: ${CAA_GID:-1000}
+    # The Hugging Face Trainer's DataLoader workers deadlock on Docker's 64 MB
+    # default /dev/shm.
+    shm_size: 16gb
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # No CUDA: analysis, plotting, R figures, path contexts, unit tests.
+  caa-cpu:
+    <<: *common
+    image: caa:cpu
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: cpu
+      args:
+        BASE_IMAGE: ubuntu:22.04
+        UID: ${CAA_UID:-1000}
+        GID: ${CAA_GID:-1000}
+    shm_size: 2gb
+
+volumes:
+  hf-cache:

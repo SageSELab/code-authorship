@@ -13,7 +13,9 @@ from torch.utils.data import Dataset
 
 parser = argparse.ArgumentParser(description="Adversarial Attack on CodeBERT")
 
-parser.add_argument("--sample_path", type=str, default="/Users/atish/Documents/KD-Orthogonality/Spitting-CAA-Study/GridSearch/Results/code2vec_adversarial_sample.json", help="Path to the sample.")
+parser.add_argument("--sample_path", type=str, default="./results/pbnn_adversarial_sample.json",
+                    help="Path-context JSON for the adversarial samples, relative to the "
+                         "model directory this script is run from (e.g. LeetCode/PbNN).")
 parser.add_argument("--h_config", type=int, default=3, help="Path to the hyperparameter config file no.")
 
 args = parser.parse_args()
@@ -175,7 +177,7 @@ with open(sample_path, "r") as f:
     samples = json.load(f)
 
 df = pd.read_csv("../../adversarial_samples_GPT4_accepted.csv")
-df = df[df[f"Code2Vec"] == True]
+df = df[df["PbNN"] == True]
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -229,6 +231,6 @@ for sample in zip(samples, df.iterrows()):
         print("Attack succeeded!")
     
 # Save results
-df.to_csv(f"./results/adversarial_samples_GPT4_accepted_Code2Vec_predictions.csv", index=False)
+df.to_csv("./results/adversarial_samples_GPT4_accepted_PbNN_predictions.csv", index=False)
 
 

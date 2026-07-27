@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Secrets
+.env
+
+# Tree-sitter: grammar checkouts and compiled parsers are build artifacts.
+# Rebuild with scripts/build-tree-sitter.sh.
+tree-sitter-so/
+tree-sitter-c/
+tree-sitter-cpp/
+tree-sitter-c-sharp/
+tree-sitter-java/
+tree-sitter-javascript/
+tree-sitter-python/
+tree-sitter-ruby/
+*.so
+
+# ContraBERT checkpoints (fetched with scripts/fetch-contrabert.sh)
+/ContraBERT_C/
+/ContraBERT_G/
+
+# Experiment outputs, under {dataset}/{model}/
+*/*/models/
+*/*/results/
+*/*/explanations/
+*/*/data/
+*/*/finetuned_fold_*/
+*/*/fold/
+
+# Path contexts generated for PbNN (large; regenerate with
+# generate_path_contexts.sh)
+*/data/*.json
+
+# RQ3 intermediate outputs
+Adversarial-Samples-GPT4/
+Invalid-Transformations/
+Submissions/
+Submissions-Error/
+Picked/
+
+# Generated tables and figures
+best_config_results.csv
+all_configs_results.csv
+all_models_correct_samples.csv
+positive_contributions.csv
+adversarial_samples_GPT4_verified.csv
+*.pdf
+!figures/*.pdf
+
+# macOS
+.DS_Store

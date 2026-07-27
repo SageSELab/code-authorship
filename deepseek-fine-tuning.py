@@ -20,6 +20,7 @@ from transformers import (
 from datasets import load_dataset
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.preprocessing import LabelEncoder
+from attn_backend import attn_implementation
 
 # --------------------
 # Step 0: Start Timer
@@ -224,7 +225,7 @@ config.hidden_dropout_prob = 0.1
 config.attention_probs_dropout_prob = 0.1
 
 model = AutoModelForSequenceClassification.from_pretrained(model_path, config=config,
-                                                                attn_implementation="flash_attention_2")
+                                                                attn_implementation=attn_implementation())
 if tokenizer.pad_token == '[PAD]':
     model.resize_token_embeddings(len(tokenizer))
     

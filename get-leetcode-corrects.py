@@ -3,14 +3,32 @@ import glob
 import pandas as pd
 
 datasets = ["LeetCode"]
-models = ["PbNN", "CodeBERT", "GraphCodeBERT", "ContraBERT_C", "ContraBERT_G", "UniXcoder", "DeepSeek", "CodeLlama"]
+
+# Per-model best hyperparameter configuration on LeetCode, as selected by
+# k-fold-result-summary.py (highest mean eval_f1 across folds). The results
+# files are named "{config}_fold_{n}_results.csv", so the config number is
+# required to glob them -- a bare "fold_*_results.csv" pattern matches nothing.
+models = [
+    {"name": "PbNN",          "best_config": 3},
+    {"name": "CodeBERT",      "best_config": 1},
+    {"name": "GraphCodeBERT", "best_config": 3},
+    {"name": "ContraBERT_C",  "best_config": 2},
+    {"name": "ContraBERT_G",  "best_config": 3},
+    {"name": "UniXcoder",     "best_config": 3},
+    {"name": "DeepSeek",      "best_config": 5},
+    {"name": "CodeLlama",     "best_config": 1},
+]
+model_names = [m["name"] for m in models]
 
 all_corrects = {}
 
 for dataset in datasets:
-    for model in models:
-        csv_files = glob.glob(f"./{dataset}/{model}/results/fold_*_results.csv")
-        
+    for model_spec in models:
+        model = model_spec["name"]
+        csv_files = glob.glob(
+            f"./{dataset}/{model}/results/{model_spec['best_config']}_fold_*_results.csv"
+        )
+
         for csv_file in csv_files:
             df = pd.read_csv(csv_file)
             
@@ -27,9 +45,9 @@ with open("leetcode-all-models-corrects.json", "w") as f:
     json.dump(all_corrects, f, indent=4)
     
 
-intersections = set(all_corrects["Code2Vec"])
+intersections = set(all_corrects[model_names[0]])
 
-for model in models[1:]:
+for model in model_names[1:]:
     intersections = intersections.intersection(all_corrects[model])
 
 with open("leetcode-all-models-corrects-intersection.json", "w") as f:

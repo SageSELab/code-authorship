@@ -38,12 +38,28 @@ os.makedirs("Submissions", exist_ok=True)
 os.makedirs("Submissions-Error", exist_ok=True)
 os.makedirs("Picked", exist_ok=True)
 
-parser = argparse.ArgumentParser( description='Submit code to LeetCode')
-parser.add_argument('--csrftoken', type=str, help='csrftoken')
+parser = argparse.ArgumentParser(
+    description='Submit adversarial samples to LeetCode to verify they still pass '
+                'the original problem\'s tests. Credentials default to the '
+                'LEETCODE_CSRF_TOKEN and LEETCODE_SESSION environment variables '
+                '(see .env.example); passing them on the command line leaks them '
+                'into your shell history.')
+parser.add_argument('--csrftoken', type=str, default=os.environ.get('LEETCODE_CSRF_TOKEN'),
+                    help='LeetCode csrftoken cookie. Defaults to $LEETCODE_CSRF_TOKEN.')
 
-parser.add_argument('--LEETCODE_SESSION', type=str, help='LEETCODE_SESSION')
+parser.add_argument('--LEETCODE_SESSION', type=str, default=os.environ.get('LEETCODE_SESSION'),
+                    help='LeetCode LEETCODE_SESSION cookie. Defaults to $LEETCODE_SESSION.')
 
 args = parser.parse_args()
+
+if not args.csrftoken or not args.LEETCODE_SESSION:
+    raise SystemExit(
+        "Missing LeetCode credentials.\n"
+        "Log in at https://leetcode.com, copy the 'csrftoken' and "
+        "'LEETCODE_SESSION' cookies, and either export them as "
+        "LEETCODE_CSRF_TOKEN / LEETCODE_SESSION (recommended) or pass "
+        "--csrftoken / --LEETCODE_SESSION."
+    )
 
 df = pd.read_csv("./leetcode-all-models-corrects-intersection.csv")
 

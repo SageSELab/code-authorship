@@ -104,10 +104,10 @@ print(f"Fold {fold} loaded successfully.")
 # --------------------
 tokenizer_path = model_path
 # Special logic for contrabert if needed
-if "contrabert_c_model" in model_path:
-    tokenizer_path = "/home/atishkumar/hf_models/codebert-base"
-elif "contrabert_g_model" in model_path:
-    tokenizer_path = "/home/atishkumar/hf_models/graphcodebert-base"
+if "contrabert_c" in model_path.lower():
+    tokenizer_path = "microsoft/codebert-base"
+elif "contrabert_g" in model_path.lower():
+    tokenizer_path = "microsoft/graphcodebert-base"
 
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
 

@@ -65,7 +65,7 @@ with open("all_models_all_corrects.json") as f:
     data = json.load(f)
 
 
-all_models_corrects = set(data['Code2Vec'])
+all_models_corrects = set(data['PbNN'])
 
 
 for key in data:
@@ -85,14 +85,14 @@ for sample in all_models_corrects:
     sample_df = df[df['sample_id'] == int(sample_id)]
     sample_record = sample_df.to_dict(orient='records')[0]
     sample_record['location'] = sample
-    sample_record['Code2Vec'] = True if sample in data['Code2Vec'] else False
+    sample_record['PbNN'] = True if sample in data['PbNN'] else False
     sample_record['CodeBERT'] = True if sample in data['CodeBERT'] else False
     sample_record['GraphCodeBERT'] = True if sample in data['GraphCodeBERT'] else False
     sample_record['ContraBERT_C'] = True if sample in data['ContraBERT_C'] else False
     sample_record['ContraBERT_G'] = True if sample in data['ContraBERT_G'] else False
     sample_record['UniXcoder'] = True if sample in data['UniXcoder'] else False
     sample_record['DeepSeek'] = True if sample in data['DeepSeek'] else False
-    sample_record['CodeLlamaLoRA'] = True if sample in data['CodeLlamaLoRA'] else False
+    sample_record['CodeLlama'] = True if sample in data['CodeLlama'] else False
     all_models_corrects_sample.append(sample_record)
 
 

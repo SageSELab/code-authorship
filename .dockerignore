@@ -1,0 +1,39 @@
+# The build context only needs requirements*.txt and scripts/build-tree-sitter.sh;
+# everything else is bind-mounted at run time. Excluding the datasets keeps the
+# context around 1 MB instead of ~280 MB.
+
+.git
+.gitignore
+.env
+
+# Datasets (~250 MB) — mounted at /workspace, never copied into the image.
+*/data/*.csv
+*/data/*.json
+
+# Experiment outputs
+*/*/models/
+*/*/results/
+*/*/explanations/
+*/*/finetuned_fold_*/
+*/*/fold/
+Invalid-Transformations/
+Adversarial-Samples-GPT4/
+Submissions/
+Submissions-Error/
+Picked/
+
+# Locally built artifacts
+tree-sitter-so/
+tree-sitter-*/
+*.so
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Docs and figures
+figures/
+*.pdf
+*.md
+!README.md
+
+.DS_Store

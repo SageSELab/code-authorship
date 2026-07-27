@@ -9,6 +9,7 @@ import pandas as pd
 import json
 from captum.attr import LayerIntegratedGradients
 import os
+from attn_backend import attn_implementation
 
 os.makedirs('explanations', exist_ok=True)
 
@@ -65,7 +66,7 @@ for fold in range(0, no_of_folds):
     
     result_df.drop_duplicates(subset=['Row_Id'],keep=False, inplace=True)
     
-    model = AutoModelForSequenceClassification.from_pretrained(f"./models/{h_config_no}_{fold}_model", attn_implementation="flash_attention_2").half()
+    model = AutoModelForSequenceClassification.from_pretrained(f"./models/{h_config_no}_{fold}_model", attn_implementation=attn_implementation()).half()
     model.eval()
     
     layer_ig = LayerIntegratedGradients(forward_func, model.model.embed_tokens)

@@ -35,6 +35,9 @@ parser.add_argument("--h_config_no", type=int, required=True,
                     help="Hyperparameter configuration number.")
 parser.add_argument("--early_stopping_patience", type=int, default=3,
                     help="Number of epochs with no improvement in eval_f1 before early stopping.")
+parser.add_argument("--num_train_epochs", type=int, default=50,
+                    help="Maximum training epochs. Early stopping usually halts well "
+                         "before this; lower it only for smoke tests.")
 
 args = parser.parse_args()
 
@@ -241,7 +244,7 @@ final_model = AutoModelForSequenceClassification.from_pretrained(
 # --------------------
 final_args = TrainingArguments(
     output_dir=f'./finetuned_fold_{h_config_no}_{fold}',
-    num_train_epochs=50,               # Max epochs (will stop earlier if no improvement)
+    num_train_epochs=args.num_train_epochs,  # Max epochs (will stop earlier if no improvement)
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
     learning_rate=learning_rate,

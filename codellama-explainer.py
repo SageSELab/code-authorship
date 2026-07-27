@@ -8,12 +8,14 @@ import json
 from captum.attr import LayerIntegratedGradients
 import os
 from peft import PeftModel
+from attn_backend import attn_implementation
 
 os.makedirs('explanations', exist_ok=True)
 
 start = time.time()
 parser = argparse.ArgumentParser(description='Interpret Predictions')
-parser.add_argument('--tokenizer', type=str, default="/home/atishkumar/10CV_CAA/codellama-7b-hf")
+parser.add_argument('--tokenizer', type=str, default="codellama/CodeLlama-7b-hf",
+                    help="Tokenizer to use: a Hugging Face model ID or a local directory.")
 parser.add_argument('--n_steps', type=int, default=5)
 parser.add_argument('--no_of_folds', type=int, default=8)
 parser.add_argument('--h_config_no', type=int, default=1)
@@ -93,7 +95,7 @@ for fold in range(0, no_of_folds):
     base_model = AutoModelForSequenceClassification.from_pretrained(
         base_model_path,
         num_labels=no_of_classes,
-        attn_implementation="flash_attention_2",
+        attn_implementation=attn_implementation(),
         torch_dtype=dtype
     )
     base_model.config.pad_token_id = tokenizer.pad_token_id

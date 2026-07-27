@@ -1,3 +1,18 @@
+"""
+t-SNE projection of the tokens each model treats as positive evidence for an
+author (RQ2). Also writes positive_contributions.csv, which author_word_cloud.py
+consumes.
+
+Run from inside a model directory, e.g.:
+
+    cd gcj-cpp/DeepSeek
+    python ../../tsne_plot.py --no_of_folds=8 --h_config_no=1
+
+The defaults reproduce the figure in the paper (gcj-cpp/DeepSeek, 8 folds,
+configuration 1). Pass --no_of_folds=10 for any dataset other than gcj-cpp.
+"""
+
+import argparse
 import json
 import pandas as pd
 import ast
@@ -6,9 +21,17 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import numpy as np
 
+arg_parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
+arg_parser.add_argument('--no_of_folds', type=int, default=8,
+                        help="Number of cross-validation folds. gcj-cpp has 8; every "
+                             "other dataset has 10.")
+arg_parser.add_argument('--h_config_no', type=int, default=1,
+                        help="Hyperparameter configuration whose results to project.")
+args = arg_parser.parse_args()
+
 dfs = []
-h_config = 1
-for fold in range(0, 8):
+h_config = args.h_config_no
+for fold in range(0, args.no_of_folds):
     test_df = pd.read_csv(f'./data/fold_{fold}_test.csv')
     test_results = pd.read_csv(f'./results/{h_config}_fold_{fold}_results.csv')
     test_results_corrects = test_results[test_results['Actual'] == test_results['Predicted']]
