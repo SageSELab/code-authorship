@@ -1,0 +1,175 @@
+name: CI
+
+# Verifies that the replication package still builds and runs. The `test` job
+# is the real gate: it builds the CPU image and runs scripts/smoke-test.sh,
+# which covers package imports, Tree-sitter grammars, R, the 111
+# adversarial-rule unit tests, path-context extraction, and a real (tiny)
+# fine-tuning run.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer commit on the same branch supersedes an in-flight run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Fast feedback (~1 min): catches syntax errors and config breakage without
+  # waiting on a Docker build.
+  static:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Python files parse
+        # ast.parse rather than py_compile: py_compile writes .pyc files beside
+        # each source, so it reports a read-only filesystem as a syntax error
+        # and litters __pycache__ directories. This only reads.
+        run: |
+          python - <<'PY'
+          import ast, pathlib, sys
+
+          failed = []
+          for path in sorted(pathlib.Path('.').rglob('*.py')):
+              if '.git' in path.parts:
+                  continue
+              try:
+                  ast.parse(path.read_text(encoding='utf-8'), filename=str(path))
+              except SyntaxError as e:
+                  failed.append(path)
+                  print(f"::error file={path},line={e.lineno}::{e.msg}")
+
+          print(f"parsed {'OK' if not failed else 'FAILED'}: "
+                f"{len(failed)} error(s)")
+          sys.exit(1 if failed else 0)
+          PY
+
+      - name: Shell scripts parse
+        run: |
+          fail=0
+          for f in *.sh scripts/*.sh; do
+            bash -n "$f" || { echo "::error file=$f::syntax error"; fail=1; }
+          done
+          exit $fail
+
+      - name: docker-compose.yml is valid
+        run: docker compose config --quiet
+
+      - name: CITATION.cff is valid YAML
+        run: |
+          python -m pip install --quiet pyyaml
+          python -c "
+          import yaml
+          d = yaml.safe_load(open('CITATION.cff'))
+          assert d['cff-version'], 'missing cff-version'
+          assert d['authors'], 'missing authors'
+          print('CITATION.cff OK:', ' '.join(d['title'].split()))
+          "
+
+      - name: No secrets or personal absolute paths
+        run: |
+          # .github is excluded because this check's own regex would match it.
+          if git grep -nE '(sk-[A-Za-z0-9]{20}|/home/atishkumar|/Users/atish)' -- . ':!*.md' ':!.github'; then
+            echo "::error::secret or personal absolute path committed"
+            exit 1
+          fi
+          echo "clean"
+
+  # The real gate. Builds the artifact reviewers actually use, then runs the
+  # full environment verification inside it.
+  test:
+    name: Smoke test (CPU image)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build CPU image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          target: cpu
+          tags: caa:cpu
+          load: true
+          # Layer cache keyed on the workflow; the apt/R/grammar layers change
+          # rarely, so most runs only redo the pip layer at worst.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run smoke test
+        run: |
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -w /workspace \
+            caa:cpu scripts/smoke-test.sh
+
+      - name: Run unit tests (verbose, for the log)
+        if: always()
+        run: |
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -w /workspace \
+            caa:cpu scripts/run-tests.sh
+
+  # Verifies the CUDA image builds. Separate because it is slow (~15 min) and
+  # needs an x86_64 runner — the pinned nvidia-*-cu12 wheels have no arm64
+  # build, which is why this cannot be checked on an Apple Silicon machine.
+  #
+  # It builds the image but does not run it: GitHub's hosted runners have no
+  # GPU, so nothing CUDA-dependent can actually execute here.
+  #
+  # Scoped to main and manual runs to keep PR feedback fast. Delete this job if
+  # the build minutes are not worth it.
+  gpu-image:
+    name: Build GPU image
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        # The CUDA base plus the CUDA torch wheels need well over the ~14 GB a
+        # stock runner leaves free.
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /opt/hostedtoolcache/CodeQL
+          sudo docker image prune -af
+          df -h /
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build GPU image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          target: gpu
+          tags: caa:gpu
+          load: true
+          cache-from: type=gha,scope=gpu
+          cache-to: type=gha,mode=max,scope=gpu
+
+      - name: Verify the CUDA torch build is installed
+        run: |
+          docker run --rm caa:gpu python -c "
+          import torch
+          print('torch', torch.__version__)
+          print('built against CUDA', torch.version.cuda)
+          assert torch.version.cuda is not None, 'CPU-only torch in the GPU image'
+          assert torch.version.cuda.startswith('12.1'), torch.version.cuda
+          print('OK (no GPU on hosted runners, so cuda.is_available() is False by design)')
+          "

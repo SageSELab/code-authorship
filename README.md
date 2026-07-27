@@ -1,5 +1,6 @@
 # Reassessing Code Authorship Attribution in the Era of Language Models
 
+[![CI](https://github.com/SageSELab/code-authorship/actions/workflows/ci.yml/badge.svg)](https://github.com/SageSELab/code-authorship/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Data: see DATA-LICENSE](https://img.shields.io/badge/Data-see%20DATA--LICENSE-lightgrey.svg)](DATA-LICENSE.md)
 
@@ -451,6 +452,9 @@ tests in [`adversarial-rule-unit-tests/`](adversarial-rule-unit-tests/):
 scripts/run-tests.sh                  # all rules
 scripts/run-tests.sh test_rule_13.py  # one rule
 ```
+
+These run in CI on every commit, inside the same CPU image described above —
+see [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 [`Element-List.md`](Element-List.md) catalogues the code elements these
 transformations operate on.
