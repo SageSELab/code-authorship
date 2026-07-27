@@ -25,17 +25,34 @@ tree-sitter-ruby/
 /ContraBERT_C/
 /ContraBERT_G/
 
-# Experiment outputs, under {dataset}/{model}/
-*/*/models/
-*/*/results/
-*/*/explanations/
-*/*/data/
-*/*/finetuned_fold_*/
-*/*/fold/
+# Experiment outputs, under data/{dataset}/{model}/.
+#
+# These must stay anchored at data/*/*/ — a generic */*/ pattern also matches
+# data/{dataset}/data/, which would silently ignore the shipped dataset folds.
+data/*/*/models/
+data/*/*/results/
+data/*/*/explanations/
+data/*/*/data/
+data/*/*/finetuned_fold_*/
+data/*/*/fold/
 
 # Path contexts generated for PbNN (large; regenerate with
-# generate_path_contexts.sh)
-*/data/*.json
+# src/pathcontexts/generate_path_contexts.sh). The shipped fold_*.csv files
+# next to them are tracked and must not be caught by this.
+data/*/data/*.json
+
+# Pipeline outputs written to the repository root
+/models/
+/results/
+/explanations/
+/VerifiedOriginalSamples/
+all_models_all_corrects.json
+all-corrects.json
+leetcode-all-models-corrects.json
+leetcode-all-models-corrects-intersection.json
+leetcode-all-models-corrects-intersection.csv
+leetcode-language_wise_results.csv
+adversarial-samples-GPT4.csv
 
 # RQ3 intermediate outputs
 Adversarial-Samples-GPT4/
@@ -51,7 +68,6 @@ all_models_correct_samples.csv
 positive_contributions.csv
 adversarial_samples_GPT4_verified.csv
 *.pdf
-!figures/*.pdf
 
 # macOS
 .DS_Store

@@ -57,9 +57,12 @@ jobs:
       - name: Shell scripts parse
         run: |
           fail=0
-          for f in *.sh scripts/*.sh; do
+          count=0
+          while IFS= read -r f; do
+            count=$((count + 1))
             bash -n "$f" || { echo "::error file=$f::syntax error"; fail=1; }
-          done
+          done < <(find . -name '*.sh' -not -path './.git/*')
+          echo "checked $count shell scripts"
           exit $fail
 
       - name: docker-compose.yml is valid
@@ -75,6 +78,28 @@ jobs:
           assert d['authors'], 'missing authors'
           print('CITATION.cff OK:', ' '.join(d['title'].split()))
           "
+
+      - name: Shipped datasets are tracked, not ignored
+        # A .gitignore pattern like */*/data/ also matches data/{dataset}/data/,
+        # which would silently drop the 116 shipped fold CSVs from the
+        # repository. Fail loudly if that ever happens again.
+        #
+        # --no-index is required: without it check-ignore stays silent for files
+        # already in the index, so a bad pattern would only bite the next person
+        # to clone.
+        run: |
+          tracked=$(git ls-files 'data/*/data/fold_*.csv' | wc -l)
+          ignored=$(find data -name 'fold_*.csv' | git check-ignore --no-index --stdin || true)
+          echo "tracked dataset folds: $tracked"
+          if [ -n "$ignored" ]; then
+            echo "::error::.gitignore is excluding shipped dataset files:"
+            echo "$ignored" | head -5
+            exit 1
+          fi
+          if [ "$tracked" -ne 116 ]; then
+            echo "::error::expected 116 tracked fold CSVs, found $tracked"
+            exit 1
+          fi
 
       - name: No secrets or personal absolute paths
         run: |

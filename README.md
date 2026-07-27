@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/SageSELab/code-authorship/actions/workflows/ci.yml/badge.svg)](https://github.com/SageSELab/code-authorship/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Data: see DATA-LICENSE](https://img.shields.io/badge/Data-see%20DATA--LICENSE-lightgrey.svg)](DATA-LICENSE.md)
+[![Data: see DATA-LICENSE](https://img.shields.io/badge/Data-see%20DATA--LICENSE-lightgrey.svg)](docs/DATA-LICENSE.md)
 
 Replication package for the TOSEM paper *"Reassessing Code Authorship
 Attribution in the Era of Language Models."*
@@ -28,7 +28,6 @@ depends on the machine it was developed on.
 - [External dependencies](#external-dependencies)
 - [Transformation rules](#transformation-rules)
 - [Known limitations](#known-limitations)
-- [Figures](#figures)
 - [Citation](#citation)
 
 ---
@@ -48,8 +47,8 @@ transformations.
 | PbNN | Path-based neural network (baseline) | trained from scratch | — | 5 |
 | CodeBERT | Encoder LM | `microsoft/codebert-base` | 512 | 6 |
 | GraphCodeBERT | Encoder LM | `microsoft/graphcodebert-base` | 512 | 6 |
-| ContraBERT_C | Encoder LM | Google Drive ([ContraBERT.md](ContraBERT.md)) | 512 | 6 |
-| ContraBERT_G | Encoder LM | Google Drive ([ContraBERT.md](ContraBERT.md)) | 512 | 6 |
+| ContraBERT_C | Encoder LM | Google Drive ([docs/ContraBERT.md](docs/ContraBERT.md)) | 512 | 6 |
+| ContraBERT_G | Encoder LM | Google Drive ([docs/ContraBERT.md](docs/ContraBERT.md)) | 512 | 6 |
 | UniXcoder | Encoder LM | `microsoft/unixcoder-base-nine` | 1024 | 6 |
 | DeepSeek-Coder | Decoder LLM | `deepseek-ai/deepseek-coder-1.3b-instruct` | 2500 | 6 |
 | Code Llama | Decoder LLM (LoRA) | `codellama/CodeLlama-7b-hf` | 2500 | 1 |
@@ -69,9 +68,9 @@ transformations.
 
 | RQ | Question | Entry point |
 |---|---|---|
-| RQ1 | How accurately do LMs attribute authorship, versus PbNN? | [`rq1-results.sh`](rq1-results.sh) |
-| RQ2 | Which code features drive their predictions? | [`rq2-results.sh`](rq2-results.sh) |
-| RQ3 | How robust are they to semantics-preserving transformations? | [`rq3-results.py`](rq3-results.py) |
+| RQ1 | How accurately do LMs attribute authorship, versus PbNN? | [`src/rq1_accuracy/rq1-results.sh`](src/rq1_accuracy/rq1-results.sh) |
+| RQ2 | Which code features drive their predictions? | [`src/rq2_features/rq2-results.sh`](src/rq2_features/rq2-results.sh) |
+| RQ3 | How robust are they to semantics-preserving transformations? | [`src/rq3_adversarial/rq3-results.py`](src/rq3_adversarial/rq3-results.py) |
 
 ---
 
@@ -86,15 +85,16 @@ docker compose build caa-cpu
 docker compose run --rm caa-cpu scripts/smoke-test.sh
 ```
 
-The smoke test checks six things and tells you exactly what is broken if any
+The smoke test checks seven things and tells you exactly what is broken if any
 fail:
 
 1. every third-party Python package the pipeline imports resolves;
 2. all seven Tree-sitter grammars compile-load and parse;
-3. R and the Venn-diagram packages are available;
-4. the adversarial-rule unit tests pass;
-5. path-context extraction produces the schema PbNN expects;
-6. a real (tiny) CodeBERT fine-tuning run completes and writes results.
+3. the repository layout matches the paths this README documents;
+4. R and the Venn-diagram packages are available;
+5. the adversarial-rule unit tests pass;
+6. path-context extraction produces the schema PbNN expects;
+7. a real (tiny) CodeBERT fine-tuning run completes and writes results.
 
 For anything that needs a GPU — fine-tuning, the explainers, the attacks — build
 the CUDA image instead:
@@ -157,15 +157,15 @@ off casually.
 To spot-check a claim, reproduce one cell instead:
 
 ```bash
-cd LeetCode/CodeBERT
-../../run-codebert-cv.sh 10        # one model, one dataset, all configs and folds
+cd data/LeetCode/CodeBERT
+../../../src/training/run-codebert-cv.sh 10   # one model, one dataset, all configs and folds
 ```
 
 Or narrow further, to a single fold and configuration:
 
 ```bash
-cd LeetCode/CodeBERT
-python ../../llm-fine-tuning.py --model_path=microsoft/codebert-base \
+cd data/LeetCode/CodeBERT
+python ../../../src/training/llm-fine-tuning.py --model_path=microsoft/codebert-base \
     --fold=0 --max_context_length=512 --h_config_no=1
 ```
 
@@ -175,49 +175,58 @@ python ../../llm-fine-tuning.py --model_path=microsoft/codebert-base \
 
 ```
 code-authorship/
-├── docker/Dockerfile            # gpu and cpu build targets
+├── README.md  LICENSE  CITATION.cff
+├── requirements.txt             # GPU/CUDA pins (also requirements-cpu.txt)
 ├── docker-compose.yml           # caa-gpu / caa-cpu services
+├── docker/Dockerfile            #   gpu and cpu build targets
+│
+├── data/                        # the six datasets
+│   └── {dataset}/               # gcj-cpp, gcj-java, gcj-python,
+│       ├── data/                #   github-c, github-java, LeetCode
+│       │   ├── fold_N_train.csv #   shipped: code, author, sample_id
+│       │   ├── fold_N_test.csv
+│       │   └── fold_N_*.json    #   generated: path contexts for PbNN
+│       └── {model}/             # PbNN, CodeBERT, ContraBERT_C, ContraBERT_G,
+│           ├── models/          #   GraphCodeBERT, UniXcoder, DeepSeek, CodeLlama
+│           ├── results/         # generated: per-fold metrics and predictions
+│           └── explanations/    # generated: Captum attributions (RQ2)
+│
+├── src/
+│   ├── common/                  # shared helpers
+│   │   ├── paths.py             #   repo-root-anchored locations
+│   │   ├── attn_backend.py      #   flash-attn / sdpa / eager selection
+│   │   └── tree_sitter_grammars.py
+│   ├── pathcontexts/            # AST path contexts for PbNN (all languages)
+│   ├── training/                # fine-tuning + run-*-cv.sh drivers
+│   ├── rq1_accuracy/            # attribution accuracy tables and U-tests
+│   ├── rq2_features/            # explainers, t-SNE, word clouds, Venn diagrams
+│   └── rq3_adversarial/         # attacks, rule verification
+│       ├── adversarial_sample_verification.py   # the 28 rule checkers
+│       └── prompts/{0..27}.txt  # the prompts given to GPT-4o
+│
+├── config/                      # hyperparameter grids
+├── docs/                        # ContraBERT, Element-List, DATA-LICENSE
+├── tests/                       # 25 files covering the 28 rule checkers
 ├── scripts/                     # environment setup and verification
 │   ├── build-tree-sitter.sh     #   compile the 7 Tree-sitter grammars
 │   ├── smoke-test.sh            #   verify the whole environment
-│   ├── run-tests.sh             #   adversarial-rule unit tests
+│   ├── run-tests.sh             #   the rule unit tests
 │   └── fetch-contrabert.sh      #   download the ContraBERT checkpoints
-│
-├── {dataset}/                   # gcj-cpp, gcj-java, gcj-python,
-│   ├── data/                    #   github-c, github-java, LeetCode
-│   │   ├── fold_N_train.csv     #   shipped: code, author, sample_id
-│   │   ├── fold_N_test.csv
-│   │   └── fold_N_*.json        #   generated: path contexts for PbNN
-│   └── {model}/                 # PbNN, CodeBERT, ContraBERT_C, ContraBERT_G,
-│       ├── data/                #   GraphCodeBERT, UniXcoder, DeepSeek, CodeLlama
-│       ├── models/              # generated: fine-tuned checkpoints
-│       ├── results/             # generated: per-fold metrics and predictions
-│       └── explanations/        # generated: Captum attributions (RQ2)
-│
-├── llm-fine-tuning.py           # encoder LMs (CodeBERT, ContraBERT, ...)
-├── deepseek-fine-tuning.py      # DeepSeek-Coder
-├── codellama-fine-tuning.py     # Code Llama, LoRA
-├── pbnn-training.py             # PbNN baseline
-├── generate_path_contexts.py    # AST path contexts for PbNN (all languages)
-├── run-*-cv.sh                  # per-model k-fold cross-validation drivers
-│
-├── rq1-results.sh               # RQ1 tables and figures
-├── rq2-results.sh               # RQ2 figures
-├── rq3-results.py               # RQ3 figures
-│
-├── *-explainer.py               # Captum attributions (RQ2)
-├── adversarial-attack*.py       # RQ3 attacks
-├── adversarial_sample_verification.py  # the 28 rule checkers
-├── adversarial-rule-unit-tests/ # 25 test files covering those checkers
-├── Prompts/{0..27}.txt          # the transformation prompts given to GPT-4o
-│
-├── attn_backend.py              # attention-backend selection helper
-├── tree_sitter_grammars.py      # Tree-sitter grammar loading helper
 └── legacy/                      # superseded scripts, kept for provenance
 ```
 
 Each model directory ships only a `.gitkeep`; the `data/`, `models/`, `results/`
 and `explanations/` subdirectories are created by the scripts on first run.
+
+Two conventions worth knowing:
+
+- **Training, explanation and attack scripts run from inside a model
+  directory** (`data/{dataset}/{model}/`), because they read and write `./data`,
+  `./models`, `./results` and `./explanations` relative to it.
+- **Everything else runs from the repository root.** Shared inputs — the
+  datasets and the hyperparameter grids — are resolved from the repository root
+  via `src/common/paths.py` rather than from the working directory, so those
+  scripts behave the same wherever you invoke them.
 
 ---
 
@@ -237,8 +246,8 @@ Use these splits — re-splitting will produce different numbers than the paper.
 The language models tokenize the CSVs directly. PbNN needs AST path contexts:
 
 ```bash
-./generate_path_contexts.sh gcj-cpp        # one dataset
-./generate_path_contexts.sh                # all six
+src/pathcontexts/generate_path_contexts.sh gcj-cpp   # one dataset
+src/pathcontexts/generate_path_contexts.sh           # all six
 ```
 
 Inside Docker the Tree-sitter grammars are already compiled. Natively, run
@@ -254,8 +263,8 @@ directory. The argument is the number of folds (**8 for `gcj-cpp`, 10 for
 everything else**).
 
 ```bash
-cd LeetCode/CodeBERT
-../../run-codebert-cv.sh 10
+cd data/LeetCode/CodeBERT
+../../../src/training/run-codebert-cv.sh 10
 ```
 
 | Script | Model |
@@ -278,15 +287,15 @@ Each run writes into the model directory:
 - `results/{config}_fold_{n}_results.csv` — per-sample actual vs. predicted
 - `models/{config}_{n}_model/` — the fine-tuned checkpoint
 
-Hyperparameter grids: [`hyperparameter_combinations.csv`](hyperparameter_combinations.csv)
+Hyperparameter grids: [`config/hyperparameter_combinations.csv`](config/hyperparameter_combinations.csv)
 (learning rate × batch size, for the LMs) and
-[`hyperparameter_combinations_pbnn.csv`](hyperparameter_combinations_pbnn.csv)
+[`config/hyperparameter_combinations_pbnn.csv`](config/hyperparameter_combinations_pbnn.csv)
 (hidden dimension, for PbNN).
 
 ### Step 4 — RQ1: attribution accuracy
 
 ```bash
-./rq1-results.sh
+src/rq1_accuracy/rq1-results.sh
 ```
 
 Aggregates every `results/` directory into `best_config_results.csv` and
@@ -298,9 +307,9 @@ the Mann-Whitney U comparisons.
 First generate token attributions, from inside each model directory:
 
 ```bash
-cd LeetCode/CodeBERT   && python ../../lm-explainer.py --tokenizer=microsoft/codebert-base --h_config_no=1
-cd LeetCode/DeepSeek   && python ../../deepseek-explainer.py --h_config_no=5
-cd LeetCode/CodeLlama  && python ../../codellama-explainer.py --h_config_no=1
+cd data/LeetCode/CodeBERT  && python ../../../src/rq2_features/lm-explainer.py --tokenizer=microsoft/codebert-base --h_config_no=1
+cd data/LeetCode/DeepSeek  && python ../../../src/rq2_features/deepseek-explainer.py --h_config_no=5
+cd data/LeetCode/CodeLlama && python ../../../src/rq2_features/codellama-explainer.py --h_config_no=1
 ```
 
 `lm-explainer.py` covers all the encoder models; the two decoder models need
@@ -309,8 +318,8 @@ their own scripts because of how their embeddings and LoRA adapters load.
 Then build the figures:
 
 ```bash
-./rq2-results.sh                      # defaults to gcj-cpp/DeepSeek
-./rq2-results.sh gcj-python UniXcoder # or any other (dataset, model)
+src/rq2_features/rq2-results.sh                      # defaults to gcj-cpp/DeepSeek
+src/rq2_features/rq2-results.sh gcj-python UniXcoder  # or any other (dataset, model)
 ```
 
 Produces the necessity/sufficiency curves, the model-orthogonality Venn diagram,
@@ -325,14 +334,14 @@ back to the judge.
 **6a. Find the samples every model gets right.**
 
 ```bash
-python get-leetcode-corrects.py
+python src/rq3_adversarial/get-leetcode-corrects.py
 ```
 
 **6b. Generate adversarial variants with GPT-4o.**
 
 ```bash
 export OPENAI_API_KEY=sk-...          # or put it in .env
-python generate-adversarial-sample-gpt-4.py
+python src/rq3_adversarial/generate-adversarial-sample-gpt-4.py
 ```
 
 Applies all 28 transformation prompts to each snippet. Resumable — already
@@ -343,9 +352,9 @@ generated files are skipped.
 ```bash
 export LEETCODE_CSRF_TOKEN=...        # from your browser cookies after logging in
 export LEETCODE_SESSION=...
-python submit2leetcode.py
-python get-all-accepted-samples.py
-python verify-adversarial-samples.py
+python src/rq3_adversarial/submit2leetcode.py
+python src/rq3_adversarial/get-all-accepted-samples.py
+python src/rq3_adversarial/verify-adversarial-samples.py
 ```
 
 `submit2leetcode.py` checks *functional* equivalence (does it still pass?).
@@ -357,8 +366,8 @@ markdown report for every sample it rejects. Its rule checkers are covered by
 **6d. Attack the models.** Run from inside each model directory:
 
 ```bash
-cd LeetCode/CodeBERT
-python ../../adversarial-attack.py --tokenizer_path=microsoft/codebert-base \
+cd data/LeetCode/CodeBERT
+python ../../../src/rq3_adversarial/adversarial-attack.py --tokenizer_path=microsoft/codebert-base \
     --max_context_length=512 --h_config=1 --model_name=CodeBERT
 ```
 
@@ -371,7 +380,7 @@ python ../../adversarial-attack.py --tokenizer_path=microsoft/codebert-base \
 **6e. Build the figures.**
 
 ```bash
-python rq3-results.py
+python src/rq3_adversarial/rq3-results.py
 ```
 
 ---
@@ -383,13 +392,13 @@ repository; **generated** means a pipeline step produces it.
 
 | File | Status | Produced by |
 |---|---|---|
-| `{dataset}/data/fold_*.csv` | shipped | — |
-| `Prompts/{0..27}.txt` | shipped | — |
-| `hyperparameter_combinations*.csv` | shipped | — |
-| `{dataset}/data/fold_*.json` | generated | `generate_path_contexts.sh` (Step 2) |
-| `{dataset}/{model}/results/*` | generated | `run-*-cv.sh` (Step 3) |
-| `{dataset}/{model}/models/*` | generated | `run-*-cv.sh` (Step 3) |
-| `{dataset}/{model}/explanations/*` | generated | `*-explainer.py` (Step 5) |
+| `data/{dataset}/data/fold_*.csv` | shipped | — |
+| `src/rq3_adversarial/prompts/{0..27}.txt` | shipped | — |
+| `config/hyperparameter_combinations*.csv` | shipped | — |
+| `data/{dataset}/data/fold_*.json` | generated | `src/pathcontexts/generate_path_contexts.sh` (Step 2) |
+| `data/{dataset}/{model}/results/*` | generated | `src/training/run-*-cv.sh` (Step 3) |
+| `data/{dataset}/{model}/models/*` | generated | `src/training/run-*-cv.sh` (Step 3) |
+| `data/{dataset}/{model}/explanations/*` | generated | `src/rq2_features/*-explainer.py` (Step 5) |
 | `best_config_results.csv`, `all_configs_results.csv` | generated | `k-fold-result-summary.py` (Step 4) |
 | `all_models_all_corrects.json`, `all_models_correct_samples.csv` | generated | `all-models-corrects.py` (Step 4) |
 | `leetcode-all-models-corrects.json`, `…-intersection.json`, `…-intersection.csv` | generated | `get-leetcode-corrects.py` (Step 6a) |
@@ -418,7 +427,7 @@ repository; **generated** means a pipeline step produces it.
 | Dependency | Needed for | How it is supplied | If unavailable |
 |---|---|---|---|
 | Hugging Face Hub | CodeBERT, GraphCodeBERT, UniXcoder, DeepSeek-Coder, Code Llama | Downloaded on first use, cached in the `hf-cache` volume. `HF_TOKEN` only for rate limits. | Those models cannot be fine-tuned. |
-| ContraBERT_C / ContraBERT_G | Two of the eight models | Google Drive; `scripts/fetch-contrabert.sh`, links in [ContraBERT.md](ContraBERT.md) | Skip those two models; the rest is unaffected. |
+| ContraBERT_C / ContraBERT_G | Two of the eight models | Google Drive; `scripts/fetch-contrabert.sh`, links in [docs/ContraBERT.md](docs/ContraBERT.md) | Skip those two models; the rest is unaffected. |
 | OpenAI API | Generating adversarial samples (Step 6b) | `OPENAI_API_KEY` in `.env` | Use existing adversarial samples and skip to Step 6d. |
 | LeetCode account | Functional verification (Step 6c) | `LEETCODE_CSRF_TOKEN` / `LEETCODE_SESSION` in `.env` | Use an existing accepted-samples CSV. |
 | FlashAttention-2 | Speed for the two decoder models | Optional: `requirements-flash-attn.txt` | `attn_backend.py` falls back to PyTorch SDPA — same results, slower. |
@@ -444,9 +453,10 @@ to GPT-4o, a checker that validates the result, and unit tests.
 | Control flow | 19–23 | `if-else` ↔ `switch`; `if-else` ↔ ternary; swap `if`/`else` bodies | `check_rule_19_and_20`, `check_rule_21` … `check_rule_23` |
 | Function | 24–27 | swap parameter order; add a defaulted parameter; extract a function; reorder declarations | `check_rule_24` … `check_rule_27` |
 
-Full prompt text is in [`Prompts/`](Prompts/) — `Prompts/N.txt` is rule `N`.
-Checkers live in [`adversarial_sample_verification.py`](adversarial_sample_verification.py),
-tests in [`adversarial-rule-unit-tests/`](adversarial-rule-unit-tests/):
+Full prompt text is in [`src/rq3_adversarial/prompts/`](src/rq3_adversarial/prompts/)
+— `prompts/N.txt` is rule `N`. Checkers live in
+[`src/rq3_adversarial/adversarial_sample_verification.py`](src/rq3_adversarial/adversarial_sample_verification.py),
+tests in [`tests/`](tests/):
 
 ```bash
 scripts/run-tests.sh                  # all rules
@@ -456,7 +466,7 @@ scripts/run-tests.sh test_rule_13.py  # one rule
 These run in CI on every commit, inside the same CPU image described above —
 see [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
-[`Element-List.md`](Element-List.md) catalogues the code elements these
+[`docs/Element-List.md`](docs/Element-List.md) catalogues the code elements these
 transformations operate on.
 
 ---
@@ -484,36 +494,6 @@ transformations operate on.
 
 ---
 
-## Figures
-
-Full-resolution versions of figures that were reduced for the paper.
-
-**Figure 1 — Distribution of code sample size across datasets**
-
-![Figure 1](figures/dataset-distribution.jpg)
-
-**Figure 3 — Performance improvement of LMs over PbNN**
-
-![Figure 3](figures/performance_improvement_of_llms.png)
-
-**Figure 4 — Mann-Whitney U test results**
-
-![Figure 4](figures/u_test_results.jpg)
-
-**Successful attacks per transformation category (RQ3)**
-
-![Successful attacks](figures/successful_attacks_per_category.jpg)
-
-**Code changes per category per model (RQ3)**
-
-![Code changes](figures/code_changes_per_category_per_model.jpg)
-
-**Author word clouds (RQ2, DeepSeek-Coder)**
-
-![Word cloud](figures/authors_word_cloud_deepseek.jpg)
-
----
-
 ## Citation
 
 ```bibtex
@@ -533,4 +513,4 @@ See [`CITATION.cff`](CITATION.cff) for machine-readable metadata.
 
 Code is MIT-licensed ([`LICENSE`](LICENSE)). The datasets under `*/data/` are
 third-party source code redistributed for research reproducibility — read
-[`DATA-LICENSE.md`](DATA-LICENSE.md) before reusing them.
+[`DATA-LICENSE.md`](docs/DATA-LICENSE.md) before reusing them.

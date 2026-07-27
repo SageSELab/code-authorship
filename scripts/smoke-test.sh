@@ -3,8 +3,9 @@
 # Verify that this replication package's environment is complete and working.
 #
 # Runs on CPU in a few minutes and touches every class of dependency the study
-# needs: Python packages, Tree-sitter grammars, R packages, the rule-checking
-# unit tests, path-context generation, and one real (tiny) fine-tuning run.
+# needs: Python packages, Tree-sitter grammars, the repository layout, R
+# packages, the rule-checking unit tests, path-context generation, and one real
+# (tiny) fine-tuning run.
 #
 # Usage:
 #   docker compose run --rm caa-cpu scripts/smoke-test.sh
@@ -28,7 +29,7 @@ fail() { printf '  \033[31mFAIL\033[0m  %s\n' "$1"; FAIL=$((FAIL + 1)); }
 step() { printf '\n\033[1m%s\033[0m\n' "$1"; }
 
 # ---------------------------------------------------------------------------
-step "1/6  Python dependencies"
+step "1/7  Python dependencies"
 # ---------------------------------------------------------------------------
 if python - <<'PY'
 import importlib
@@ -57,12 +58,13 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "2/6  Tree-sitter grammars"
+step "2/7  Tree-sitter grammars"
 # ---------------------------------------------------------------------------
 if python - <<'PY'
 import sys
 
-from tree_sitter_grammars import SUPPORTED_LANGUAGES, get_parser, grammar_dir
+sys.path.insert(0, "src")
+from common.tree_sitter_grammars import SUPPORTED_LANGUAGES, get_parser, grammar_dir
 
 snippets = {
     "c":          "int main(void) { return 0; }",
@@ -96,7 +98,35 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "3/6  R packages"
+step "3/7  Repository layout"
+# ---------------------------------------------------------------------------
+# Guard against the layout drifting out from under the docs: every path the
+# README tells a reviewer to run must actually exist.
+missing_paths=""
+for p in \
+    src/common/paths.py \
+    src/pathcontexts/generate_path_contexts.sh \
+    src/training/llm-fine-tuning.py \
+    src/training/run-codebert-cv.sh \
+    src/rq1_accuracy/rq1-results.sh \
+    src/rq2_features/rq2-results.sh \
+    src/rq3_adversarial/rq3-results.py \
+    src/rq3_adversarial/prompts/0.txt \
+    config/hyperparameter_combinations.csv \
+    data/gcj-cpp/data/fold_0_test.csv \
+    data/LeetCode/PbNN \
+    tests/test_rule_0.py
+do
+    [ -e "$p" ] || missing_paths="${missing_paths} ${p}"
+done
+if [ -z "$missing_paths" ]; then
+    pass "repository layout matches the documented paths"
+else
+    fail "missing:${missing_paths}"
+fi
+
+# ---------------------------------------------------------------------------
+step "4/7  R packages"
 # ---------------------------------------------------------------------------
 if Rscript -e 'library(venn); library(sets); library(jsonlite); cat("  venn, sets, jsonlite OK\n")' 2>/dev/null; then
     pass "R and the Venn-diagram packages are available"
@@ -105,10 +135,10 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "4/6  Adversarial-rule unit tests"
+step "5/7  Adversarial-rule unit tests"
 # ---------------------------------------------------------------------------
 TEST_LOG="$WORK_DIR/pytest.log"
-if python -m pytest adversarial-rule-unit-tests/ -q >"$TEST_LOG" 2>&1; then
+if python -m pytest tests/ -q >"$TEST_LOG" 2>&1; then
     pass "$(grep -oE '[0-9]+ passed[^=]*' "$TEST_LOG" | tail -n 1 | xargs)"
 else
     fail "unit tests failed — see below"
@@ -116,11 +146,11 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "5/6  Path-context generation (PbNN input)"
+step "6/7  Path-context generation (PbNN input)"
 # ---------------------------------------------------------------------------
-if python generate_path_contexts.py \
+if python src/pathcontexts/generate_path_contexts.py \
         --language=cpp \
-        --input_csv=./gcj-cpp/data/fold_0_test.csv \
+        --input_csv=./data/gcj-cpp/data/fold_0_test.csv \
         --output_json="$WORK_DIR/paths.json" \
         --limit=20 >/dev/null 2>&1 \
    && python - "$WORK_DIR/paths.json" <<'PY'
@@ -141,7 +171,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-step "6/6  End-to-end fine-tuning (1 fold, 1 epoch, tiny subset)"
+step "7/7  End-to-end fine-tuning (1 fold, 1 epoch, tiny subset)"
 # ---------------------------------------------------------------------------
 # Trains a real CodeBERT classifier on a 50-row slice of gcj-cpp. The point is
 # not accuracy — it is that the trainer, tokenizer, metrics and result-writing
@@ -156,7 +186,7 @@ import pandas as pd
 
 repo, out = sys.argv[1], sys.argv[2]
 for split in ("train", "test"):
-    df = pd.read_csv(f"{repo}/gcj-cpp/data/fold_0_{split}.csv")
+    df = pd.read_csv(f"{repo}/data/gcj-cpp/data/fold_0_{split}.csv")
     # Keep 5 authors so the label space is small and every author appears in
     # both splits.
     authors = sorted(df["author"].unique())[:5]
@@ -165,12 +195,11 @@ for split in ("train", "test"):
     print(f"  {split}: {len(subset)} rows, {subset['author'].nunique()} authors")
 PY
 
-cp "$REPO_ROOT/hyperparameter_combinations.csv" "$WORK_DIR/train/"
 TRAIN_LOG="$WORK_DIR/train.log"
 
 if (
     cd "$TRAIN_DIR" \
-    && HF_HUB_OFFLINE=0 python "$REPO_ROOT/llm-fine-tuning.py" \
+    && HF_HUB_OFFLINE=0 python "$REPO_ROOT/src/training/llm-fine-tuning.py" \
         --model_path=microsoft/codebert-base \
         --fold=0 \
         --max_context_length=128 \

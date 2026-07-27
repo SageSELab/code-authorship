@@ -7,15 +7,15 @@
 .env
 
 # Datasets (~250 MB) — mounted at /workspace, never copied into the image.
-*/data/*.csv
-*/data/*.json
+data/*/data/*.csv
+data/*/data/*.json
 
 # Experiment outputs
-*/*/models/
-*/*/results/
-*/*/explanations/
-*/*/finetuned_fold_*/
-*/*/fold/
+data/*/*/models/
+data/*/*/results/
+data/*/*/explanations/
+data/*/*/finetuned_fold_*/
+data/*/*/fold/
 Invalid-Transformations/
 Adversarial-Samples-GPT4/
 Submissions/
@@ -30,8 +30,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
-# Docs and figures
-figures/
+# Docs
 *.pdf
 *.md
 !README.md

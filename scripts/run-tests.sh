@@ -2,10 +2,11 @@
 #
 # Run the adversarial-rule unit tests.
 #
-# These exercise the check_rule_* functions in adversarial_sample_verification.py
-# against hand-written positive and negative examples in C++, Python and Java —
-# the checks that decide whether a GPT-4-produced adversarial sample really
-# applied the transformation it was asked to apply (RQ3).
+# These exercise the check_rule_* functions in
+# src/rq3_adversarial/adversarial_sample_verification.py against hand-written
+# positive and negative examples in C++, Python and Java — the checks that
+# decide whether a GPT-4-produced adversarial sample really applied the
+# transformation it was asked to apply (RQ3).
 #
 # Usage:
 #   scripts/run-tests.sh                          # all rules
@@ -20,7 +21,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 if [ "$#" -gt 0 ]; then
-    exec python -m pytest "adversarial-rule-unit-tests/$1" -v
+    exec python -m pytest "tests/$1" -v
 fi
 
-exec python -m pytest adversarial-rule-unit-tests/ -v
+exec python -m pytest tests/ -v
